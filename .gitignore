@@ -1,0 +1,8 @@
+.thumbnail
+_wcag_check.py
+_parse_check.py
+_extract_script.py
+_script_tmp.js
+*.tmp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intake Tracker — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#10161C; --ink-2:#39424E; --muted:#5B6672; --faint:#8A94A0;
+  --line:#E2E7EC; --line-strong:#CBD3DB;
+  --surface:#FFFFFF; --canvas:#F5F7F9; --canvas-2:#EDF1F4;
+  --brand:#0A6B33; --teal:#14746F; --teal-d:#0F5C58;
+  --blue:#0B63A8; --blue-d:#08507F; --blue-tint:#E8F1FA;
+  --amber:#A66A05; --amber-tint:#FDF2E0;
+  --green:#1C7A3E; --green-tint:#E6F3EA;
+  --grey-tint:#EDF0F3;
+  --red:#B3261E; --red-tint:#FBEAE9;
+  --purple:#5A4B8C; --purple-tint:#EEEBF6;
+  --r-s:6px; --r-m:10px; --r-l:14px; --r-pill:999px;
+  --sh-1:0 1px 2px rgba(16,22,28,.06), 0 1px 3px rgba(16,22,28,.05);
+  --sh-2:0 4px 12px rgba(16,22,28,.10), 0 1px 3px rgba(16,22,28,.06);
+  --sh-3:0 18px 44px rgba(16,22,28,.18);
+  --sb:248px; --tb:56px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Heebo',system-ui,sans-serif;background:var(--canvas);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--faint)}
+
+/* shell */
+.topbar{position:fixed;inset:0 0 auto 0;height:var(--tb);z-index:60;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 18px}
+.logo{width:22px;height:22px;background:var(--brand);border-radius:3px;flex:none}
+.brandname{font-weight:700;font-size:17px;letter-spacing:-.02em}
+.topsearch{margin-left:26px;flex:1;max-width:420px;position:relative}
+.topsearch input{width:100%;height:34px;border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:0 34px 0 14px;background:var(--canvas)}
+.topsearch input:focus{background:#fff;border-color:var(--blue);outline:none}
+.topsearch .ic{position:absolute;right:11px;top:8px;color:var(--faint)}
+.topright{margin-left:auto;display:flex;align-items:center;gap:6px}
+.iconbtn{width:34px;height:34px;border-radius:var(--r-pill);border:1px solid transparent;background:none;display:grid;place-items:center;cursor:pointer;color:var(--ink-2);position:relative}
+.iconbtn:hover{background:var(--canvas-2)}
+.dot{position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--brand);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;flex:none}
+.avatar.sm{width:26px;height:26px;font-size:10.5px}
+.avatar.btn{cursor:pointer;border:none}
+.sidebar{position:fixed;top:var(--tb);left:0;bottom:0;width:var(--sb);background:var(--surface);border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;z-index:50}
+.newbtn{width:100%;height:44px;border:none;border-radius:var(--r-pill);background:var(--teal);color:#fff;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--sh-1)}
+.newbtn:hover{background:var(--teal-d)}
+.nav{margin-top:20px;display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--r-m);color:var(--ink-2);font-weight:500}
+.nav a:hover{background:var(--canvas);text-decoration:none}
+.nav a.on{background:#E7F2EA;color:var(--brand);font-weight:700}
+.navnote{margin-top:auto;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:2px}
+.navnote button{background:none;border:none;text-align:left;padding:8px 12px;border-radius:var(--r-m);cursor:pointer;color:var(--muted);font-weight:500;display:flex;gap:10px;align-items:center;width:100%}
+.navnote button:hover{background:var(--canvas);color:var(--ink)}
+.main{margin:var(--tb) 0 0 var(--sb);padding:26px 30px 70px;min-height:calc(100vh - var(--tb))}
+.wrap{max-width:1180px}
+.page{display:none}
+.page.on{display:block}
+.pagehead{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
+.pagehead h1{font-size:26px;color:var(--blue-d);letter-spacing:-.025em}
+.pagehead .sub{color:var(--muted);margin-top:3px}
+.pagehead .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+/* atoms */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-1)}
+.pad{padding:20px 22px}
+.btn{height:38px;padding:0 18px;border-radius:var(--r-pill);border:1px solid var(--line-strong);background:#fff;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center;white-space:nowrap}
+.btn:hover{background:var(--canvas)}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.pri:hover{background:var(--blue-d)}
+.btn.danger{color:var(--red);border-color:#E7C7C4}
+.btn.danger:hover{background:var(--red-tint)}
+.btn.ghost{border-color:transparent;background:none;color:var(--blue)}
+.btn.ghost:hover{background:var(--blue-tint)}
+.btn.sm{height:32px;padding:0 13px;font-size:13px}
+.linkbtn{background:none;border:none;color:var(--blue);font-weight:600;cursor:pointer;padding:0;display:inline-flex;gap:7px;align-items:center}
+.linkbtn:hover{text-decoration:underline}
+label.f{display:block;font-weight:600;margin-bottom:6px}
+.hintline{color:var(--muted);font-size:12.5px;margin:-2px 0 7px}
+.inp,select.inp,textarea.inp{width:100%;min-height:40px;border:1px solid var(--line-strong);border-radius:var(--r-s);padding:9px 12px;background:#fff}
+.inp:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(11,99,168,.12)}
+.inp.bad{border-color:var(--red);box-shadow:0 0 0 3px rgba(179,38,30,.10)}
+textarea.inp{min-height:88px;resize:vertical}
+.req{color:var(--red)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.sep{height:1px;background:var(--line);margin:20px 0}
+
+.chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--r-s);font-size:12.5px;font-weight:600;white-space:nowrap}
+.chip.review{background:var(--amber-tint);color:var(--amber)}
+.chip.progress{background:var(--blue-tint);color:var(--blue)}
+.chip.hold{background:var(--purple-tint);color:var(--purple)}
+.chip.done{background:var(--green-tint);color:var(--green)}
+.chip.closed{background:var(--grey-tint);color:var(--ink-2)}
+.chip.cancel{background:var(--red-tint);color:var(--red)}
+.chip .bul{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.newtag{background:var(--blue-tint);color:var(--blue-d);font-size:10.5px;font-weight:800;letter-spacing:.07em;padding:2px 6px;border-radius:4px}
+.tagpill{background:var(--canvas-2);color:var(--ink-2);font-size:12px;padding:3px 10px;border-radius:var(--r-pill);font-weight:500}
+.stagepill{background:#EFF4EF;color:var(--brand);font-size:12px;padding:3px 10px;border-radius:var(--r-pill);font-weight:600}
+
+.hint{position:relative;display:inline-flex;vertical-align:middle}
+.info{width:16px;height:16px;border-radius:50%;border:1.3px solid var(--faint);color:var(--faint);background:none;cursor:pointer;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0;line-height:1}
+.info:hover{border-color:var(--blue);color:var(--blue)}
+.hintcard{position:absolute;top:calc(100% + 8px);left:-10px;width:308px;z-index:80;background:#fff;border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh-2);padding:14px 15px;opacity:0;visibility:hidden;transform:translateY(-3px);transition:.13s;text-align:left;font-weight:400}
+.hint:hover .hintcard,.hint:focus-within .hintcard{opacity:1;visibility:visible;transform:none}
+.hintcard.right{left:auto;right:-10px}
+.hintcard h5{margin:0 0 5px;font-size:13.5px}
+.hintcard p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.55}
+.hintcard .stage{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-2)}
+
+/* rail */
+.railwrap{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.rail{flex:1;display:flex;background:#fff;border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-1)}
+.rail button{flex:1;background:none;border:none;border-right:1px solid var(--line);padding:15px 12px;cursor:pointer;display:flex;align-items:center;gap:9px;position:relative;text-align:left}
+.rail button:first-child{border-radius:var(--r-l) 0 0 var(--r-l)}
+.rail button:last-child{border-right:none;border-radius:0 var(--r-l) var(--r-l) 0}
+.rail button:hover{background:var(--canvas)}
+.rail button .lbl{font-weight:600;color:var(--ink-2)}
+.rail button .n{margin-left:auto;font-weight:700;font-size:16px}
+.rail button.on{background:var(--canvas-2)}
+.rail button.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--blue)}
+.rail .ic{width:18px;display:grid;place-items:center;flex:none}
+
+/* table */
+.tablecard{background:#fff;border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--sh-1)}
+.tabletop{display:flex;align-items:center;gap:14px;padding:16px 20px 12px}
+.tabletop h2{font-size:16.5px}
+.tabletop .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.legend{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:12.5px;flex-wrap:wrap}
+.legend span{display:inline-flex;gap:5px;align-items:center}
+.inlinesearch{position:relative}
+.inlinesearch input{height:34px;width:230px;border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:0 32px 0 13px}
+.inlinesearch .ic{position:absolute;right:10px;top:8px;color:var(--blue)}
+table{width:100%;border-collapse:collapse}
+thead th{text-align:left;font-weight:600;color:var(--muted);font-size:12.5px;padding:9px 14px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:var(--tb);z-index:5;white-space:nowrap}
+thead th.sortable{cursor:pointer;user-select:none}
+thead th.sortable:hover{color:var(--ink)}
+thead th .arw{opacity:.35;margin-left:4px}
+thead th.act .arw{opacity:1;color:var(--blue)}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:hover{background:#FAFCFD}
+tbody tr:last-child td{border-bottom:none}
+.col-chk{width:38px}.col-id{width:86px}.col-type{width:52px}.col-stage{width:132px}
+.col-status{width:130px}.col-mem{width:132px}.col-upd{width:104px}.col-act{width:52px;text-align:right}
+td.col-id{color:var(--ink-2);font-weight:500}
+.pname{color:var(--blue);font-weight:500}
+.pname:hover{text-decoration:underline}
+.parentref{color:var(--faint);font-weight:400;margin-right:4px}
+.stack{display:flex;align-items:center}
+.stack .avatar{border:2px solid #fff;margin-left:-7px}
+.stack .avatar:first-child{margin-left:0}
+.more{width:26px;height:26px;border-radius:50%;background:var(--canvas-2);color:var(--ink-2);font-size:11px;font-weight:700;display:grid;place-items:center;border:2px solid #fff;margin-left:-7px}
+.kebab{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:var(--r-s);font-size:16px;line-height:1}
+.kebab:hover{background:var(--canvas-2);color:var(--ink)}
+.kebab.on{background:var(--blue-tint);color:var(--blue)}
+.upd{color:var(--muted);font-size:12.5px}
+.tablefoot{display:flex;align-items:center;gap:14px;padding:14px 20px;border-top:1px solid var(--line)}
+.pager{margin-left:auto;display:flex;align-items:center;gap:4px}
+.pager button{min-width:30px;height:30px;border-radius:var(--r-s);border:1px solid transparent;background:none;cursor:pointer;color:var(--ink-2);font-weight:600;padding:0 8px}
+.pager button:hover{background:var(--canvas-2)}
+.pager button.on{background:var(--blue);color:#fff}
+.pager button[disabled]{color:var(--faint);cursor:default}
+.pager button[disabled]:hover{background:none}
+.perpage{height:34px;border:1px solid var(--line-strong);border-radius:var(--r-s);padding:0 8px;background:#fff}
+.empty{padding:64px 24px;text-align:center}
+.empty .ill{width:52px;height:52px;border-radius:50%;background:var(--canvas-2);display:grid;place-items:center;margin:0 auto 14px;color:var(--faint)}
+.empty h3{font-size:16px;margin-bottom:6px}
+.empty p{color:var(--muted);margin:0 auto 16px;max-width:400px}
+.bulkbar{display:none;align-items:center;gap:14px;padding:10px 20px;background:var(--blue-tint);border-bottom:1px solid #CFE1F1}
+.bulkbar.on{display:flex}
+.bulkbar b{color:var(--blue-d)}
+.bulkbar .right{margin-left:auto;display:flex;gap:8px}
+
+/* filters */
+.filterhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.filterhead h2{font-size:15px}
+.dd{position:relative}
+.ddbtn{width:100%;height:40px;border:1px solid var(--line-strong);border-radius:var(--r-s);background:#fff;display:flex;align-items:center;padding:0 12px;cursor:pointer;text-align:left;gap:8px}
+.ddbtn.filled{border-color:var(--blue)}
+.ddbtn .ph{color:var(--faint)}
+.ddbtn .cv{margin-left:auto;color:var(--muted);flex:none}
+.ddbtn .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ddmenu{position:absolute;top:calc(100% + 5px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh-2);z-index:40;max-height:280px;overflow:auto;padding:5px;display:none}
+.ddmenu.on{display:block}
+.ddmenu label{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-s);cursor:pointer}
+.ddmenu label:hover{background:var(--canvas)}
+.ddmenu .desc{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+.ddsearch{padding:7px 8px 5px;position:sticky;top:0;background:#fff}
+.ddsearch input{width:100%;height:32px;border:1px solid var(--line-strong);border-radius:var(--r-s);padding:0 10px}
+input[type=checkbox],input[type=radio]{width:16px;height:16px;accent-color:var(--blue);flex:none;margin:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.fchip{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 6px 0 13px;border:1px solid var(--line-strong);border-radius:var(--r-pill);font-weight:600;color:var(--blue-d);background:#fff;font-size:13px}
+.fchip button{background:none;border:none;cursor:pointer;color:var(--muted);display:grid;place-items:center;padding:2px;border-radius:50%}
+.fchip button:hover{background:var(--canvas-2);color:var(--ink)}
+
+/* row action menu */
+.rowmenu{position:fixed;width:246px;background:#fff;border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh-3);z-index:100;padding:6px;display:none}
+.rowmenu.on{display:block}
+.rowmenu .mh{padding:8px 10px 6px;color:var(--faint);font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.rowmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;background:none;border:none;text-align:left;cursor:pointer;border-radius:var(--r-s);color:var(--ink-2);font-weight:500}
+.rowmenu button:hover{background:var(--canvas);color:var(--ink)}
+.rowmenu button .ic{width:16px;text-align:center;color:var(--faint);flex:none}
+.rowmenu button:hover .ic{color:var(--blue)}
+.rowmenu button.dgr{color:var(--red)}
+.rowmenu button.dgr .ic{color:var(--red)}
+.rowmenu button.dgr:hover{background:var(--red-tint)}
+.rowmenu .mdiv{height:1px;background:var(--line);margin:5px 6px}
+
+/* detail */
+.crumbs{color:var(--muted);font-size:13px;margin-bottom:8px}
+.crumbs a{color:var(--muted)}
+.backlink{display:inline-flex;align-items:center;gap:8px;font-weight:600;margin-bottom:14px}
+.dethead{display:flex;align-items:flex-start;gap:20px}
+.dethead h1{font-size:25px;letter-spacing:-.025em}
+.meta{color:var(--muted);font-size:13px;margin-top:8px;display:flex;gap:18px;flex-wrap:wrap}
+.meta b{color:var(--ink-2);font-weight:600}
+.detactions{margin-left:auto;display:flex;gap:8px;flex:none;position:relative}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:22px 0 0}
+.tabs button{background:none;border:none;padding:11px 15px;cursor:pointer;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button:hover{color:var(--ink)}
+.tabs button.on{color:var(--blue);border-bottom-color:var(--blue)}
+.tabpanel{display:none;padding-top:22px}
+.tabpanel.on{display:block}
+.detgrid{display:grid;grid-template-columns:1fr 316px;gap:22px;align-items:start}
+
+.lifecycle{padding:18px 22px 20px}
+.lc-head{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.lc-head h3{font-size:14px}
+.lc{display:flex}
+.lc-step{flex:1;padding:0 4px}
+.lc-bar{height:5px;border-radius:3px;background:var(--canvas-2);margin-bottom:9px}
+.lc-step.done .lc-bar{background:#9FC6AE}
+.lc-step.cur .lc-bar{background:var(--blue)}
+.lc-step .nm{font-weight:600;font-size:13px;color:var(--faint)}
+.lc-step.done .nm{color:var(--ink-2)}
+.lc-step.cur .nm{color:var(--blue);font-weight:700}
+.lc-step .when{font-size:12px;color:var(--faint);margin-top:2px}
+.lc-now{margin-top:16px;background:var(--blue-tint);border-radius:var(--r-m);padding:13px 15px;display:flex;gap:12px;align-items:flex-start}
+.lc-now p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.55}
+.side .card+.card{margin-top:16px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--muted)}
+.kv .v{font-weight:600;text-align:right}
+.memrow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
+.memrow:last-of-type{border-bottom:none}
+.memrow .nm{font-weight:600}
+.memrow .ro{color:var(--muted);font-size:12.5px}
+.memrow .del{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--blue);padding:6px;border-radius:var(--r-s)}
+.memrow .del:hover{background:var(--red-tint);color:var(--red)}
+
+/* details form */
+.detailslayout{display:grid;grid-template-columns:1fr 188px;gap:22px;align-items:start;max-width:1150px}
+.secnav{position:sticky;top:calc(var(--tb) + 20px);padding:10px 8px}
+.secnav .eyebrow{padding:4px 11px 8px}
+.secnav a{display:block;padding:7px 11px;border-radius:var(--r-s);color:var(--muted);font-weight:500;font-size:13px}
+.secnav a:hover{background:var(--canvas);text-decoration:none;color:var(--ink)}
+.secnav a.on{color:var(--blue-d);font-weight:700;background:var(--blue-tint)}
+.dtbar{display:flex;align-items:center;gap:12px;padding:14px 22px;flex-wrap:wrap}
+.dtbar .lastedit{color:var(--muted);font-size:13px}
+.dtbar .right{margin-left:auto;display:flex;gap:8px}
+.dsec{margin-bottom:16px;scroll-margin-top:calc(var(--tb) + 16px);overflow:hidden}
+.dsec .sh{display:flex;align-items:baseline;gap:10px;padding:17px 22px 0;flex-wrap:wrap}
+.dsec .sh h3{font-size:15px}
+.dsec .sh .sd{color:var(--faint);font-size:12.5px}
+.factgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:15px;border-top:1px solid var(--line)}
+.factgrid.editing{grid-template-columns:repeat(2,1fr)}
+.fact{background:#fff;padding:12px 22px 14px;min-width:0}
+.fact.span{grid-column:1/-1}
+.fact .fk{font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-bottom:4px;display:flex;gap:6px;align-items:center}
+.fact .fv{font-weight:500;overflow-wrap:anywhere}
+.fv.na{color:var(--faint);font-weight:400}
+.pblock{padding:15px 22px 0}
+.pblock .pk{font-weight:700;font-size:13.5px;margin-bottom:6px;display:flex;gap:7px;align-items:center}
+.pblock .pv{color:var(--ink-2);line-height:1.65;max-width:72ch}
+.dlist{margin:0;padding:0;list-style:none}
+.dlist li{display:flex;gap:9px;padding:2.5px 0;align-items:baseline}
+.dlist li .mk{flex:none;width:15px;text-align:center;font-weight:700}
+.dlist.check .mk{color:var(--green)}
+.dlist.cross .mk{color:var(--red)}
+.dlist.dot .mk{color:var(--faint)}
+.fielderr{color:var(--red);font-size:12.5px;margin-top:5px;display:none}
+.fielderr.on{display:block}
+.savebar{position:sticky;bottom:14px;background:#fff;border:1px solid var(--line);padding:14px 22px;display:flex;align-items:center;gap:12px;border-radius:var(--r-l);box-shadow:var(--sh-2);margin-top:2px}
+.savebar .msg{color:var(--muted);font-size:13px}
+.savebar .right{margin-left:auto;display:flex;gap:8px}
+.filerow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F0F3F6}
+.filerow:last-child{border-bottom:none}
+.filerow .fi{width:30px;height:30px;border-radius:var(--r-s);background:var(--canvas-2);display:grid;place-items:center;flex:none;font-size:13px}
+.filerow .fm{color:var(--muted);font-size:12.5px}
+.filerow .fa{margin-left:auto;display:flex;gap:6px}
+.dropzone{border:1.5px dashed var(--line-strong);border-radius:var(--r-m);padding:22px;text-align:center;color:var(--muted);background:var(--canvas);margin-top:12px}
+
+/* activity */
+.tl{position:relative;padding-left:26px}
+.tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tlitem{position:relative;padding:0 0 20px}
+.tlitem::before{content:"";position:absolute;left:-22px;top:5px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--line-strong)}
+.tlitem.hi::before{border-color:var(--blue);background:var(--blue)}
+.tlitem .t{font-weight:500}
+.tlitem .when{color:var(--faint);font-size:12.5px;margin-top:2px}
+.tlitem .why{margin-top:8px;background:var(--canvas);border-left:3px solid var(--line-strong);padding:9px 12px;border-radius:0 var(--r-s) var(--r-s) 0;color:var(--ink-2);font-size:13px}
+.daymark{font-size:12px;font-weight:700;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+.cmt{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.cmt:last-child{border-bottom:none}
+.cmt .body{flex:1}
+.cmt .hd{display:flex;align-items:baseline;gap:9px;margin-bottom:3px}
+.cmt .hd .nm{font-weight:700}
+.cmt .hd .tm{color:var(--faint);font-size:12.5px}
+.cmt p{margin:0;color:var(--ink-2)}
+.cmt .intbadge{background:var(--amber-tint);color:var(--amber);font-size:11px;font-weight:700;padding:1px 7px;border-radius:4px}
+.composer{border:1px solid var(--line-strong);border-radius:var(--r-m);padding:12px;background:#fff}
+.composer textarea{width:100%;border:none;resize:vertical;min-height:70px;outline:none}
+.composer .bar{display:flex;align-items:center;gap:14px;padding-top:10px;border-top:1px solid var(--line)}
+.composer .bar .right{margin-left:auto;display:flex;gap:8px}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--muted);font-size:13px}
+
+.svcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.svc{padding:20px;display:flex;flex-direction:column;gap:10px}
+.svc h3{font-size:16px}
+.svc p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.55}
+.svc .facts{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+.svc .facts .k{color:var(--faint);display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.svc .cta{margin-top:auto;padding-top:12px}
+
+.acc{border-bottom:1px solid var(--line)}
+.acc:last-child{border-bottom:none}
+.acc>button{width:100%;background:none;border:none;text-align:left;padding:16px 2px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:12px;font-size:15px}
+.acc>button .cv{margin-left:auto;color:var(--muted);transition:.18s}
+.acc.on>button .cv{transform:rotate(180deg)}
+.acc .abody{display:none;padding:0 2px 20px;color:var(--ink-2);max-width:760px}
+.acc.on .abody{display:block}
+.acc .abody p{margin:0 0 10px;line-height:1.65}
+
+.scrim{position:fixed;inset:0;background:rgba(16,22,28,.42);z-index:90;opacity:0;visibility:hidden;transition:.18s}
+.scrim.on{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:#fff;z-index:95;box-shadow:var(--sh-3);transform:translateX(100%);transition:transform .24s cubic-bezier(.3,.7,.3,1);display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer .dh{display:flex;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid var(--line)}
+.drawer .dh h2{font-size:18px}
+.drawer .db{overflow:auto;padding:22px 24px 40px}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.flow .arw{color:var(--faint)}
+.callout{background:var(--amber-tint);border-radius:var(--r-m);padding:14px 16px;margin-bottom:20px}
+.callout h4{font-size:13.5px;margin-bottom:5px;color:var(--amber)}
+.callout p{margin:0;color:var(--ink-2);font-size:13px;line-height:1.6}
+.sdef{padding:16px 0;border-bottom:1px solid var(--line)}
+.sdef:last-child{border-bottom:none}
+.sdef .top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sdef p{margin:0 0 8px;color:var(--ink-2);line-height:1.6}
+.sdef .rules{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px;margin-top:9px}
+.sdef .rules dt{color:var(--faint);font-weight:600}
+.sdef .rules dd{margin:0;color:var(--ink-2)}
+
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);width:min(620px,calc(100% - 40px));background:#fff;border-radius:var(--r-l);box-shadow:var(--sh-3);z-index:95;padding:26px 28px;opacity:0;visibility:hidden;transition:.16s}
+.modal.on{opacity:1;visibility:visible;transform:translate(-50%,-50%)}
+.modal h2{font-size:19px;margin-bottom:4px}
+.modal .msub{color:var(--muted);margin-bottom:20px}
+.modal .foot{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+.modal .x{position:absolute;top:16px;right:16px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);z-index:120;background:#10161C;color:#fff;padding:12px 18px;border-radius:var(--r-pill);box-shadow:var(--sh-3);display:flex;align-items:center;gap:12px;opacity:0;visibility:hidden;transition:.2s;font-weight:500;max-width:min(560px,92vw)}
+.toast.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.toast a{color:#8CC4F0;flex:none}
+.pop{position:absolute;top:calc(100% + 8px);right:0;width:340px;background:#fff;border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh-2);z-index:70;display:none;overflow:hidden}
+.pop.on{display:block}
+.pop .ph{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center}
+.pop .ph b{font-size:14px}
+.pop .ph a{margin-left:auto;font-size:13px}
+.nitem{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.nitem:hover{background:var(--canvas)}
+.nitem.unread{background:#F4F9FE}
+.nitem .tx{font-size:13.5px;line-height:1.45}
+.nitem .tm{color:var(--faint);font-size:12px;margin-top:3px}
+.menu{width:230px}
+.menu a,.menu button{display:flex;gap:10px;align-items:center;width:100%;padding:10px 16px;background:none;border:none;text-align:left;cursor:pointer;color:var(--ink-2);font-weight:500}
+.menu a:hover,.menu button:hover{background:var(--canvas);text-decoration:none}
+.menu .mdiv{height:1px;background:var(--line);margin:5px 0}
+.menu .who{padding:14px 16px;border-bottom:1px solid var(--line)}
+.menu .who b{display:block}
+.menu .who span{color:var(--muted);font-size:12.5px}
+
+.stepper{display:flex;border-bottom:1px solid var(--line)}
+.stepper .st{padding:0 22px 14px;position:relative;color:var(--faint)}
+.stepper .st .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--canvas-2);color:var(--muted);font-size:12px;font-weight:700;margin-right:9px}
+.stepper .st.on{color:var(--ink);font-weight:700}
+.stepper .st.on .n{background:var(--blue);color:#fff}
+.stepper .st.ok .n{background:var(--green-tint);color:var(--green)}
+.stepper .st.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--blue)}
+.wstep{display:none}
+.wstep.on{display:block}
+.review-grid{display:grid;grid-template-columns:200px 1fr;gap:14px 18px}
+.review-grid .k{color:var(--muted)}
+
+.note h2{font-size:17px;margin:26px 0 10px}
+.note h2:first-child{margin-top:0}
+.note p,.note li{color:var(--ink-2);line-height:1.7;max-width:820px}
+.note ul{padding-left:20px}
+.note .tag{display:inline-block;background:var(--green-tint);color:var(--green);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:8px}
+
+@media (max-width:1080px){.detgrid{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.detailslayout{grid-template-columns:1fr}.secnav{display:none}}
+@media (max-width:860px){
+  :root{--sb:0px}
+  .sidebar{display:none}.main{padding:18px 16px 60px}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .rail{flex-wrap:wrap}.rail button{flex:1 1 45%;border-bottom:1px solid var(--line)}
+  .col-upd,.col-type,.col-stage{display:none}
+  .topsearch{display:none}
+  .detailslayout{grid-template-columns:1fr}
+  .secnav{display:none}
+  .factgrid,.factgrid.editing{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo"></div>
+  <div class="brandname">Business Name</div>
+  <div class="topsearch">
+    <input id="globalSearch" placeholder="Search intakes by number, project or site" aria-label="Search intakes">
+    <span class="ic">🔍</span>
+  </div>
+  <div class="topright">
+    <button class="btn sm ghost" onclick="openGuide()">Status guide</button>
+    <div style="position:relative">
+      <button class="iconbtn" onclick="togglePop('popNotif',event)" aria-label="Notifications">🔔<span class="dot" id="notifDot"></span></button>
+      <div class="pop" id="popNotif">
+        <div class="ph"><b>Notifications</b><a href="#" onclick="markAllRead(event)">Mark all read</a></div>
+        <div class="nitem unread"><div class="avatar sm" style="background:#7A4FBF">IO</div><div><div class="tx"><b>Ines Okafor</b> put <b>#0071 Ashgrove School — measured survey</b> on hold. Waiting on site access.</div><div class="tm">18 minutes ago</div></div></div>
+        <div class="nitem unread"><div class="avatar sm" style="background:#8C2F2F">PR</div><div><div class="tx"><b>Priya Raghavan</b> made you project lead on <b>#0202 Harbour Point — landscape strategy</b>.</div><div class="tm">2 hours ago</div></div></div>
+        <div class="nitem"><div class="avatar sm" style="background:#2F6F4E">MK</div><div><div class="tx"><b>#0030 Fenwick Tower — façade calculations</b> is complete and waiting on your sign-off.</div><div class="tm">Yesterday</div></div></div>
+        <div class="ph" style="border-top:1px solid var(--line);border-bottom:none;justify-content:center"><a href="#" onclick="return false">View all activity</a></div>
+      </div>
+    </div>
+    <div style="position:relative">
+      <button class="avatar btn" onclick="togglePop('popMenu',event)" aria-label="Account">NB</button>
+      <div class="pop menu" id="popMenu">
+        <div class="who"><b>Nadia Brandt</b><span>Project lead · Structures</span></div>
+        <a href="#" onclick="return false">Profile and preferences</a>
+        <a href="#" onclick="return false">Notification settings</a>
+        <button onclick="closePops();openGuide()">Status guide</button>
+        <div class="mdiv"></div>
+        <a href="#" onclick="return false">Sign out</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <button class="newbtn" onclick="go('new')">⊕ New intake</button>
+  <div class="nav" id="nav">
+    <a href="#" data-p="dashboard" class="on" onclick="go('dashboard');return false">🏠 Dashboard</a>
+    <a href="#" data-p="intakes" onclick="go('intakes');return false">📊 All intakes</a>
+    <a href="#" data-p="services" onclick="go('services');return false">☆ Services</a>
+    <a href="#" data-p="faq" onclick="go('faq');return false">? Help &amp; FAQ</a>
+  </div>
+  <div class="navnote">
+    <button onclick="openGuide()">ⓘ Status guide</button>
+    <button onclick="go('notes')" style="color:var(--brand)">✎ 设计说明 (中文)</button>
+  </div>
+</nav>
+
+<main class="main"><div class="wrap">
+
+<!-- DASHBOARD -->
+<section class="page on" id="page-dashboard">
+  <div class="pagehead">
+    <div>
+      <h1>Welcome back, Nadia</h1>
+      <div class="sub">Two intakes are waiting on your review, and one has been on hold for eleven days.</div>
+    </div>
+  </div>
+  <div class="railwrap">
+    <div class="rail" id="rail"></div>
+    <span class="hint">
+      <button class="info" aria-label="What do these statuses mean?" onclick="openGuide()">i</button>
+      <span class="hintcard right">
+        <h5>What do these statuses mean?</h5>
+        <p>Every intake moves through the same six stages. Hover a status to see what it covers, or open the guide for who can move it and what has to be true first.</p>
+        <span class="stage"><b>Open status guide →</b></span>
+      </span>
+    </span>
+  </div>
+  <div class="tablecard">
+    <div class="tabletop">
+      <h2 id="dashTitle">Assigned to me</h2>
+      <span class="hint">
+        <button class="info" aria-label="Which intakes appear here">i</button>
+        <span class="hintcard"><h5>Assigned to me</h5><p>Intakes where you hold any role. Intakes you only requested are under All intakes.</p></span>
+      </span>
+      <div class="right">
+        <button class="btn sm" onclick="toggleScope(this)" id="scopeBtn">Showing: assigned to me</button>
+        <div class="inlinesearch"><input id="dashSearch" placeholder="Search these intakes" oninput="renderDash()"><span class="ic">🔍</span></div>
+      </div>
+    </div>
+    <div id="dashTableHost"></div>
+  </div>
+</section>
+
+<!-- ALL INTAKES -->
+<section class="page" id="page-intakes">
+  <div class="pagehead">
+    <div>
+      <h1>All intakes</h1>
+      <div class="sub">Every request across the practice, including work packages raised inside a live project.</div>
+    </div>
+    <div class="right">
+      <button class="btn" onclick="toast('Export queued. We will email you the CSV.')">Export CSV</button>
+      <button class="btn pri" onclick="go('new')">New intake</button>
+    </div>
+  </div>
+  <div class="card pad" style="margin-bottom:18px">
+    <div class="filterhead">
+      <h2>Filter</h2>
+      <span class="hint">
+        <button class="info" aria-label="How filters combine">i</button>
+        <span class="hintcard"><h5>How filters combine</h5><p>Choices inside one field match with “or”. Different fields match with “and” — so Status: In progress plus Discipline: Structures returns in-progress structural work only.</p></span>
+      </span>
+      <button class="linkbtn" style="margin-left:auto" onclick="clearFilters()">Clear all</button>
+    </div>
+    <div class="grid3">
+      <div><label class="f">Status</label>
+        <div class="dd"><button class="ddbtn" onclick="toggleDD('ddStatus',event)"><span class="tx ph" id="ddStatusLbl">Any status</span><span class="cv">⌄</span></button><div class="ddmenu" id="ddStatus"></div></div>
+      </div>
+      <div><label class="f">Project stage</label>
+        <div class="dd"><button class="ddbtn" onclick="toggleDD('ddStage',event)"><span class="tx ph" id="ddStageLbl">Any stage</span><span class="cv">⌄</span></button><div class="ddmenu" id="ddStage"></div></div>
+      </div>
+      <div><label class="f">Discipline</label>
+        <div class="dd"><button class="ddbtn" onclick="toggleDD('ddDisc',event)"><span class="tx ph" id="ddDiscLbl">Any discipline</span><span class="cv">⌄</span></button><div class="ddmenu" id="ddDisc"></div></div>
+      </div>
+    </div>
+    <div class="grid3" style="margin-top:16px">
+      <div><label class="f">Tags</label>
+        <div class="dd"><button class="ddbtn" onclick="toggleDD('ddTags',event)"><span class="tx ph" id="ddTagsLbl">Any tag</span><span class="cv">⌄</span></button>
+          <div class="ddmenu" id="ddTags"><div class="ddsearch"><input placeholder="Find a tag" oninput="filterDDList(this,'ddTags')"></div><div id="ddTagsList"></div></div></div>
+      </div>
+      <div><label class="f">Members</label>
+        <div class="dd"><button class="ddbtn" onclick="toggleDD('ddMem',event)"><span class="tx ph" id="ddMemLbl">Anyone</span><span class="cv">⌄</span></button>
+          <div class="ddmenu" id="ddMem"><div class="ddsearch"><input placeholder="Find a person" oninput="filterDDList(this,'ddMem')"></div><div id="ddMemList"></div></div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-end">
+        <div style="flex:1"><label class="f">Search</label><input class="inp" id="allSearch" placeholder="Project, site or number" oninput="renderAll()"></div>
+        <button class="btn pri" style="height:40px" onclick="renderAll()">Search</button>
+      </div>
+    </div>
+    <div class="chips" id="filterChips"></div>
+  </div>
+  <div class="tablecard">
+    <div class="tabletop">
+      <h2 id="allCount">Intakes</h2>
+      <div class="right legend" id="typeLegend"></div>
+    </div>
+    <div class="bulkbar" id="bulkBar">
+      <b id="bulkN">0 selected</b>
+      <div class="right">
+        <button class="btn sm" onclick="openModal('mAssign')">Assign member</button>
+        <button class="btn sm" onclick="openModal('mTags')">Add tag</button>
+        <button class="btn sm" onclick="openModal('mStatus')">Change status</button>
+        <button class="btn sm ghost" onclick="clearSel()">Cancel</button>
+      </div>
+    </div>
+    <div id="allTableHost"></div>
+    <div class="tablefoot">
+      <select class="perpage" id="perPage" onchange="page=1;renderAll()"><option value="10">10 per page</option><option value="25">25 per page</option><option value="50">50 per page</option></select>
+      <span class="upd" id="rangeLbl"></span>
+      <div class="pager" id="pager"></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEW INTAKE -->
+<section class="page" id="page-new">
+  <a href="#" class="backlink" onclick="go('dashboard');return false">← Back to dashboard</a>
+  <div class="pagehead"><div><h1>New intake</h1><div class="sub">About three minutes. Save a draft at any point and finish later.</div></div></div>
+  <div class="card">
+    <div class="stepper" style="padding:20px 24px 0">
+      <div class="st on" id="st1"><span class="n">1</span>Request</div>
+      <div class="st" id="st2"><span class="n">2</span>Project</div>
+      <div class="st" id="st3"><span class="n">3</span>Team &amp; review</div>
+    </div>
+    <div class="pad" style="padding:24px">
+      <div class="wstep on" id="ws1">
+        <div class="grid2">
+          <div><label class="f">Intake name <span class="req">*</span></label>
+            <div class="hintline">Name it after the building or site, then the work. Not a job code.</div>
+            <input class="inp" id="w_name" placeholder="e.g. Riverside Depot — structural review"></div>
+          <div><label class="f">What kind of request is this? <span class="req">*</span></label>
+            <div class="hintline">Sets who triages it and how fast.</div>
+            <select class="inp" id="w_kind"><option value="">Choose one</option><option>New project</option><option>Work package inside a live project</option><option>Site issue or RFI</option><option>Variation to agreed scope</option><option>Internal — bid, standards or research</option></select></div>
+        </div>
+        <div class="sep"></div>
+        <div class="grid2">
+          <div><label class="f">Service <span class="req">*</span></label>
+            <div class="hintline">Routes it to the right discipline lead. <a href="#" onclick="go('services');return false">See all services</a></div>
+            <select class="inp" id="w_service"><option value="">Choose a service</option></select></div>
+          <div><label class="f">Parent project</label>
+            <div class="hintline">Leave blank if this is a brand new project.</div>
+            <select class="inp" id="w_parent"><option value="">None — new project</option></select></div>
+        </div>
+        <div style="margin-top:18px">
+          <label class="f">What do you need? <span class="req">*</span></label>
+          <div class="hintline">Scope, constraints and anything already decided. Two or three sentences.</div>
+          <textarea class="inp" id="w_desc" placeholder="Steel frame needs re-checking after the mezzanine load change. The set issued 12 June is current."></textarea>
+        </div>
+      </div>
+      <div class="wstep" id="ws2">
+        <div class="grid2">
+          <div><label class="f">Site address</label><input class="inp" id="w_site" placeholder="14 Wharf Road, Bristol"></div>
+          <div><label class="f">Job number</label><div class="hintline">The practice's own number, if one exists.</div><input class="inp" id="w_job" placeholder="24-118"></div>
+        </div>
+        <div class="grid2" style="margin-top:18px">
+          <div><label class="f">Project stage</label>
+            <div class="hintline">Where the design is. Separate from the intake status. <button class="linkbtn" onclick="openGuide()">Difference →</button></div>
+            <select class="inp" id="w_stage"></select></div>
+          <div><label class="f">Lead discipline</label><select class="inp" id="w_disc"></select></div>
+        </div>
+        <div class="grid2" style="margin-top:18px">
+          <div><label class="f">Building type</label><select class="inp" id="w_btype"></select></div>
+          <div><label class="f">Date needed by</label><div class="hintline">When the deliverable is needed on site or with the client.</div><input class="inp" placeholder="DD MM YYYY"></div>
+        </div>
+        <div style="margin-top:18px"><label class="f">Deliverables expected</label>
+          <textarea class="inp" placeholder="Stamped calculation pack · Revised GA drawings · RFI response"></textarea></div>
+        <div style="margin-top:18px"><label class="f">Attachments</label>
+          <div class="dropzone" style="margin-top:0">Drop drawings, models or a survey here — or <a href="#" onclick="return false">browse files</a><br>
+            <span style="font-size:12.5px;color:var(--faint)">PDF, DWG, RVT, IFC, XLSX · up to 200 MB each</span></div></div>
+      </div>
+      <div class="wstep" id="ws3">
+        <div class="grid2">
+          <div><label class="f">Project lead <span class="req">*</span></label>
+            <div class="hintline">The one person accountable for getting this to Completed.</div>
+            <select class="inp" id="w_lead"><option value="">Choose a person</option></select></div>
+          <div><label class="f">Design reviewer</label>
+            <div class="hintline">Checks and signs off before anything is issued.</div>
+            <select class="inp" id="w_rev"><option value="">Choose a person</option></select></div>
+        </div>
+        <div class="sep"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <h3 style="font-size:15px">Review</h3>
+          <span class="chip review"><span class="bul"></span>Submits as In review</span>
+          <span class="hint"><button class="info" aria-label="Why In review">i</button>
+            <span class="hintcard"><h5>Why it starts In review</h5><p>New intakes sit in the triage queue so a discipline lead can confirm scope and pick an owner. Nothing is programmed until someone accepts it.</p></span></span>
+        </div>
+        <div class="review-grid" id="reviewGrid"></div>
+      </div>
+      <div class="sep"></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn ghost" onclick="toast('Draft saved to your dashboard.')">Save draft</button>
+        <div style="margin-left:auto;display:flex;gap:10px">
+          <button class="btn" id="wBack" onclick="wizard(-1)" style="display:none">Back</button>
+          <button class="btn pri" id="wNext" onclick="wizard(1)">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DETAIL -->
+<section class="page" id="page-detail">
+  <div class="crumbs"><a href="#" onclick="go('intakes');return false">All intakes</a> › <a href="#" onclick="return false">#0016 Fenwick Tower</a> › <span>#0009</span></div>
+  <div class="dethead">
+    <div>
+      <h1>#0009 · Riverside Depot — structural review</h1>
+      <div style="margin-top:9px;display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+        <span id="detChip" class="chip review"><span class="bul"></span>In review</span>
+        <span class="hint">
+          <button class="info" aria-label="What In review means" onclick="openGuide()">i</button>
+          <span class="hintcard"><h5>In review</h5><p>Submitted and waiting on a discipline lead to confirm scope and pick an owner. No design work has started.</p><span class="stage"><b>Next:</b> assign a project lead to move it to In progress.</span></span>
+        </span>
+        <span class="stagepill">Technical design</span>
+        <span class="tagpill">Structures</span>
+        <span class="tagpill">Retrofit</span>
+      </div>
+      <div class="meta">
+        <span>Raised <b>29 Aug 2024</b> by <b>Yuki Tanabe</b></span>
+        <span>Updated <b>2 days ago</b> by <b>Tomás Vieira</b></span>
+        <span>Job no. <b>24-118</b></span>
+      </div>
+    </div>
+    <div class="detactions">
+      <button class="btn sm" onclick="toast('Watching. Status changes will come by email.')">Watch</button>
+      <button class="btn sm" onclick="detMenu(event)">More ⌄</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="on" onclick="tab(this,'tp-manage')">Manage</button>
+    <button onclick="tab(this,'tp-details')">Intake details</button>
+    <button onclick="tab(this,'tp-activity')">Activity</button>
+    <button onclick="tab(this,'tp-comments')">Comments <span class="tagpill" style="margin-left:6px">4</span></button>
+  </div>
+
+  <div class="tabpanel on" id="tp-manage">
+    <div class="detgrid">
+      <div>
+        <div class="card lifecycle">
+          <div class="lc-head">
+            <h3>Where this intake stands</h3>
+            <span class="hint"><button class="info" aria-label="About the lifecycle" onclick="openGuide()">i</button>
+              <span class="hintcard"><h5>The six stages</h5><p>Every intake follows the same path. A status only applies once its entry condition is true.</p><span class="stage"><b>Open status guide →</b></span></span></span>
+            <button class="linkbtn" style="margin-left:auto" onclick="openGuide()">Status guide</button>
+          </div>
+          <div class="lc" id="lcRail"></div>
+          <div class="lc-now"><span style="font-size:16px;line-height:1">🛈</span><p id="lcNow"></p></div>
+        </div>
+
+        <div class="card pad" style="margin-top:16px">
+          <h3 style="font-size:15px;margin-bottom:14px">Status</h3>
+          <label class="f">Change the status</label>
+          <div class="hintline">Each option says what has to be true before you pick it.</div>
+          <div class="dd" style="max-width:440px">
+            <button class="ddbtn filled" onclick="toggleDD('ddDetStatus',event)"><span class="tx" id="detStatusLbl">In review</span><span class="cv">⌄</span></button>
+            <div class="ddmenu" id="ddDetStatus"></div>
+          </div>
+          <div id="reasonBox" style="display:none;margin-top:16px;max-width:440px">
+            <label class="f">Reason <span class="req">*</span></label>
+            <div class="hintline">Shown on the activity feed and in the weekly hold report.</div>
+            <textarea class="inp" placeholder="Waiting on the client's topographic survey — chased 12 June."></textarea>
+          </div>
+          <div style="margin-top:16px"><button class="btn pri" onclick="saveStatus()">Save status</button></div>
+        </div>
+
+        <div class="card pad" style="margin-top:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <h3 style="font-size:15px">Members</h3>
+            <span class="hint"><button class="info" aria-label="About roles">i</button>
+              <span class="hintcard"><h5>What each role does</h5><p><b>Project lead</b> owns delivery and keeps the status current. <b>Design reviewer</b> checks the work before it is issued. <b>Contributor</b> works on it day to day.</p></span></span>
+            <button class="linkbtn" style="margin-left:auto" onclick="openModal('mAssign')">＋ Assign member</button>
+          </div>
+          <div id="memList"></div>
+        </div>
+
+        <div class="card pad" style="margin-top:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <h3 style="font-size:15px">Tags</h3>
+            <button class="linkbtn" style="margin-left:auto" onclick="openModal('mTags')">✎ Manage tags</button>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tagpill">Retrofit</span><span class="tagpill">Heritage</span><span class="tagpill">Site critical</span></div>
+        </div>
+      </div>
+      <aside class="side">
+        <div class="card pad">
+          <h3 style="font-size:14px;margin-bottom:8px">At a glance</h3>
+          <div class="kv"><span class="k">Service</span><span class="v">Structural review</span></div>
+          <div class="kv"><span class="k">Lead discipline</span><span class="v">Structures</span></div>
+          <div class="kv"><span class="k">Project stage</span><span class="v">Technical design</span></div>
+          <div class="kv"><span class="k">Parent project</span><span class="v"><a href="#" onclick="return false">#0016 Fenwick Tower</a></span></div>
+          <div class="kv"><span class="k">Priority</span><span class="v">High</span></div>
+          <div class="kv"><span class="k">Days in status</span><span class="v">4</span></div>
+        </div>
+        <div class="card pad">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+            <h3 style="font-size:14px">Key dates</h3>
+            <span class="hint"><button class="info" aria-label="About dates">i</button>
+              <span class="hintcard right"><h5>Issue date</h5><p>The date the deliverable is needed. Setting it starts the delivery clock — days spent On hold are excluded.</p></span></span>
+          </div>
+          <div class="kv"><span class="k">Issue date</span><span class="v" style="color:var(--muted);font-weight:400">Not set</span></div>
+          <div class="kv"><span class="k">Planning submission</span><span class="v">30 Sep 2024</span></div>
+          <div class="kv"><span class="k">Site start</span><span class="v">14 Nov 2024</span></div>
+          <button class="linkbtn" style="margin-top:12px" onclick="tabByName('Intake details');toast('Edit the dates under Programme.')">Edit dates</button>
+        </div>
+        <div class="card pad">
+          <h3 style="font-size:14px;margin-bottom:10px">Work packages</h3>
+          <div class="kv"><span class="k"><a href="#" onclick="return false">#0100 Frame calculations</a></span><span class="v"><span class="chip done"><span class="bul"></span>Completed</span></span></div>
+          <div class="kv"><span class="k"><a href="#" onclick="return false">#0101 Connection details</a></span><span class="v"><span class="chip progress"><span class="bul"></span>In progress</span></span></div>
+          <button class="linkbtn" style="margin-top:12px" onclick="go('new')">＋ Add work package</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- INTAKE DETAILS -->
+  <div class="tabpanel" id="tp-details">
+    <div class="detailslayout">
+      <div>
+        <div class="card dtbar" style="margin-bottom:16px">
+          <div class="lastedit">Last edited by <b>Tomás Vieira</b>, 2 days ago · <a href="#" onclick="tabByName('Activity');return false">see what changed</a></div>
+          <div class="right" id="dtActions"></div>
+        </div>
+        <div id="detailsBody"></div>
+        <div id="saveBar"></div>
+      </div>
+      <nav class="secnav card" id="secNav" aria-label="Sections on this page"></nav>
+    </div>
+  </div>
+
+  <div class="tabpanel" id="tp-activity">
+    <div class="card pad" style="max-width:820px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        <h3 style="font-size:15px">Activity</h3>
+        <select class="perpage" style="margin-left:auto"><option>All activity</option><option>Status changes only</option><option>Detail edits only</option><option>Members and tags</option></select>
+      </div>
+      <div id="activityBody"></div>
+    </div>
+  </div>
+
+  <div class="tabpanel" id="tp-comments">
+    <div class="card pad" style="max-width:820px">
+      <div class="composer">
+        <textarea placeholder="Add a comment. Type @ to notify someone."></textarea>
+        <div class="bar">
+          <label class="switch"><input type="checkbox"> Internal note — hidden from the requester</label>
+          <div class="right"><button class="btn sm">Attach</button><button class="btn sm pri" onclick="toast('Comment posted.')">Comment</button></div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <div class="cmt"><div class="avatar sm" style="background:#2F6F4E">TV</div><div class="body">
+          <div class="hd"><span class="nm">Tomás Vieira</span><span class="tm">Today, 09:44</span></div>
+          <p>Survey is booked for Tuesday. Once it lands I will move this to In progress — the scope does not need revisiting.</p></div></div>
+        <div class="cmt"><div class="avatar sm" style="background:#7A4FBF">IO</div><div class="body">
+          <div class="hd"><span class="nm">Ines Okafor</span><span class="tm">31 Aug, 16:24</span><span class="intbadge">Internal</span></div>
+          <p>The mezzanine change was not in the original fee. Worth raising a variation before we spend more hours on it.</p></div></div>
+        <div class="cmt"><div class="avatar sm" style="background:#C0566B">HL</div><div class="body">
+          <div class="hd"><span class="nm">Hana Lindqvist</span><span class="tm">30 Aug, 08:12</span></div>
+          <p>Contractor is asking for a date. Can we indicate week commencing 11 Sept?</p></div></div>
+        <div class="cmt"><div class="avatar sm" style="background:#4A5A7A">YT</div><div class="body">
+          <div class="hd"><span class="nm">Yuki Tanabe</span><span class="tm">29 Aug, 10:12</span></div>
+          <p>Load schedule attached. The 12 June drawing set is the one to work from.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="page" id="page-services">
+  <div class="pagehead"><div><h1>Services</h1>
+    <div class="sub">What each team takes on, how long it usually runs, and what to have ready before raising an intake.</div></div></div>
+  <div class="svcgrid" id="svcGrid"></div>
+</section>
+
+<!-- FAQ -->
+<section class="page" id="page-faq">
+  <div class="pagehead"><div><h1>Help &amp; FAQ</h1><div class="sub">How intakes move, who can change what, and where things live.</div></div>
+    <div class="right"><button class="btn" onclick="openGuide()">Open status guide</button></div></div>
+  <div class="card pad" style="max-width:860px" id="faqAcc"></div>
+</section>
+
+<!-- NOTES -->
+<section class="page note" id="page-notes">
+  <div class="pagehead"><div><h1>设计说明</h1><div class="sub">改动清单与理由 — 内部评审用，不属于产品页面。</div></div></div>
+  <div class="card pad" style="max-width:920px">
+    <h2>v4 · Intake details 版式重构</h2>
+    <p>上一版 26 个字段是一条同质的「标签—值」长列，扫读"需求描述"和"成本代码"花一样的力气，细横线分组撑不住这个体量。这次按<b>内容性质</b>拆成两种版式：</p>
+    <ul>
+      <li><b>短事实 → 三列事实网格</b>（Request / Project / Programme 三卡）：标签小字在上、值在下，密排，1px 网格线分格。一屏能看完过去三屏的信息。</li>
+      <li><b>长文本 → 全宽阅读块</b>（Scope of work 一卡）：72ch 行宽，行高放开。交付物渲染成 <span style="color:var(--green);font-weight:700">✓</span> 列表、不包含渲染成 <span style="color:var(--red);font-weight:700">✕</span> 列表、假设用 • —— 范围的边界一眼可读，这正是这几个字段存在的意义。</li>
+      <li><b>右侧粘性区内导航</b>：五个区块可跳转，滚动时自动高亮当前所在区。</li>
+      <li><b>信号字段</b>：费用基础为"需要变更单"或"未议定"时显示琥珀色提示块，而不是和其他值长得一样。</li>
+      <li>编辑态沿用整页编辑：事实网格切成两列输入、列表字段一行一条，校验与"已改动 N 项"保存条不变。</li>
+    </ul>
+
+    <h2>v3 · 本轮改动</h2>
+    <ul>
+      <li><b>Actions 菜单从 10 项收到 5 项</b>：只留在列表里就想做、不必打开记录的动作 —— 打开、改状态、指派成员、复制链接，加一条分隔线下的取消。管标签、加工作包、复制为新 intake、导出 PDF 这些都移回详情页，它们本来就需要看到上下文才做得对。详情页的 More 同样收到 4 项。</li>
+      <li><b>去掉状态相关的权限门控</b>：行菜单不再按状态置灰，Intake details 也不再因为 Completed / Closed 变只读。状态说明里原来的「谁能改」改成「通常由谁改」—— 保留了解释价值（这是最初的核心需求），但不再断言权限规则。等权限模型定了再加回来，届时置灰 + 悬停说明原因这套交互可以直接复用。</li>
+      <li><b>全部人名替换</b>，覆盖列表、通知、评论、活动流、成员表与筛选器。新名单为国际化混合，首字母两两不重复（IO / TV / MK / RO / PR / JV / AN / EH / DA / HL / YT / NB），头像色各自区分，避免演示时误认成真实同事。当前登录用户为 Nadia Brandt。</li>
+    </ul>
+    <p>唯一保留的不可编辑字段是「Raised by」—— 它在提交时写入，属于系统记录而非权限限制，样式上用灰色区分。</p>
+
+    <h2>v2 · 内容换成建筑 / 工程 / 设计通用语境</h2>
+    <p>原示例是金融业的（Wealth US、IMA Fiduciary、PATRIOT Act），对 AEC 公司不成立。按行业真实结构重做，同时避开英美任一体系的专有名词：</p>
+    <ul>
+      <li><b>项目 → 工作包两层结构</b>：Fenwick Tower 下挂 Stage 3 图纸包、幕墙计算书。原设计把父级塞进名字里，现在是弱化前缀 + 侧栏 Work packages + 面包屑。</li>
+      <li><b>请求类型五类</b>：新项目 / 工作包 / 现场问题 RFI / 变更 / 内部。</li>
+      <li><b>新增「项目阶段」维度</b>：Feasibility → Concept → Developed → Technical → Construction support → Handover。不绑定 RIBA 或 AIA，两边的人都读得懂。</li>
+    </ul>
+    <p><b>顺带解决了一个隐藏的理解问题</b>：项目阶段和 intake 状态是两个维度，"Technical design 阶段"和"In progress 状态"经常被混为一谈。状态说明抽屉顶部有专门的对比说明，FAQ 里也有独立一问。</p>
+
+    <h2>v2 · Intake details 扩到 26 个字段并可编辑</h2>
+    <p>分五组（细横线 + 小标签分区，不加二级标题）：Request / Project / Scope / Programme &amp; commercial / Files。其中三项是多数系统没有、但工程公司离不开的 ——<b>不包含什么</b>、<b>假设与约束</b>、<b>费用基础（是否需要变更单）</b>，这三处是后期扯皮的高发区。软件与格式也单列，模型格式不预先约定是返工的主要来源。</p>
+    <p>编辑交互：整页进编辑态（工程委托通常一次改一批，逐字段行内编辑反而更慢）→ 必填空值红框 + 字段级提示 → 底部固定条显示"已改动 N 项" → 保存后写进 Activity，Toast 可直接跳转查看改了什么。</p>
+
+    <h2>沿用 v1 的状态解释体系</h2>
+    <p>四处触达仍在：状态说明抽屉（唯一事实来源，含进入条件 / 流转条件 / 谁能改）、表格与筛选的悬停卡片、改状态下拉里每个选项下的进入条件、详情页顶部的生命周期条。On Hold 与 Cancelled 强制填原因，原因进活动流。</p>
+  </div>
+</section>
+
+</div></main>
+
+<div class="scrim" id="scrim" onclick="closeAll()"></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-label="Status guide">
+  <div class="dh"><h2>Status guide</h2><button class="btn sm ghost" style="margin-left:auto" onclick="closeAll()">Close</button></div>
+  <div class="db">
+    <p style="margin:0 0 16px;color:var(--muted)">Every intake follows the same path. A status only applies once its entry condition is true — that is what keeps the programme report honest.</p>
+    <div class="flow" id="flowStrip"></div>
+    <div class="callout">
+      <h4>Status is not the same as project stage</h4>
+      <p><b>Project stage</b> says where the design is — concept, technical, construction support. <b>Status</b> says where this request is with us. A technical-design job can sit In review for a week before anyone picks it up, and a concept study can be In progress on day one. Both are shown on every intake.</p>
+    </div>
+    <div id="sdefs"></div>
+    <div class="card pad" style="margin-top:22px;background:var(--canvas);box-shadow:none">
+      <h3 style="font-size:14px;margin-bottom:8px">What the NEW badge means</h3>
+      <p style="margin:0;color:var(--ink-2)">Raised in the last seven days and not yet opened by you. It disappears once you view the intake — it is not a status.</p>
+    </div>
+  </div>
+</aside>
+
+<!-- ROW ACTION MENU -->
+<div class="rowmenu" id="rowMenu" role="menu"></div>
+
+<div class="modal" id="mAssign" role="dialog" aria-label="Assign a member">
+  <button class="iconbtn x" onclick="closeAll()" aria-label="Close">✕</button>
+  <h2>Assign a member</h2>
+  <p class="msub">The project lead is notified straight away. Everyone else gets the daily digest.</p>
+  <div class="grid2">
+    <div><label class="f">Person <span class="req">*</span></label><select class="inp" id="asgPerson"></select></div>
+    <div><label class="f">Role <span class="req">*</span></label><select class="inp" id="asgRole"></select></div>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin:14px 0 0">An intake has one project lead. Assigning a new one replaces the current lead.</p>
+  <div class="foot"><button class="btn" onclick="closeAll()">Cancel</button><button class="btn pri" onclick="closeAll();toast('Member assigned.')">Assign</button></div>
+</div>
+
+<div class="modal" id="mTags" role="dialog" aria-label="Manage tags">
+  <button class="iconbtn x" onclick="closeAll()" aria-label="Close">✕</button>
+  <h2>Manage tags</h2>
+  <p class="msub">Tags group intakes for reporting. They never affect status or permissions.</p>
+  <label class="f">Tags</label>
+  <div style="border:1px solid var(--line-strong);border-radius:var(--r-s);max-height:240px;overflow:auto;padding:5px" id="tagPick"></div>
+  <div class="foot"><button class="btn" onclick="closeAll()">Cancel</button><button class="btn pri" onclick="closeAll();toast('Tags updated.')">Save tags</button></div>
+</div>
+
+<div class="modal" id="mCancel" role="dialog" aria-label="Cancel intake">
+  <button class="iconbtn x" onclick="closeAll()" aria-label="Close">✕</button>
+  <h2 id="cancelTitle">Cancel this intake?</h2>
+  <p class="msub">It stops here and will not resume. The requester and all members are notified. Comments and files stay readable.</p>
+  <label class="f">Reason <span class="req">*</span></label>
+  <div class="hintline">Appears on the activity feed and in the monthly report.</div>
+  <textarea class="inp" placeholder="Client withdrew the mezzanine change, so the re-check is no longer needed."></textarea>
+  <div class="foot"><button class="btn" onclick="closeAll()">Keep intake</button><button class="btn pri" style="background:var(--red);border-color:var(--red)" onclick="closeAll();toast('Intake cancelled.')">Cancel intake</button></div>
+</div>
+
+<div class="modal" id="mStatus" role="dialog" aria-label="Change status">
+  <button class="iconbtn x" onclick="closeAll()" aria-label="Close">✕</button>
+  <h2 id="statusTitle">Change status</h2>
+  <p class="msub">Everyone assigned to these intakes is notified of the change.</p>
+  <label class="f">New status</label>
+  <div id="bulkStatusList"></div>
+  <div class="foot"><button class="btn" onclick="closeAll()">Cancel</button><button class="btn pri" onclick="closeAll();clearSel();toast('Status updated.')">Update status</button></div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span><a href="#" id="toastAct" onclick="hideToast();return false">Dismiss</a></div>
+
+<script>
+/* ============ reference data ============ */
+const STATUS={
+ review:{k:'review',label:'In review',cls:'review',
+  def:'Submitted and waiting on a discipline lead to confirm the scope and pick an owner. No design work has started.',
+  enter:'An intake has been raised.',exit:'A project lead is assigned and accepts the work.',
+  who:'The discipline lead who triages the queue.'},
+ progress:{k:'progress',label:'In progress',cls:'progress',
+  def:'An owner has accepted it and work is actively underway — calculations, drawings, models or coordination.',
+  enter:'A project lead is assigned and has accepted. Not while the request is still being scoped.',
+  exit:'Deliverables are issued to the requester.',who:'The project lead, once they pick the work up.'},
+ hold:{k:'hold',label:'On hold',cls:'hold',
+  def:'Work started but is paused by something outside the team — missing client information, site access, a permit, or budget sign-off.',
+  enter:'Work has already started and a reason is recorded. Days on hold do not count towards the issue date.',
+  exit:'The blocker clears and it returns to In progress.',who:'Whoever spots the blocker. A reason is required.'},
+ done:{k:'done',label:'Completed',cls:'done',
+  def:'Deliverables have been issued and accepted. Everything is read-only except comments.',
+  enter:'The design reviewer has signed off and the deliverable has been issued.',
+  exit:'Archived once the issue date has passed.',who:'The project lead, after the deliverable is issued.'},
+ closed:{k:'closed',label:'Closed',cls:'closed',
+  def:'Completed and formally archived. Kept for the record and for reporting; no further edits.',
+  enter:'The issue date has passed and the job file is archived.',exit:'Final state.',who:'Set once the job file is archived.'},
+ cancel:{k:'cancel',label:'Cancelled',cls:'cancel',
+  def:'Stopped before delivery and will not resume. Files and comments stay readable.',
+  enter:'A reason is recorded. Can happen from any stage.',exit:'Final state.',
+  who:'Whoever raised it, or the project lead.'}
+};
+const TYPES={
+ pkg:{i:'▤',t:'Work package'},
+ rfi:{i:'⚠',t:'Site issue / RFI'},
+ chg:{i:'⇄',t:'Variation'},
+ int:{i:'⌂',t:'Internal'}
+};
+const STAGES=['Feasibility','Concept design','Developed design','Technical design','Construction support','Handover'];
+const DISCIPLINES=['Architecture','Structures','Building services','Civil','Landscape','Digital delivery','Sustainability','Interiors'];
+const BTYPES=['Residential','Commercial office','Education','Healthcare','Industrial','Civic and culture','Transport','Mixed use'];
+const SERVICES=['Structural review','Technical drawing package','Model coordination','Measured survey','Building services design','Sustainability assessment','Planning and permits','Visualisation'];
+const ROLES=['Project lead — owns delivery and the status','Design reviewer — signs off before issue','Contributor — works on it day to day','Client contact — kept in the loop'];
+const TAGS=['Retrofit','Heritage','Public sector','Residential','Education','Healthcare','Infrastructure','Net zero','Phase 1','Phase 2','Fee variation','Site critical'];
+const PEOPLE=['Ines Okafor','Tomás Vieira','Marta Kowalska','Rafael Ortiz','Priya Raghavan','Jonas Vester','Adaeze Nwosu','Erik Halvorsen','Daniel Achebe','Hana Lindqvist','Yuki Tanabe','Nadia Brandt'];
+const PC={NB:'#0A6B33',IO:'#7A4FBF',TV:'#2F6F4E',HL:'#C0566B',RO:'#B0562F',PR:'#8C2F2F',DA:'#3E2E52',MK:'#1F6B7A',JV:'#0F5C58',YT:'#4A5A7A',AN:'#6A4C93',EH:'#0B63A8'};
+function m(i,n){return{i:i,n:n,c:PC[i]||'#5B6672'}}
+
+const DATA=[
+ {id:'0016',name:'Fenwick Tower',type:null,st:'progress',stage:'Technical design',disc:'Architecture',mem:[m('IO','Ines Okafor'),m('RO','Rafael Ortiz'),m('MK','Marta Kowalska'),m('DA','Daniel Achebe')],tags:['Mixed use','Phase 2'],upd:'2 hours ago',mine:true},
+ {id:'0029',name:'Stage 3 drawing package',parent:'0016',type:'pkg',st:'progress',stage:'Developed design',disc:'Architecture',mem:[m('IO','Ines Okafor'),m('MK','Marta Kowalska')],tags:['Phase 2'],upd:'4 hours ago',mine:true},
+ {id:'0030',name:'Façade calculation pack',parent:'0016',type:'pkg',st:'done',stage:'Technical design',disc:'Structures',mem:[m('RO','Rafael Ortiz'),m('MK','Marta Kowalska')],tags:['Phase 2'],upd:'Yesterday',mine:false},
+ {id:'0050',name:'Fire strategy review',parent:'0016',type:'rfi',st:'done',stage:'Technical design',disc:'Building services',mem:[m('RO','Rafael Ortiz'),m('MK','Marta Kowalska')],tags:['Site critical'],upd:'Yesterday',mine:false},
+ {id:'0060',name:'Net zero feasibility study',type:null,st:'review',stage:'Feasibility',disc:'Sustainability',mem:[m('IO','Ines Okafor')],tags:['Net zero','Public sector'],upd:'2 days ago',mine:true,isnew:true},
+ {id:'0068',name:'Studio detail library update',type:'int',st:'done',stage:'Handover',disc:'Digital delivery',mem:[m('RO','Rafael Ortiz'),m('MK','Marta Kowalska'),m('DA','Daniel Achebe')],tags:['Retrofit'],upd:'3 days ago',mine:false},
+ {id:'0009',name:'Riverside Depot — structural review',parent:'0016',type:null,st:'review',stage:'Technical design',disc:'Structures',mem:[m('TV','Tomás Vieira'),m('HL','Hana Lindqvist')],tags:['Retrofit','Heritage','Site critical'],upd:'2 days ago',mine:true,isnew:true},
+ {id:'0071',name:'Ashgrove School — measured survey',type:null,st:'hold',stage:'Concept design',disc:'Civil',mem:[m('IO','Ines Okafor')],tags:['Education','Public sector'],upd:'11 days ago',mine:true},
+ {id:'0072',name:'Northgate Yard — model coordination',type:null,st:'progress',stage:'Technical design',disc:'Digital delivery',mem:[m('MK','Marta Kowalska'),m('PR','Priya Raghavan')],tags:['Industrial','Phase 2'],upd:'6 days ago',mine:false},
+ {id:'0100',name:'Clash review — cycle 2',parent:'0072',type:'pkg',st:'done',stage:'Technical design',disc:'Digital delivery',mem:[m('RO','Rafael Ortiz'),m('MK','Marta Kowalska')],tags:['Phase 2'],upd:'3 days ago',mine:true},
+ {id:'0101',name:'Federated model issue log',parent:'0072',type:'pkg',st:'done',stage:'Technical design',disc:'Digital delivery',mem:[m('RO','Rafael Ortiz'),m('DA','Daniel Achebe')],tags:['Phase 2'],upd:'4 days ago',mine:false},
+ {id:'0200',name:'Harbour Point masterplan',type:null,st:'progress',stage:'Concept design',disc:'Landscape',mem:[m('RO','Rafael Ortiz'),m('PR','Priya Raghavan')],tags:['Public sector','Phase 1'],upd:'5 days ago',mine:true},
+ {id:'0202',name:'Landscape strategy',parent:'0200',type:'pkg',st:'progress',stage:'Concept design',disc:'Landscape',mem:[m('RO','Rafael Ortiz')],tags:['Fee variation'],upd:'5 days ago',mine:true},
+ {id:'0081',name:'Kilnbrook Depot — RFI 214, slab levels',type:'rfi',st:'progress',stage:'Construction support',disc:'Civil',mem:[m('PR','Priya Raghavan'),m('JV','Jonas Vester')],tags:['Site critical','Industrial'],upd:'Today',mine:true},
+ {id:'0085',name:'Pier Road — mezzanine load change',type:'chg',st:'review',stage:'Technical design',disc:'Structures',mem:[m('JV','Jonas Vester')],tags:['Fee variation'],upd:'Today',mine:false,isnew:true},
+ {id:'0073',name:'Foundry Lane — planning submission',type:null,st:'closed',stage:'Handover',disc:'Architecture',mem:[m('JV','Jonas Vester')],tags:['Public sector'],upd:'3 weeks ago',mine:false},
+ {id:'0074',name:'Meridian fit-out — services design',type:null,st:'cancel',stage:'Developed design',disc:'Building services',mem:[m('DA','Daniel Achebe')],tags:['Commercial office'],upd:'1 month ago',mine:false}
+];
+
+/* ============ helpers ============ */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function opts(arr,sel){return arr.map(o=>`<option ${o===sel?'selected':''}>${o}</option>`).join('')}
+function chip(k){const s=STATUS[k];return `<span class="hint"><span class="chip ${s.cls}"><span class="bul"></span>${s.label}</span><span class="hintcard"><h5>${s.label}</h5><p>${s.def}</p><span class="stage"><b>Moves on when:</b> ${s.exit.charAt(0).toLowerCase()+s.exit.slice(1)}</span></span></span>`}
+function stack(mem){const s=mem.slice(0,3),r=mem.length-s.length;
+ return `<div class="stack">${s.map(p=>`<span class="avatar sm" style="background:${p.c}" title="${p.n}">${p.i}</span>`).join('')}${r>0?`<span class="more" title="${mem.slice(3).map(p=>p.n).join(', ')}">+${r}</span>`:''}</div>`}
+function typeCell(t){return t?`<span class="hint" style="cursor:default"><span>${TYPES[t].i}</span><span class="hintcard" style="width:180px"><h5>${TYPES[t].t}</h5></span></span>`:''}
+function row(d,chk,type){
+ return `<tr onclick="go('detail')" style="cursor:pointer">
+  ${chk?`<td class="col-chk" onclick="event.stopPropagation()"><input type="checkbox" class="rowchk" data-id="${d.id}" onchange="selChanged()"></td>`:''}
+  <td class="col-id num">#${d.id}</td>
+  ${type?`<td class="col-type">${typeCell(d.type)}</td>`:''}
+  <td><a href="#" class="pname" onclick="event.stopPropagation();go('detail');return false">${d.parent?`<span class="parentref">#${d.parent} ›</span>`:''}${d.name}</a>${d.isnew?' <span class="newtag">NEW</span>':''}</td>
+  ${type?`<td class="col-stage"><span class="stagepill">${d.stage}</span></td>`:''}
+  <td class="col-status">${chip(d.st)}</td>
+  <td class="col-mem">${stack(d.mem)}</td>
+  <td class="col-upd upd">${d.upd}</td>
+  <td class="col-act" onclick="event.stopPropagation()"><button class="kebab" aria-haspopup="menu" aria-label="Actions for intake ${d.id}" onclick="rowMenu(event,'${d.id}')">⋮</button></td>
+ </tr>`}
+function table(rows,chk,type){
+ return `<table><thead><tr>
+  ${chk?`<th class="col-chk"><input type="checkbox" onchange="selAll(this)" aria-label="Select all"></th>`:''}
+  <th class="col-id sortable act">No. <span class="arw">↓</span></th>
+  ${type?`<th class="col-type">Type</th>`:''}
+  <th class="sortable">Project and work <span class="arw">↕</span></th>
+  ${type?`<th class="col-stage">Stage <span class="hint"><button class="info" style="width:14px;height:14px;font-size:9px" aria-label="Stage versus status" onclick="event.stopPropagation();openGuide()">i</button><span class="hintcard"><h5>Project stage</h5><p>Where the design is — separate from the intake status. A technical-design job can still be sitting In review.</p><span class="stage"><b>See the difference →</b></span></span></span></th>`:''}
+  <th class="col-status">Status <span class="hint"><button class="info" style="width:14px;height:14px;font-size:9px" aria-label="What statuses mean" onclick="event.stopPropagation();openGuide()">i</button><span class="hintcard"><h5>Status</h5><p>Where the request is with us. Hover any status to see what it covers.</p><span class="stage"><b>Open status guide →</b></span></span></span></th>
+  <th class="col-mem">Members</th>
+  <th class="col-upd sortable">Updated <span class="arw">↕</span></th>
+  <th class="col-act">Actions</th>
+ </tr></thead><tbody>${rows}</tbody></table>`}
+function empty(t,p,btn){return `<div class="empty"><div class="ill">◫</div><h3>${t}</h3><p>${p}</p>${btn||''}</div>`}
+
+/* ============ ROW ACTION MENU ============ */
+let menuFor=null;
+function rowMenu(e,id){
+  e.stopPropagation();
+  const d=DATA.find(x=>x.id===id); if(!d)return;
+  closePops();
+  const el=$('#rowMenu');
+  if(menuFor===id&&el.classList.contains('on')){closeRowMenu();return}
+  menuFor=id;
+  const short=d.name.length>26?d.name.slice(0,26)+'…':d.name;
+  el.innerHTML=`
+   <div class="mh">#${d.id} · ${short}</div>
+   <button onclick="closeRowMenu();go('detail')"><span class="ic">↗</span>Open intake</button>
+   <button onclick="closeRowMenu();openModal('mStatus','${d.id}')"><span class="ic">◑</span>Change status</button>
+   <button onclick="closeRowMenu();openModal('mAssign','${d.id}')"><span class="ic">＋</span>Assign member</button>
+   <button onclick="closeRowMenu();toast('Link copied to your clipboard.')"><span class="ic">⧉</span>Copy link</button>
+   <div class="mdiv"></div>
+   <button class="dgr" onclick="closeRowMenu();openModal('mCancel','${d.id}')"><span class="ic">✕</span>Cancel intake</button>`;
+  el.classList.add('on');
+  e.currentTarget.classList.add('on');
+  const r=e.currentTarget.getBoundingClientRect(),h=el.offsetHeight,w=el.offsetWidth;
+  let left=Math.max(12,Math.min(r.right-w,innerWidth-w-12));
+  let top=r.bottom+6;
+  if(top+h>innerHeight-12) top=Math.max(12,r.top-h-6);
+  el.style.left=left+'px'; el.style.top=top+'px';
+}
+function detMenu(e){
+  e.stopPropagation();closePops();
+  const el=$('#rowMenu');
+  if(el.classList.contains('on')){closeRowMenu();return}
+  el.innerHTML=`
+   <div class="mh">#0009 · Riverside Depot</div>
+   <button onclick="closeRowMenu();tabByName('Intake details');startEdit()"><span class="ic">✎</span>Edit details</button>
+   <button onclick="closeRowMenu();toast('Link copied to your clipboard.')"><span class="ic">⧉</span>Copy link</button>
+   <button onclick="closeRowMenu();toast('Exported #0009 to PDF.')"><span class="ic">⇩</span>Export to PDF</button>
+   <div class="mdiv"></div>
+   <button class="dgr" onclick="closeRowMenu();openModal('mCancel','0009')"><span class="ic">✕</span>Cancel intake</button>`;
+  el.classList.add('on');
+  const r=e.currentTarget.getBoundingClientRect(),h=el.offsetHeight,w=el.offsetWidth;
+  el.style.left=Math.max(12,Math.min(r.right-w,innerWidth-w-12))+'px';
+  el.style.top=(r.bottom+6+h>innerHeight-12?Math.max(12,r.top-h-6):r.bottom+6)+'px';
+}
+function closeRowMenu(){$('#rowMenu').classList.remove('on');$$('.kebab.on').forEach(k=>k.classList.remove('on'));menuFor=null}
+
+/* ============ dashboard ============ */
+let dashFilter='all',scopeMine=true;
+const RAIL=[['all','All','☰'],['review','In review','◐'],['progress','In progress','◔'],['hold','On hold','⏸'],['done','Completed','✓']];
+function renderRail(){
+ const base=DATA.filter(d=>scopeMine?d.mine:true);
+ $('#rail').innerHTML=RAIL.map(([k,l,i])=>{
+  const n=k==='all'?base.length:base.filter(d=>d.st===k).length,s=STATUS[k];
+  return `<button class="${dashFilter===k?'on':''}" onclick="dashFilter='${k}';renderDash()">
+   <span class="ic">${i}</span><span class="lbl">${l}</span><span class="n num">${n}</span>
+   ${s?`<span class="hintcard" style="left:0;top:calc(100% + 4px)"><h5>${s.label}</h5><p>${s.def}</p></span>`:''}</button>`}).join('');
+ $$('#rail button').forEach(b=>{const c=b.querySelector('.hintcard');if(!c)return;
+  b.addEventListener('mouseenter',()=>{c.style.opacity=1;c.style.visibility='visible';c.style.transform='none'});
+  b.addEventListener('mouseleave',()=>{c.style.opacity=0;c.style.visibility='hidden'})});
+}
+function toggleScope(b){scopeMine=!scopeMine;b.textContent=scopeMine?'Showing: assigned to me':'Showing: everything';$('#dashTitle').textContent=scopeMine?'Assigned to me':'All intakes';renderDash()}
+function renderDash(){
+ renderRail();
+ const q=($('#dashSearch').value||'').toLowerCase();
+ const rows=DATA.filter(d=>scopeMine?d.mine:true).filter(d=>dashFilter==='all'||d.st===dashFilter)
+  .filter(d=>!q||d.name.toLowerCase().includes(q)||d.id.includes(q));
+ $('#dashTableHost').innerHTML=rows.length?table(rows.map(d=>row(d,false,false)).join(''),false,false)
+  :(dashFilter==='hold'?empty('Nothing is on hold','No work is blocked waiting on a client, site access or a permit.','')
+   :empty('No intakes here yet','Nothing matches this view. Raise a new intake, or switch to everything across the practice.',`<button class="btn pri" onclick="go('new')">New intake</button>`));
+}
+
+/* ============ all intakes ============ */
+let f={st:[],stage:[],disc:[],tags:[],mem:[]},page=1;
+function buildDD(){
+ $('#ddStatus').innerHTML=Object.values(STATUS).map(s=>`<label><input type="checkbox" data-g="st" value="${s.k}" onchange="tog('st',this)"><span><b>${s.label}</b><span class="desc">${s.enter}</span></span></label>`).join('')
+  +`<div style="padding:9px 10px;border-top:1px solid var(--line);margin-top:4px"><button class="linkbtn" onclick="openGuide()">Read the full status guide →</button></div>`;
+ $('#ddStage').innerHTML=STAGES.map(s=>`<label><input type="checkbox" data-g="stage" value="${s}" onchange="tog('stage',this)"><span>${s}</span></label>`).join('')
+  +`<div style="padding:9px 10px;border-top:1px solid var(--line);margin-top:4px"><button class="linkbtn" onclick="openGuide()">Stage is not status →</button></div>`;
+ $('#ddDisc').innerHTML=DISCIPLINES.map(s=>`<label><input type="checkbox" data-g="disc" value="${s}" onchange="tog('disc',this)"><span>${s}</span></label>`).join('');
+ $('#ddTagsList').innerHTML=TAGS.map(t=>`<label><input type="checkbox" data-g="tags" value="${t}" onchange="tog('tags',this)"><span>${t}</span></label>`).join('');
+ $('#ddMemList').innerHTML=PEOPLE.map(p=>`<label><input type="checkbox" data-g="mem" value="${p}" onchange="tog('mem',this)"><span>${p}</span></label>`).join('');
+ $('#ddDetStatus').innerHTML=Object.values(STATUS).map(s=>`<label style="align-items:flex-start"><input type="radio" name="dst" style="margin-top:3px" ${s.k==='review'?'checked':''} onchange="pickDetStatus('${s.k}')"><span><b>${s.label}</b><span class="desc">${s.enter}</span></span></label>`).join('')
+  +`<div style="padding:9px 10px;border-top:1px solid var(--line)"><button class="linkbtn" onclick="openGuide()">What each status means →</button></div>`;
+ $('#bulkStatusList').innerHTML=['review','progress','hold','done'].map(k=>{const s=STATUS[k];
+  return `<label style="display:flex;gap:10px;align-items:flex-start;padding:10px 2px;border-bottom:1px solid var(--line)"><input type="radio" name="bst" style="margin-top:3px"><span><b>${s.label}</b><span style="display:block;color:var(--muted);font-size:12.5px">${s.enter}</span></span></label>`}).join('');
+ $('#tagPick').innerHTML=TAGS.map((t,i)=>`<label style="display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:6px"><input type="checkbox" ${i<2?'checked':''}><span>${t}</span></label>`).join('');
+ $('#typeLegend').innerHTML=`<span class="eyebrow">Type</span>`+Object.values(TYPES).map(t=>`<span>${t.i} ${t.t}</span>`).join('');
+ $('#asgPerson').innerHTML=`<option value="">Search by name</option>`+opts(PEOPLE);
+ $('#asgRole').innerHTML=`<option value="">Choose a role</option>`+opts(ROLES);
+ $('#w_service').innerHTML=`<option value="">Choose a service</option>`+opts(SERVICES);
+ $('#w_parent').innerHTML=`<option value="">None — new project</option>`+opts(DATA.filter(d=>!d.parent).map(d=>`#${d.id} ${d.name}`));
+ $('#w_stage').innerHTML=opts(STAGES,'Concept design');
+ $('#w_disc').innerHTML=opts(DISCIPLINES,'Structures');
+ $('#w_btype').innerHTML=opts(BTYPES);
+ $('#w_lead').innerHTML=`<option value="">Choose a person</option>`+opts(PEOPLE);
+ $('#w_rev').innerHTML=`<option value="">Choose a person</option>`+opts(PEOPLE);
+}
+function tog(k,el){const a=f[k],i=a.indexOf(el.value);i>-1?a.splice(i,1):a.push(el.value);page=1;renderAll()}
+function lbl(id,arr,none,map){const e=$(id);e.textContent=arr.length?arr.map(map||(x=>x)).join(', '):none;e.className=arr.length?'tx':'tx ph';
+ const b=e.closest('.ddbtn'); if(b) b.classList.toggle('filled',arr.length>0)}
+function ddLbl(){
+ lbl('#ddStatusLbl',f.st,'Any status',k=>STATUS[k].label);
+ lbl('#ddStageLbl',f.stage,'Any stage');lbl('#ddDiscLbl',f.disc,'Any discipline');
+ lbl('#ddTagsLbl',f.tags,'Any tag');lbl('#ddMemLbl',f.mem,'Anyone');
+}
+function chipsRow(){
+ const all=[...f.st.map(k=>['st',k,STATUS[k].label]),...f.stage.map(v=>['stage',v,v]),...f.disc.map(v=>['disc',v,v]),...f.tags.map(v=>['tags',v,v]),...f.mem.map(v=>['mem',v,v])];
+ $('#filterChips').innerHTML=all.length?all.map(([g,v,l])=>`<span class="fchip">${l}<button onclick="rm('${g}','${v}')" aria-label="Remove ${l}">✕</button></span>`).join('')
+  +`<button class="linkbtn" style="margin-left:4px" onclick="clearFilters()">Clear all</button>`:'';
+}
+function rm(g,v){f[g]=f[g].filter(x=>x!==v);syncBoxes();page=1;renderAll()}
+function clearFilters(){f={st:[],stage:[],disc:[],tags:[],mem:[]};$('#allSearch').value='';syncBoxes();page=1;renderAll()}
+function syncBoxes(){$$('.ddmenu input[type=checkbox]').forEach(c=>{const g=c.dataset.g;c.checked=g&&f[g].includes(c.value)})}
+function renderAll(){
+ ddLbl();chipsRow();
+ const q=($('#allSearch').value||'').toLowerCase();
+ const rows=DATA.filter(d=>!f.st.length||f.st.includes(d.st))
+  .filter(d=>!f.stage.length||f.stage.includes(d.stage))
+  .filter(d=>!f.disc.length||f.disc.includes(d.disc))
+  .filter(d=>!f.tags.length||d.tags.some(t=>f.tags.includes(t)))
+  .filter(d=>!f.mem.length||d.mem.some(p=>f.mem.includes(p.n)))
+  .filter(d=>!q||d.name.toLowerCase().includes(q)||d.id.includes(q));
+ const per=+$('#perPage').value,tot=rows.length,pages=Math.max(1,Math.ceil(tot/per));
+ if(page>pages)page=pages;
+ const slice=rows.slice((page-1)*per,page*per);
+ $('#allCount').textContent=`Intakes (${tot})`;
+ $('#allTableHost').innerHTML=tot?table(slice.map(d=>row(d,true,true)).join(''),true,true)
+  :empty('No intakes match these filters','Try removing a filter, or search by intake number instead of name.',`<button class="btn" onclick="clearFilters()">Clear all filters</button>`);
+ $('#rangeLbl').textContent=tot?`${(page-1)*per+1}–${Math.min(page*per,tot)} of ${tot}`:'';
+ let p=`<button ${page===1?'disabled':''} onclick="page--;renderAll()">‹ Previous</button>`;
+ for(let i=1;i<=pages;i++)p+=`<button class="${i===page?'on':''}" onclick="page=${i};renderAll()">${i}</button>`;
+ p+=`<button ${page===pages?'disabled':''} onclick="page++;renderAll()">Next ›</button>`;
+ $('#pager').innerHTML=pages>1?p:'';clearSel();
+}
+function selAll(el){$$('.rowchk').forEach(c=>c.checked=el.checked);selChanged()}
+function selChanged(){const n=$$('.rowchk:checked').length;$('#bulkBar').classList.toggle('on',n>0);$('#bulkN').textContent=`${n} selected`}
+function clearSel(){$$('.rowchk').forEach(c=>c.checked=false);$('#bulkBar').classList.remove('on')}
+
+/* ============ INTAKE DETAILS — editable ============ */
+const SECTIONS=[
+ {id:'sec-request',t:'Request',d:'Who is asking and how urgent it is.',kind:'facts',fields:[
+  {k:'Raised by',v:'Yuki Tanabe · Client services',t:'lock'},
+  {k:'Client',v:'Wharfside Estates',t:'text',req:true},
+  {k:'Requesting team',v:'Client services',t:'select',o:['Client services','Architecture','Structures','Building services','Civil','Business development']},
+  {k:'Priority',v:'High — contractor is holding the steel order',t:'select',o:['Normal','High — contractor is holding the steel order','Urgent — blocking site work']},
+  {k:'Date needed by',v:'20 Sep 2024',t:'text',ph:'DD MM YYYY'}
+ ]},
+ {id:'sec-scope',t:'Scope of work',d:'What is being asked for — and where it stops.',kind:'prose',fields:[
+  {k:'What is needed',v:'Re-check the steel frame after the mezzanine load change. The set issued 12 June is current. A stamped calculation pack is needed before the contractor orders steel.',t:'area',req:true},
+  {k:'Deliverables',v:'Stamped calculation pack\nRevised general arrangement drawings\nWritten RFI response',t:'area',req:true,list:'check',ph:'One deliverable per line'},
+  {k:'Not included',v:'Connection design is by the steel fabricator\nNo temporary works or erection sequence\nNo site attendance beyond one visit',t:'area',list:'cross',ph:'One exclusion per line',tip:{h:'Say what you are not doing',p:'The boundary of the scope is what gets argued about later. One exclusion per line.'}},
+  {k:'Assumptions and constraints',v:'Existing foundations are adequate for the revised load\nSurvey data from the client is accurate to ±25 mm\nNo asbestos survey has been carried out',t:'area',list:'dot',ph:'One assumption per line'},
+  {k:'Standards to apply',v:'Eurocode 3 · National annex · Local building regulations',t:'text'},
+  {k:'Software and formats',v:'Revit 2024 · IFC 4 · PDF at A1',t:'text',hint:'Agree this before anyone models. It causes most of the rework.'}
+ ]},
+ {id:'sec-project',t:'Project',d:'The building and how it is being procured.',kind:'facts',fields:[
+  {k:'Parent project',v:'#0016 Fenwick Tower',t:'select',o:['None — standalone','#0016 Fenwick Tower','#0072 Northgate Yard','#0200 Harbour Point masterplan']},
+  {k:'Job number',v:'24-118',t:'text',hint:'The practice\u2019s own number.'},
+  {k:'Project stage',v:'Technical design',t:'select',o:STAGES,tip:{h:'Stage is not status',p:'Stage says where the design is. Status says where the request is with us. They move independently.'}},
+  {k:'Lead discipline',v:'Structures',t:'select',o:DISCIPLINES,req:true},
+  {k:'Other disciplines',v:'Architecture, Building services',t:'text',ph:'Comma separated'},
+  {k:'Site address',v:'14 Wharf Road, Bristol BS1 4RN',t:'text',req:true},
+  {k:'Building type',v:'Industrial',t:'select',o:BTYPES},
+  {k:'Scale',v:'4 storeys · 6,200 m² gross internal area',t:'text'},
+  {k:'Procurement route',v:'Design and build',t:'select',o:['Traditional','Design and build','Construction management','Framework','Not yet decided']}
+ ]},
+ {id:'sec-prog',t:'Programme and commercial',d:'Dates, money and sign-off.',kind:'facts',fields:[
+  {k:'Issue date',v:'',t:'text',ph:'DD MM YYYY',hint:'Sets the delivery clock. Days on hold are excluded.'},
+  {k:'Fee basis',v:'Variation required — not in the agreed fee',t:'select',o:['Within the agreed fee','Variation required — not in the agreed fee','Not yet agreed','Internal — no fee'],req:true},
+  {k:'Cost code',v:'24-118-STR',t:'text'},
+  {k:'Estimated hours',v:'42',t:'text'},
+  {k:'Sign-off before issue',v:'Design reviewer check, then project director',t:'text'},
+  {k:'Milestones',v:'Planning submission 30 Sep 2024\nSite start 14 Nov 2024',t:'area',list:'dot',span:true,ph:'One milestone per line'}
+ ]}
+];
+const FIELDS=[];SECTIONS.forEach(sec=>sec.fields.forEach(f=>FIELDS.push(f)));
+const FILES=[
+ ['📐','GA-drawings-rev-C.pdf','8.2 MB · Rev C · Yuki Tanabe · 29 Aug'],
+ ['🧊','frame-model.ifc','44 MB · IFC 4 · Marta Kowalska · 30 Aug'],
+ ['📊','load-schedule.xlsx','240 KB · Rev 2 · Yuki Tanabe · 29 Aug']
+];
+let editing=false,dirty=0,vals=FIELDS.map(f=>f.v);
+let curStatus='review',pendingStatus='review';
+const LCSTEPS=[['raised','Raised'],['review','In review'],['progress','In progress'],['done','Completed'],['closed','Closed']];
+const LCNOW={
+ review:'<b>In review</b> means a discipline lead is confirming scope and choosing an owner — no calculations or drawings are being produced yet. It becomes <b>In progress</b> the moment a project lead is assigned and accepts the work.',
+ progress:'<b>In progress</b> means a project lead has accepted the work and it is actively being produced. Move it to <b>On hold</b> if something outside the team blocks it, or to <b>Completed</b> once the deliverable has been issued.',
+ hold:'<b>On hold</b> means work started but is paused by something outside the team. The days spent here do not count towards the issue date. It returns to <b>In progress</b> when the blocker clears.',
+ done:'<b>Completed</b> means the deliverable has been issued and accepted. The record is now read-only apart from comments. It closes automatically once the issue date has passed.',
+ closed:'<b>Closed</b> means the job file is archived. Nothing can be edited. If the client comes back, raise a new intake and link it to this one.',
+ cancel:'<b>Cancelled</b> means this stopped before delivery and will not resume. Files and comments stay readable for the record.'
+};
+function renderLifecycle(){
+ const order=['review','progress','done','closed'];
+ const effective=curStatus==='hold'?'progress':curStatus==='cancel'?'review':curStatus;
+ const idx=order.indexOf(effective);
+ $('#lcRail').innerHTML=LCSTEPS.map(([k,l])=>{
+  if(k==='raised')return `<div class="lc-step done"><div class="lc-bar"></div><div class="nm">Raised</div><div class="when">29 Aug</div></div>`;
+  const i=order.indexOf(k);
+  let cls='',when='—';
+  if(curStatus==='hold'&&k==='progress'){cls='cur';when='Paused'}
+  else if(curStatus==='cancel'){cls=k==='review'?'done':'';when=k==='review'?'29 Aug':'—'}
+  else if(i<idx){cls='done';when='Done'}
+  else if(i===idx){cls='cur';when=k==='review'?'4 days so far':'Current'}
+  return `<div class="lc-step ${cls}"><div class="lc-bar"></div><div class="nm">${l}</div><div class="when">${when}</div></div>`;
+ }).join('');
+ $('#lcNow').innerHTML=LCNOW[curStatus];
+ const s=STATUS[curStatus];
+ $('#detChip').className='chip '+s.cls;
+ $('#detChip').innerHTML='<span class="bul"></span>'+s.label;
+}
+
+function inputEl(f,i){
+ const id='fld'+i;
+ if(f.t==='select')return `<select class="inp" id="${id}" onchange="markDirty()">${opts(f.o,vals[i])}</select>`;
+ if(f.t==='area')return `<textarea class="inp" id="${id}" placeholder="${f.ph||''}" oninput="markDirty()">${vals[i]}</textarea>`;
+ return `<input class="inp" id="${id}" value="${vals[i]}" placeholder="${f.ph||''}" oninput="markDirty()">`;
+}
+function listHTML(v,kind){
+ const mk=kind==='check'?'✓':kind==='cross'?'✕':'•';
+ return `<ul class="dlist ${kind}">`+v.split('\n').filter(x=>x.trim()).map(x=>`<li><span class="mk">${mk}</span><span>${x}</span></li>`).join('')+`</ul>`;
+}
+function tipHTML(f){
+ let h='';
+ if(f.tip)h+=` <span class="hint"><button class="info" aria-label="${f.tip.h}">i</button><span class="hintcard"><h5>${f.tip.h}</h5><p>${f.tip.p}</p></span></span>`;
+ if(f.hint&&editing)h+=` <span class="hint"><button class="info" aria-label="Guidance">i</button><span class="hintcard"><h5>${f.k}</h5><p>${f.hint}</p></span></span>`;
+ return h;
+}
+function viewVal(f,i){
+ const v=vals[i];
+ if(f.t==='lock')return `<div class="fv na">${v||'—'}</div>`;
+ if(!v||!v.trim())return `<div class="fv na">Not set</div>`;
+ if(f.k==='Fee basis'&&/Variation|Not yet/.test(v))return `<div class="fv"><span class="chip review" style="height:auto;padding:3px 10px;white-space:normal;line-height:1.4">${v}</span></div>`;
+ if(f.list)return `<div class="fv" style="font-weight:400">${listHTML(v,f.list)}</div>`;
+ return `<div class="fv">${v}</div>`;
+}
+function renderDetails(){
+ $('#dtActions').innerHTML = editing
+  ? `<button class="btn sm" onclick="cancelEdit()">Cancel</button>`
+  : `<button class="btn sm" onclick="startEdit()">✎ Edit details</button><button class="btn sm" onclick="toast('Exported to PDF.')">Export to PDF</button>`;
+ let h='';
+ SECTIONS.forEach(sec=>{
+  h+=`<section class="card dsec" id="${sec.id}"><div class="sh"><h3>${sec.t}</h3><span class="sd">${sec.d}</span></div>`;
+  if(sec.kind==='facts'){
+   h+=`<div class="factgrid ${editing?'editing':''}">`;
+   sec.fields.forEach(f=>{
+    const i=FIELDS.indexOf(f);
+    h+=`<div class="fact ${f.span?'span':''}"><div class="fk">${f.k}${f.req?' <span class="req">*</span>':''}${tipHTML(f)}</div>`;
+    h+= editing&&f.t!=='lock' ? `${inputEl(f,i)}<div class="fielderr" id="err${i}"></div>` : viewVal(f,i);
+    h+=`</div>`;
+   });
+   h+=`</div>`;
+  }else{
+   sec.fields.forEach(f=>{
+    const i=FIELDS.indexOf(f);
+    h+=`<div class="pblock"><div class="pk">${f.k}${f.req?' <span class="req">*</span>':''}${tipHTML(f)}</div>`;
+    h+= editing ? `${inputEl(f,i)}<div class="fielderr" id="err${i}"></div>`
+      : `<div class="pv">${!vals[i]||!vals[i].trim()?'<span class="fv na">Not set</span>':(f.list?listHTML(vals[i],f.list):vals[i])}</div>`;
+    h+=`</div>`;
+   });
+   h+=`<div style="height:20px"></div>`;
+  }
+  h+=`</section>`;
+ });
+ h+=`<section class="card dsec" id="sec-files"><div class="sh"><h3>Files</h3><span class="sd">Uploading a file with the same name creates a new revision.</span></div><div style="padding:6px 22px 20px">`;
+ FILES.forEach(([ic,n,meta])=>{h+=`<div class="filerow"><span class="fi">${ic}</span><span><a href="#" onclick="return false">${n}</a><div class="fm">${meta}</div></span>
+   <span class="fa">${editing?`<button class="btn sm" onclick="toast('Upload a new revision of ${n}.')">Replace</button><button class="btn sm ghost" onclick="toast('${n} removed.')">Remove</button>`:`<button class="btn sm" onclick="toast('Downloading ${n}.')">Download</button>`}</span></div>`});
+ if(editing)h+=`<div class="dropzone">Drop a new drawing, model or schedule here — or <a href="#" onclick="return false">browse files</a></div>`;
+ h+=`</div></section>`;
+ $('#detailsBody').innerHTML=h;
+ $('#saveBar').innerHTML = editing
+  ? `<div class="savebar"><span class="msg" id="dirtyMsg">No changes yet</span>
+      <div class="right"><button class="btn" onclick="cancelEdit()">Discard</button><button class="btn pri" onclick="saveDetails()">Save changes</button></div></div>` : '';
+ renderSecNav();watchSecs();
+}
+function renderSecNav(){
+ const items=[...SECTIONS.map(x=>[x.id,x.t]),['sec-files','Files']];
+ $('#secNav').innerHTML=`<div class="eyebrow">On this page</div>`+items.map(([id,t],i)=>`<a href="#" data-s="${id}" class="${i===0?'on':''}" onclick="jumpSec(event,'${id}')">${t}</a>`).join('');
+}
+function jumpSec(e,id){e.preventDefault();
+ document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+ $$('#secNav a').forEach(x=>x.classList.toggle('on',x.dataset.s===id));
+}
+let spy=null;
+function watchSecs(){
+ if(spy)spy.disconnect();
+ spy=new IntersectionObserver(es=>{
+  es.forEach(en=>{ if(en.isIntersecting)
+   $$('#secNav a').forEach(x=>x.classList.toggle('on',x.dataset.s===en.target.id)); });
+ },{rootMargin:'-25% 0px -65% 0px'});
+ $$('.dsec').forEach(el=>spy.observe(el));
+}
+function startEdit(){editing=true;dirty=0;renderDetails();window.scrollTo({top:0,behavior:'smooth'})}
+function cancelEdit(){
+ if(dirty>0&&!confirm('Discard '+dirty+' unsaved change'+(dirty>1?'s':'')+'?'))return;
+ editing=false;dirty=0;renderDetails();
+}
+function markDirty(){dirty++;const e=$('#dirtyMsg');if(e)e.textContent=dirty+' field'+(dirty>1?'s':'')+' changed'}
+function saveDetails(){
+ let bad=null;
+ FIELDS.forEach((f,i)=>{
+  if(f.g||!f.req)return;
+  const el=$('#fld'+i),err=$('#err'+i);if(!el)return;
+  if(!el.value.trim()){el.classList.add('bad');err.textContent=f.k+' is needed before this can be issued.';err.classList.add('on');if(!bad)bad=el}
+  else{el.classList.remove('bad');err.classList.remove('on')}
+ });
+ if(bad){bad.focus();toast('Fill in the highlighted fields, then save.');return}
+ FIELDS.forEach((f,i)=>{if(f.g)return;const el=$('#fld'+i);if(el)vals[i]=el.value});
+ const n=dirty;editing=false;dirty=0;renderDetails();
+ ACTIVITY.unshift({d:'Today',hi:true,t:'<b>Nadia Brandt</b> edited the intake details ('+n+' field'+(n>1?'s':'')+')',w:'Just now'});
+ renderActivity();
+ toastAction('Details saved.','See what changed',()=>tabByName('Activity'));
+}
+
+/* ============ activity ============ */
+let ACTIVITY=[
+ {d:'Today',hi:true,t:'<b>Tomás Vieira</b> assigned <b>Hana Lindqvist</b> as design reviewer',w:'09:41'},
+ {d:'Today',t:'<b>Tomás Vieira</b> uploaded <b>load-schedule.xlsx</b> (rev 2)',w:'09:38'},
+ {d:'31 August',hi:true,t:'Status changed from <b>In progress</b> to <b>On hold</b> by <b>Ines Okafor</b>',w:'16:20',why:'Waiting on the client\u2019s topographic survey. Chased 29 Aug, promised for the week commencing 4 Sept.'},
+ {d:'31 August',t:'<b>Ines Okafor</b> changed <b>Fee basis</b> from “Within the agreed fee” to “Variation required”',w:'11:06'},
+ {d:'31 August',t:'Tag <b>Heritage</b> added by <b>Ines Okafor</b>',w:'11:02'},
+ {d:'29 August',hi:true,t:'Status changed from <b>In review</b> to <b>In progress</b> by <b>Tomás Vieira</b>',w:'14:05'},
+ {d:'29 August',t:'Intake raised by <b>Yuki Tanabe</b>',w:'10:10'}
+];
+function renderActivity(){
+ let h='',last=null;
+ ACTIVITY.forEach(a=>{
+  if(a.d!==last){if(last)h+='</div>';h+=`<p class="daymark">${a.d}</p><div class="tl">`;last=a.d}
+  h+=`<div class="tlitem ${a.hi?'hi':''}"><div class="t">${a.t}</div><div class="when">${a.w}</div>${a.why?`<div class="why">${a.why}</div>`:''}</div>`;
+ });
+ h+='</div>';$('#activityBody').innerHTML=h;
+}
+
+/* ============ members / status ============ */
+const MEMBERS=[['TV','Tomás Vieira','Project lead'],['HL','Hana Lindqvist','Design reviewer'],['MK','Marta Kowalska','Contributor']];
+function renderMembers(){
+ $('#memList').innerHTML=MEMBERS.map(([i,n,r])=>`<div class="memrow"><span class="avatar sm" style="background:${PC[i]||'#5B6672'}">${i}</span>
+  <span><span class="nm">${n}</span><br><span class="ro">${r}</span></span>
+  <button class="del" onclick="toast('${n} removed from this intake.')" aria-label="Remove ${n}">🗑</button></div>`).join('');
+}
+function pickDetStatus(k){const s=STATUS[k];pendingStatus=k;$('#detStatusLbl').textContent=s.label;$('#ddDetStatus').classList.remove('on');
+ $('#reasonBox').style.display=(k==='hold'||k==='cancel')?'block':'none'}
+function saveStatus(){
+ if(pendingStatus===curStatus){toast('That is already the status.');return}
+ const from=STATUS[curStatus].label,to=STATUS[pendingStatus].label;
+ curStatus=pendingStatus;
+ ACTIVITY.unshift({d:'Today',hi:true,t:'Status changed from <b>'+from+'</b> to <b>'+to+'</b> by <b>Nadia Brandt</b>',w:'Just now'});
+ renderLifecycle();renderActivity();renderDetails();
+ toastAction('Status updated to '+to+'.','See activity',()=>tabByName('Activity'));
+}
+function tab(btn,id){$$('#page-detail .tabs button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+ $$('#page-detail .tabpanel').forEach(p=>p.classList.remove('on'));$('#'+id).classList.add('on')}
+function tabByName(name){
+ const b=$$('#page-detail .tabs button').find(x=>x.textContent.trim().startsWith(name));
+ if(b)b.click();
+}
+
+/* ============ services / guide / faq ============ */
+const SVC=[
+ ['Structural review','Structures','5–10 working days','A current drawing set and the load changes you want checked.','Independent check of frames, foundations and connections, ending in a stamped calculation pack.'],
+ ['Technical drawing package','Architecture','3–6 weeks','Approved design intent and the level of detail you need.','A coordinated drawing set ready for tender, permit or construction.'],
+ ['Model coordination','Digital delivery','2–4 weeks per cycle','Discipline models exported to a shared open format.','Model federation, clash review and a resolved issue log for each coordination cycle.'],
+ ['Measured survey','Civil','2–3 weeks','Site access dates and any known constraints.','Topographic and measured survey delivered as a point cloud plus 2D base drawings.'],
+ ['Building services design','Building services','4–8 weeks','Room schedule, loads and the client’s performance targets.','Services layouts, plant sizing and coordination with the structure.'],
+ ['Sustainability assessment','Sustainability','Runs alongside the project','The target rating and the stage you are at.','Strategy, energy modelling and the evidence pack for certification.'],
+ ['Planning and permits','Planning','Varies by authority','The agreed scheme and the authority you are dealing with.','Preparing, submitting and tracking applications, and answering officer queries.'],
+ ['Visualisation','Studio','1–2 weeks','A model or drawings, plus reference images for the mood.','Stills, flythroughs and material studies for client or public consultation use.']
+];
+function renderSvc(){
+ $('#svcGrid').innerHTML=SVC.map(([n,team,turn,prep,desc])=>`<div class="card svc"><h3>${n}</h3><p>${desc}</p>
+  <div class="facts"><span><span class="k">Team</span>${team}</span><span><span class="k">Typical turnaround</span>${turn}</span></div>
+  <p style="font-size:13px"><b style="color:var(--ink)">Have ready:</b> ${prep}</p>
+  <div class="cta"><button class="btn sm pri" onclick="go('new')">Start an intake</button></div></div>`).join('');
+}
+function renderGuide(){
+ const order=['review','progress','hold','done','closed'];
+ $('#flowStrip').innerHTML=order.map((k,i)=>`${i?'<span class="arw">→</span>':''}<span class="chip ${STATUS[k].cls}"><span class="bul"></span>${STATUS[k].label}</span>`).join('')
+  +`<span class="arw" style="margin-left:8px">from any stage →</span><span class="chip cancel"><span class="bul"></span>Cancelled</span>`;
+ $('#sdefs').innerHTML=Object.values(STATUS).map(s=>`<div class="sdef">
+   <div class="top"><span class="chip ${s.cls}"><span class="bul"></span>${s.label}</span></div>
+   <p>${s.def}</p>
+   <dl class="rules"><dt>Use it when</dt><dd>${s.enter}</dd><dt>Moves on when</dt><dd>${s.exit}</dd><dt>Usually set by</dt><dd>${s.who}</dd></dl></div>`).join('');
+}
+function openGuide(){closePops();closeRowMenu();$('#drawer').classList.add('on');$('#scrim').classList.add('on')}
+const FAQ=[
+ ['What does each status mean?','<p>Every intake moves through six stages: In review, In progress, On hold, Completed, Closed and Cancelled. The one people ask about most is <b>In progress</b> — it only applies once a project lead has been assigned and has accepted the work. While a request is still being scoped it stays <b>In review</b>, even if someone has already read it.</p><p><button class="btn sm pri" onclick="openGuide()">Open the status guide</button></p>'],
+ ['What is the difference between project stage and status?','<p><b>Project stage</b> — feasibility, concept, developed, technical, construction support, handover — says where the design is. <b>Status</b> says where this request is with us. They move independently: a technical-design job can sit In review for a week before anyone picks it up, and a feasibility study can be In progress on its first day. Both are shown on every intake and both can be filtered.</p>'],
+ ['Can I change the details after submitting?','<p>Yes. Open the intake, go to <b>Intake details</b> and choose Edit. Every change is recorded on the Activity tab with who changed what and when, so a growing scope is visible rather than invisible.</p>'],
+ ['Who normally moves an intake along?','<p>By convention the discipline lead triages anything In review, and the project lead keeps it current from there — In progress, On hold and Completed. Anyone can update a status if they know something the rest of the team does not; the change is recorded against your name either way.</p>'],
+ ['What is a work package?','<p>A piece of work inside a live project — a calculation pack, a drawing set, one coordination cycle. Work packages show the parent project before their name and roll up to it in reporting. Use them instead of raising unrelated intakes for the same building.</p>'],
+ ['What are tags for?','<p>Reporting and grouping only. They never affect status or permissions. Use them for sector, phase or commercial flags, not for tracking progress.</p>'],
+ ['When do I get notified?','<p>Straight away if you are made project lead, if an intake you own goes on hold, or if someone mentions you. Everything else arrives in a daily digest at 08:00. Change this under Notification settings.</p>'],
+ ['Can I export the list?','<p>Yes — from All intakes, apply your filters and choose Export CSV. The export matches exactly what is on screen, including the filters you have applied.</p>']
+];
+function renderFaq(){$('#faqAcc').innerHTML=FAQ.map(([q,a],i)=>`<div class="acc ${i===0?'on':''}"><button onclick="this.parentElement.classList.toggle('on')">${q}<span class="cv">⌄</span></button><div class="abody">${a}</div></div>`).join('')}
+
+/* ============ wizard ============ */
+let ws=1;
+function wizard(dir){
+ if(dir>0&&ws===1){
+  const miss=[['#w_name','an intake name'],['#w_kind','a request type'],['#w_service','a service'],['#w_desc','a short description']].filter(([s])=>!$(s).value.trim());
+  if(miss.length){miss.forEach(([s])=>$(s).classList.add('bad'));toast('Add '+miss.map(x=>x[1]).join(', ')+' to continue.');return}
+ }
+ if(dir>0&&ws===3){toast('Intake #0231 raised. It is In review with the Structures lead.');go('detail');return}
+ ws=Math.min(3,Math.max(1,ws+dir));
+ [1,2,3].forEach(i=>{$('#ws'+i).classList.toggle('on',i===ws);
+  const st=$('#st'+i);st.classList.toggle('on',i===ws);st.classList.toggle('ok',i<ws);
+  st.querySelector('.n').textContent=i<ws?'✓':i});
+ $('#wBack').style.display=ws>1?'':'none';
+ $('#wNext').textContent=ws===3?'Submit intake':'Continue';
+ if(ws===3)$('#reviewGrid').innerHTML=`
+  <div class="k">Intake name</div><div>${$('#w_name').value||'—'}</div>
+  <div class="k">Request type</div><div>${$('#w_kind').value||'—'}</div>
+  <div class="k">Service</div><div>${$('#w_service').value||'—'}</div>
+  <div class="k">Parent project</div><div>${$('#w_parent').value||'None — new project'}</div>
+  <div class="k">Project stage</div><div>${$('#w_stage').value}</div>
+  <div class="k">Lead discipline</div><div>${$('#w_disc').value}</div>
+  <div class="k">Site</div><div>${$('#w_site').value||'—'}</div>
+  <div class="k">What is needed</div><div>${$('#w_desc').value||'—'}</div>
+  <div class="k">Notified on submit</div><div>The ${$('#w_disc').value} discipline lead, plus you as requester</div>`;
+}
+
+/* ============ chrome ============ */
+function go(p){
+ $$('.page').forEach(x=>x.classList.remove('on'));$('#page-'+p).classList.add('on');
+ $$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));
+ closeAll();closePops();closeRowMenu();window.scrollTo(0,0);
+ if(p==='dashboard')renderDash();
+ if(p==='intakes')renderAll();
+ if(p==='new'){ws=1;wizard(0);$$('.wstep .bad').forEach(e=>e.classList.remove('bad'))}
+ if(p==='detail'){editing=false;dirty=0;renderDetails();renderActivity();renderLifecycle()}
+}
+function toggleDD(id,e){e.stopPropagation();closeRowMenu();const el=$('#'+id),was=el.classList.contains('on');
+ $$('.ddmenu').forEach(d=>d.classList.remove('on'));if(!was)el.classList.add('on')}
+function filterDDList(inp,host){const q=inp.value.toLowerCase();
+ $$('#'+host+' label').forEach(l=>l.style.display=l.textContent.toLowerCase().includes(q)?'':'none')}
+function togglePop(id,e){e.stopPropagation();closeRowMenu();const el=$('#'+id),was=el.classList.contains('on');closePops();if(!was)el.classList.add('on')}
+function closePops(){$$('.pop').forEach(p=>p.classList.remove('on'))}
+function markAllRead(e){e.preventDefault();$$('.nitem').forEach(n=>n.classList.remove('unread'));$('#notifDot').style.display='none';toast('All notifications marked as read.')}
+function openModal(id,intakeId){
+ closePops();closeRowMenu();
+ if(intakeId){
+  const d=DATA.find(x=>x.id===intakeId);
+  if(d){
+   if(id==='mCancel')$('#cancelTitle').textContent='Cancel #'+d.id+' '+d.name+'?';
+   if(id==='mStatus')$('#statusTitle').textContent='Change status of #'+d.id;
+  }
+ }else if(id==='mStatus'){$('#statusTitle').textContent='Change status of '+$$('.rowchk:checked').length+' intakes'}
+ $('#'+id).classList.add('on');$('#scrim').classList.add('on');
+}
+function closeAll(){$$('.modal').forEach(m=>m.classList.remove('on'));$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')}
+let tt;
+function toast(msg){$('#toastMsg').textContent=msg;$('#toastAct').textContent='Dismiss';$('#toastAct').onclick=e=>{e.preventDefault();hideToast()};
+ $('#toast').classList.add('on');clearTimeout(tt);tt=setTimeout(hideToast,4600)}
+function toastAction(msg,label,fn){$('#toastMsg').textContent=msg;$('#toastAct').textContent=label;
+ $('#toastAct').onclick=e=>{e.preventDefault();hideToast();fn()};$('#toast').classList.add('on');clearTimeout(tt);tt=setTimeout(hideToast,6000)}
+function hideToast(){$('#toast').classList.remove('on')}
+document.addEventListener('click',()=>{$$('.ddmenu').forEach(d=>d.classList.remove('on'));closePops();closeRowMenu()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAll();closePops();closeRowMenu();$$('.ddmenu').forEach(d=>d.classList.remove('on'))}});
+window.addEventListener('scroll',()=>{if($('#rowMenu').classList.contains('on'))closeRowMenu()},true);
+window.addEventListener('resize',closeRowMenu);
+$('#globalSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){go('intakes');$('#allSearch').value=e.target.value;renderAll()}});
+$$('.wstep input,.wstep select,.wstep textarea').forEach(el=>el.addEventListener('input',()=>el.classList.remove('bad')));
+
+buildDD();renderDash();renderAll();renderSvc();renderGuide();renderFaq();renderMembers();renderDetails();renderActivity();renderLifecycle();
+</script>
+</body>
+</html>
