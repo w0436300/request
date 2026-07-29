@@ -1,0 +1,74 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build site artifact
+        env:
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SITE_PASSWORD:-}" ]; then
+            echo "::error::Missing secret SITE_PASSWORD. Add it under Settings → Secrets and variables → Actions, then re-run."
+            exit 1
+          fi
+
+          HASH="$(
+            python3 - <<'PY'
+          import hashlib, os
+          print(hashlib.sha256(os.environ["SITE_PASSWORD"].encode("utf-8")).hexdigest())
+          PY
+          )"
+
+          rm -rf site
+          mkdir -p site
+
+          cp index.html auth-gate.js support.js site/
+          cp "Intake Tracker.dc.html" site/app.html
+
+          # Inject hash only into the deploy artifact — never commit auth-config.js
+          printf '%s\n' "window.__SITE_PASSWORD_HASH__ = \"${HASH}\";" > site/auth-config.js
+
+          # Safety: plaintext password must never appear in the published site
+          if grep -R --fixed-strings -- "$SITE_PASSWORD" site >/dev/null; then
+            echo "::error::SITE_PASSWORD plaintext leaked into site artifact"
+            exit 1
+          fi
+
+          echo "Site artifact ready:"
+          find site -type f | sort
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
