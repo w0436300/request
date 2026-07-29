@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Fieldstone Studio · 访问验证</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>window.__SITE_PASSWORD_HASH__=window.__SITE_PASSWORD_HASH__||"";</script>
+  <script src="./auth-config.js"></script>
+  <script src="./auth-gate.js" defer></script>
+  <style>
+    :root {
+      --ink: #1C1B18;
+      --ink2: #3F4A43;
+      --muted: #6B756E;
+      --line: #D7E0DA;
+      --paper: #F4F7F5;
+      --accent: #2D7A52;
+      --accent-ink: #1F5539;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #d9ebe1 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #e7eef0 0%, transparent 50%),
+        linear-gradient(180deg, #f7faf8 0%, #eef3f0 100%);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .panel {
+      width: min(420px, 100%);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      box-shadow: 0 18px 50px rgba(28, 27, 24, 0.08);
+      backdrop-filter: blur(8px);
+    }
+    .brand {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent-ink);
+      margin-bottom: 10px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+    .lede {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink2);
+      margin-bottom: 8px;
+    }
+    input[type="password"] {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0 14px;
+      font: inherit;
+      font-size: 15px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type="password"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45, 122, 82, 0.18);
+    }
+    button {
+      width: 100%;
+      height: 46px;
+      margin-top: 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    button:hover { background: var(--accent-ink); }
+    button:active { transform: translateY(1px); }
+    button:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+    .error {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #A33B3B;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .hint {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <main class="panel" aria-labelledby="gate-title">
+    <div class="brand">Fieldstone Studio</div>
+    <h1 id="gate-title">Intake Tracker</h1>
+    <p class="lede">此原型为受限访问。请输入访问密码后继续。</p>
+    <form id="gate-form" autocomplete="current-password">
+      <label for="gate-password">访问密码</label>
+      <input id="gate-password" name="password" type="password" required autofocus placeholder="输入密码">
+      <button id="gate-submit" type="submit">进入</button>
+      <div id="gate-error" class="error" role="alert" aria-live="polite"></div>
+    </form>
+    <p class="hint">密码由仓库维护者通过 GitHub Actions Secret（SITE_PASSWORD）在发布时注入，不会提交到代码库。</p>
+  </main>
+</body>
+</html>

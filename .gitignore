@@ -6,3 +6,8 @@ _script_tmp.js
 *.tmp
 .DS_Store
 Thumbs.db
+
+# Generated at deploy time from GitHub Actions secret SITE_PASSWORD — never commit
+auth-config.js
+app.html
+site/
