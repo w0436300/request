@@ -26,7 +26,7 @@ button,input,select,textarea{font-family:inherit}
 .app-shell{min-width:0}
 .app-main{min-width:0;width:100%}
 .app-main>main{min-width:0;width:100%;max-width:1180px}
-.status-pills{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.status-pills{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:16px}
 .detail-stack{width:100%;max-width:100%;margin-top:22px;min-width:0}
 .detail-stack-tight{width:100%;max-width:100%;margin-top:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
 .detail-card{width:100%;min-width:0}
@@ -35,7 +35,7 @@ button,input,select,textarea{font-family:inherit}
 .lifecycle-rail>div{flex:1;padding:0 4px;min-width:0}
 .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .unsaved-bar{width:min(560px,calc(100vw - 48px))}
-@media (max-width:1100px){
+@media (max-width:1200px){
   .status-pills{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:900px){
@@ -88,7 +88,7 @@ button,input,select,textarea{font-family:inherit}
       <h1 style="font-weight:800;font-size:28px;margin:0;letter-spacing:-.03em">Welcome back, Nadia</h1>
     </div>
     <div class="status-pills">
-      <sc-for list="{{ statusPills }}" as="p" hint-placeholder-count="5">
+      <sc-for list="{{ statusPills }}" as="p" hint-placeholder-count="6">
         <button onclick="{{ p.select }}" style="position:relative;height:72px;background:{{ p.bg }};border:1px solid {{ p.border }};border-radius:var(--r-xl);padding:0 16px;cursor:pointer;text-align:left;box-shadow:{{ p.shadow }};overflow:hidden;min-width:0;width:100%" style-hover="border-color:{{ p.hoverBorder }};transform:translateY(-1px)">
           <div style="height:100%;display:flex;align-items:center;gap:12px;min-width:0">
             <span style="width:30px;height:30px;border-radius:9px;background:{{ p.iconBg }};color:{{ p.numColor }};font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;display:grid;place-items:center;flex:none">{{ p.icon }}</span>
@@ -138,7 +138,7 @@ button,input,select,textarea{font-family:inherit}
         <sc-for list="{{ dashPagedRows }}" as="r" hint-placeholder-count="4">
           <tr class="request-row">
             <td style="font-family:'IBM Plex Mono',monospace;color:var(--muted);padding:13px 22px;border-bottom:1px solid var(--line);white-space:nowrap">#{{ r.id }}</td>
-            <td onclick="{{ r.open }}" style="padding:14px;border-bottom:1px solid var(--line);cursor:pointer"><span style="color:var(--ink);font-weight:600">{{ r.name }}</span><sc-if value="{{ r.isnew }}" hint-placeholder-val="{{ false }}"><span style="margin-left:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 7px;border-radius:6px">NEW</span></sc-if></td>
+            <td onclick="{{ r.open }}" style="padding:14px;border-bottom:1px solid var(--line);cursor:pointer"><span style="display:inline-flex;align-items:center;gap:8px;min-width:0"><sc-if value="{{ r.isnew }}" hint-placeholder-val="{{ false }}"><span title="Not opened yet" aria-label="Unread" style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none"></span></sc-if><span style="color:var(--ink);font-weight:600">{{ r.name }}</span></span></td>
             <td style="padding:14px;border-bottom:1px solid var(--line)"><span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ r.statusTint }};color:{{ r.statusColor }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ r.statusIcon }}</span>{{ r.statusLabel }}</span></td>
             <td style="padding:13px 14px;border-bottom:1px solid var(--line)">
               <div style="display:flex;align-items:center">
@@ -286,12 +286,12 @@ button,input,select,textarea{font-family:inherit}
       <div style="max-width:560px;margin:40px auto 0;text-align:center">
         <div style="width:52px;height:52px;border-radius:50%;background:var(--accent-tint);color:var(--accent-ink);display:grid;place-items:center;font-size:24px;font-weight:700;margin:0 auto 18px">✓</div>
         <h1 style="font-weight:700;font-size:23px;margin:0 0 8px;letter-spacing:-.02em">Request submitted</h1>
-        <div style="color:var(--muted);margin-bottom:22px">#{{ newReqId }} · {{ newReqName }} is now <b style="color:var(--accent-ink)">In review</b>.</div>
+        <div style="color:var(--muted);margin-bottom:22px">#{{ newReqId }} · {{ newReqName }} is now <b style="color:var(--accent-ink)">New</b>.</div>
         <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:22px 24px;text-align:left">
           <div style="font-weight:700;font-size:13px;margin-bottom:14px">What happens next</div>
           <div style="display:flex;flex-direction:column;gap:14px">
-            <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">1</div><div style="font-size:13.5px;color:var(--ink2)">A discipline lead reviews scope and confirms an owner — usually within 2 business days.</div></div>
-            <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">2</div><div style="font-size:13.5px;color:var(--ink2)">You'll get a notification the moment it's picked up and moves to In progress.</div></div>
+            <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">1</div><div style="font-size:13.5px;color:var(--ink2)">A discipline lead triages the intake and confirms what is needed — usually within 2 business days.</div></div>
+            <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">2</div><div style="font-size:13.5px;color:var(--ink2)">A lead will triage it — usually to In progress, or Pending details if something is still missing.</div></div>
             <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">3</div><div style="font-size:13.5px;color:var(--ink2)">Track status, files and comments any time from the request page.</div></div>
           </div>
         </div>
@@ -373,8 +373,8 @@ button,input,select,textarea{font-family:inherit}
             </sc-if>
           </div>
           <div style="margin-top:20px;background:var(--accent-tint);border-radius:var(--r-m);padding:14px 16px;display:flex;gap:10px;align-items:flex-start">
-            <div style="font-weight:700;color:var(--accent-ink)">Submits as In review</div>
-            <div style="color:var(--ink2);font-size:13px">New requests sit in the triage queue so a discipline lead can confirm scope and pick an owner.</div>
+            <div style="font-weight:700;color:var(--accent-ink)">Submits as New</div>
+            <div style="color:var(--ink2);font-size:13px">New requests start on the main path in New. Move to In progress when ready, or Pending details only if blocked before start.</div>
           </div>
         </sc-if>
         <div style="height:1px;background:var(--line);margin:24px 0"></div>
@@ -422,26 +422,31 @@ button,input,select,textarea{font-family:inherit}
               <button onclick="{{ toggleStatusInfo }}" aria-label="About statuses" title="About statuses" style="width:16px;height:16px;border-radius:50%;border:1.3px solid var(--faint);color:var(--faint);background:none;cursor:pointer;font-size:10px;font-weight:800;font-family:'IBM Plex Mono',monospace;display:grid;place-items:center;padding:0;line-height:1" style-hover="border-color:var(--accent);color:var(--accent)">i</button>
               <sc-if value="{{ showStatusInfo }}" hint-placeholder-val="{{ false }}">
                 <span style="position:absolute;left:0;top:22px;z-index:8;width:min(340px,calc(100vw - 64px));max-height:360px;overflow:auto;padding:4px 14px 12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh);color:var(--ink2);font-size:12.5px;font-weight:400;line-height:1.45">
-                  <b style="display:block;margin:10px 0;color:var(--ink)">What each status means</b>
+                  <b style="display:block;margin:10px 0;color:var(--ink)">Main path</b>
                   <div style="padding:10px 0;border-top:1px solid var(--line)">
-                    <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#F6F0E4;color:#8F6318;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">◐</span>In review</div>
-                    <div>A discipline lead is confirming scope and choosing an owner — no design work has started yet.</div>
+                    <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#F8EFE4;color:#C56A17;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">!</span>New</div>
+                    <div>Just raised — in the queue. Default status.</div>
                   </div>
                   <div style="padding:10px 0;border-top:1px solid var(--line)">
                     <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#EAF1F8;color:#3B6B96;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">◔</span>In progress</div>
-                    <div>A project lead has accepted the work and it is actively being produced.</div>
-                  </div>
-                  <div style="padding:10px 0;border-top:1px solid var(--line)">
-                    <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#F1ECF5;color:#6E5688;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">⏸</span>On hold</div>
-                    <div>Work started but is paused by something outside the team. Days here do not count towards the issue date.</div>
+                    <div>Work is actively underway.</div>
                   </div>
                   <div style="padding:10px 0;border-top:1px solid var(--line)">
                     <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#E8F3EC;color:#2D7A52;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">✓</span>Completed</div>
-                    <div>The deliverable has been issued and accepted. The record stays readable for comments.</div>
+                    <div>Finished and closed.</div>
+                  </div>
+                  <b style="display:block;margin:14px 0 10px;color:var(--ink)">Waiting / closed side paths</b>
+                  <div style="padding:10px 0;border-top:1px solid var(--line)">
+                    <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#EEF1F3;color:#5C6670;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">◎</span>Pending details</div>
+                    <div>Blocked before start (funding, approval, missing info).</div>
                   </div>
                   <div style="padding:10px 0;border-top:1px solid var(--line)">
-                    <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#F7ECEC;color:#B04A4A;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">✕</span>Cancelled</div>
-                    <div>Stopped before delivery and will not resume. Files and comments stay readable for the record.</div>
+                    <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#E8EBEE;color:#2F3A4A;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">▣</span>On hold</div>
+                    <div>Paused after work had already started.</div>
+                  </div>
+                  <div style="padding:10px 0;border-top:1px solid var(--line)">
+                    <div style="display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:#F7ECEC;color:#B04A4A;margin-bottom:6px"><span style="font-family:'IBM Plex Mono',monospace">−</span>Cancelled</div>
+                    <div>Will not proceed, or duplicate.</div>
                   </div>
                 </span>
               </sc-if>
@@ -452,18 +457,21 @@ button,input,select,textarea{font-family:inherit}
                 <span style="font-size:10px;opacity:.75;margin-left:2px">▾</span>
               </button>
               <sc-if value="{{ showStatusMenu }}" hint-placeholder-val="{{ false }}">
-                <div style="position:absolute;right:0;top:34px;z-index:9;width:200px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh)">
-                  <button onclick="{{ pickStatusReview }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuReviewBg }};color:#8F6318;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#F6F0E4"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">◐</span>In review</button>
+                <div style="position:absolute;right:0;top:34px;z-index:9;width:232px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh)">
+                  <div style="padding:6px 10px 4px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)">Main path</div>
+                  <button onclick="{{ pickStatusNew }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuNewBg }};color:#C56A17;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#F8EFE4"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">!</span>New</button>
                   <button onclick="{{ pickStatusProgress }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuProgressBg }};color:#3B6B96;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#EAF1F8"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">◔</span>In progress</button>
-                  <button onclick="{{ pickStatusHold }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuHoldBg }};color:#6E5688;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#F1ECF5"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">⏸</span>On hold</button>
                   <button onclick="{{ pickStatusDone }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuDoneBg }};color:#2D7A52;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#E8F3EC"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">✓</span>Completed</button>
-                  <button onclick="{{ pickStatusCancel }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuCancelBg }};color:#B04A4A;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#F7ECEC"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">✕</span>Cancelled</button>
+                  <div style="padding:10px 10px 4px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)">Waiting / closed</div>
+                  <button onclick="{{ pickStatusPending }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuPendingBg }};color:#5C6670;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#EEF1F3"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">◎</span>Pending details</button>
+                  <button onclick="{{ pickStatusHold }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuHoldBg }};color:#2F3A4A;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#E8EBEE"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">▣</span>On hold</button>
+                  <button onclick="{{ pickStatusCancel }}" style="width:100%;display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:{{ menuCancelBg }};color:#B04A4A;font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:#F7ECEC"><span style="font-family:'IBM Plex Mono',monospace;width:14px;flex:none">−</span>Cancelled</button>
                 </div>
               </sc-if>
             </span>
           </div>
           <div class="lifecycle-rail">
-            <sc-for list="{{ lifecycleSteps }}" as="ls" hint-placeholder-count="4">
+            <sc-for list="{{ lifecycleSteps }}" as="ls" hint-placeholder-count="3">
               <div>
                 <div style="height:5px;border-radius:3px;background:{{ ls.barColor }};margin-bottom:9px"></div>
                 <div style="font-weight:{{ ls.nameWeight }};font-size:13px;color:{{ ls.textColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ ls.label }}</div>
@@ -471,11 +479,21 @@ button,input,select,textarea{font-family:inherit}
               </div>
             </sc-for>
           </div>
+          <sc-if value="{{ showStatusSideBanner }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px;padding:10px 12px;border-radius:10px;background:{{ statusSideTint }};border:1px solid {{ statusSideBorder }};display:flex;gap:10px;align-items:flex-start">
+              <span style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:{{ detailStatusColor }};flex:none">{{ detailStatusIcon }}</span>
+              <div style="min-width:0">
+                <div style="font-weight:700;font-size:13px;color:{{ detailStatusColor }}">{{ statusSideTitle }}</div>
+                <div style="font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:2px">{{ statusSideBody }}</div>
+              </div>
+            </div>
+          </sc-if>
           <p style="margin:14px 0 0;font-size:13px;color:var(--ink2);line-height:1.55">{{ detailStatusDesc }}</p>
+          <p style="margin:8px 0 0;font-size:12.5px;color:var(--muted);line-height:1.45">{{ detailStatusNext }}</p>
           <sc-if value="{{ showStatusNote }}" hint-placeholder-val="{{ false }}">
             <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
               <label style="display:block;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Add a comment <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted)">(optional)</span></label>
-              <textarea value="{{ statusNote }}" onchange="{{ setStatusNote }}" placeholder="Waiting for the client to confirm the revised scope." style="width:100%;min-height:72px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:10px 12px;font:inherit;color:inherit;resize:vertical;background:#fff;box-sizing:border-box"></textarea>
+              <textarea value="{{ statusNote }}" onchange="{{ setStatusNote }}" placeholder="Waiting on funding approval / missing survey before work can start." style="width:100%;min-height:72px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:10px 12px;font:inherit;color:inherit;resize:vertical;background:#fff;box-sizing:border-box"></textarea>
             </div>
           </sc-if>
         </div>
@@ -973,18 +991,21 @@ button,input,select,textarea{font-family:inherit}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const STATUS = {
-  review:{label:'In review',icon:'◐',color:'#8F6318',tint:'#F6F0E4',desc:'A discipline lead is confirming scope and choosing an owner — no calculations or drawings are being produced yet. It becomes In progress the moment a project lead is assigned and accepts the work.'},
-  progress:{label:'In progress',icon:'◔',color:'#3B6B96',tint:'#EAF1F8',desc:'A project lead has accepted the work and it is actively being produced. Move it to On hold if something outside the team blocks it, or to Completed once the deliverable has been issued.'},
-  hold:{label:'On hold',icon:'⏸',color:'#6E5688',tint:'#F1ECF5',desc:'Work started but is paused by something outside the team. Days spent here do not count towards the issue date. It returns to In progress when the blocker clears.'},
-  done:{label:'Completed',icon:'✓',color:'#2D7A52',tint:'#E8F3EC',desc:'The deliverable has been issued and accepted. The record stays readable for comments; raise a new request if the client comes back.'},
-  cancel:{label:'Cancelled',icon:'✕',color:'#B04A4A',tint:'#F7ECEC',desc:'This stopped before delivery and will not resume. Files and comments stay readable for the record.'}
+  // Main path: New → In progress → Completed
+  // Side paths: Pending details (pre-start wait), On hold (mid-work pause), Cancelled (terminal)
+  new:{label:'New',icon:'!',color:'#C56A17',tint:'#F8EFE4',kind:'flow',rail:'new',desc:'Just raised and sitting in the intake queue. Default status. Triage it to In progress when ready to start, or to Pending details if something must arrive first.',next:'Usually moves to In progress, or Pending details if blocked before start.'},
+  pending:{label:'Pending details',shortLabel:'Pending',icon:'◎',color:'#5C6670',tint:'#EEF1F3',kind:'wait',rail:'new',desc:'Still before production — waiting on a decision, funding, approval or missing information. Not the same as On hold (which pauses work already started).',next:'Move to In progress once the missing input lands.'},
+  progress:{label:'In progress',icon:'◔',color:'#3B6B96',tint:'#EAF1F8',kind:'flow',rail:'progress',desc:'Go-ahead is confirmed and the team is actively producing work. This is the main delivery state.',next:'Move to Completed when issued, or On hold if blocked mid-flight.'},
+  hold:{label:'On hold',icon:'▣',color:'#2F3A4A',tint:'#E8EBEE',kind:'wait',rail:'progress',desc:'Work had started but is paused while waiting on input, approval or resources. Days here do not count toward the issue date.',next:'Return to In progress when the blocker clears.'},
+  done:{label:'Completed',icon:'✓',color:'#2D7A52',tint:'#E8F3EC',kind:'end',rail:'done',desc:'All work is finished and the request is officially closed. The record stays readable for comments.',next:'Raise a new request if the client comes back.'},
+  cancel:{label:'Cancelled',icon:'−',color:'#B04A4A',tint:'#F7ECEC',kind:'end',rail:'new',desc:'Confirmed as no longer valid — will not proceed, or marked as a duplicate. Terminal state.',next:'No further workflow moves; keep the record for audit.'}
 };
 const DATA=[
  {id:'0016',name:'Fenwick Tower',st:'progress',stage:'Technical design',mem:['Ines Okafor','Rafael Ortiz','Marta Kowalska'],tags:['Mixed use','Phase 2'],upd:'2 hours ago',mine:true},
  {id:'0029',name:'Stage 3 drawing package',st:'progress',stage:'Developed design',mem:['Ines Okafor','Marta Kowalska'],tags:['Phase 2'],upd:'4 hours ago',mine:true},
  {id:'0030',name:'Façade calculation pack',st:'done',stage:'Technical design',mem:['Rafael Ortiz'],tags:['Phase 2'],upd:'Yesterday',mine:false},
- {id:'0060',name:'Net zero feasibility study',st:'review',stage:'Feasibility',mem:['Ines Okafor'],tags:['Net zero','Public sector'],upd:'2 days ago',mine:true,isnew:true},
- {id:'0009',name:'Riverside Depot — structural review',st:'review',stage:'Technical design',mem:['Tomás Vieira','Hana Lindqvist'],tags:['Retrofit','Heritage','Site critical'],upd:'2 days ago',mine:true,isnew:true},
+ {id:'0060',name:'Net zero feasibility study',st:'new',stage:'Feasibility',mem:['Ines Okafor'],tags:['Net zero','Public sector'],upd:'2 days ago',mine:true,isnew:true},
+ {id:'0009',name:'Riverside Depot — structural review',st:'pending',stage:'Technical design',mem:['Tomás Vieira','Hana Lindqvist'],tags:['Retrofit','Heritage','Site critical'],upd:'2 days ago',mine:true},
  {id:'0071',name:'Ashgrove School — measured survey',st:'hold',stage:'Concept design',mem:['Ines Okafor'],tags:['Education','Public sector'],upd:'11 days ago',mine:true},
  {id:'0072',name:'Northgate Yard — model coordination',st:'progress',stage:'Technical design',mem:['Marta Kowalska','Priya Raghavan'],tags:['Industrial','Phase 2'],upd:'6 days ago',mine:false},
  {id:'0200',name:'Harbour Point masterplan',st:'progress',stage:'Concept design',mem:['Rafael Ortiz','Priya Raghavan'],tags:['Public sector','Phase 1'],upd:'5 days ago',mine:true},
@@ -1016,11 +1037,11 @@ const SERVICES=[
  {name:'Sustainability assessment',desc:'Energy, embodied carbon and certification pathway.',time:'3–5 weeks'}
 ];
 const FAQS=[
- {q:'What is the difference between status and project stage?',a:'Project stage says where the design is — concept, technical, construction support. Status says where the request is with us. A technical-design job can sit In review for a week before anyone picks it up.'},
- {q:'Who can move a request to a new status?',a:'Any assigned member can propose a change; the project lead is the one accountable for keeping it current.'},
- {q:'What happens when I put a request on hold?',a:'You record a reason. Days on hold are excluded from the delivery clock, and the reason appears on the weekly hold report.'},
- {q:'Can I raise a work package inside a live project?',a:'Yes — choose "Work package inside a live project" and pick the parent when raising a new request.'},
- {q:'What does the NEW badge mean?',a:'Raised in the last seven days and not yet opened by you. It disappears once you view the request.'}
+ {q:'What is the main status path?',a:'Most requests follow New → In progress → Completed. Pending details and On hold are waiting side-paths, not required steps. Cancelled ends the request.'},
+ {q:'What is the difference between status and project stage?',a:'Project stage is design maturity (concept, technical, construction support). Status is where the request sits in our intake workflow.'},
+ {q:'When should I use Pending details vs On hold?',a:'Pending details = blocked before work starts (funding, approval, missing survey). On hold = work already started, then paused. Days on hold are excluded from the delivery clock.'},
+ {q:'Who can move a request to a new status?',a:'Any assigned member can propose a change; the project lead is accountable for keeping it current.'},
+ {q:'What does the green unread dot mean?',a:'A personal “not opened yet” marker on your list. It is not a status. Opening the request clears the dot; the workflow status stays whatever it already is.'}
 ];
 const DETAIL={
   id:'0009',name:'Riverside Depot — structural review',parentId:'0016',parentName:'Fenwick Tower',
@@ -1054,7 +1075,7 @@ class Component extends DCLogic {
   state={page:'dashboard',detailTab:'manage',detailLayout:'a',wizardStep:1,search:'',statusFilter:'all',tagFilter:'all',memberFilter:'all',requestsPage:1,dashPage:1,currentUserRole:'Project lead',draftId:'',drafts:[],newRequestName:'',newRequestKind:'New project',newParentProjectId:'',newRequestDescription:'',newRequestBusinessName:'',newRequestSiteAddress:'',newRequestContactPhone:'',newRequestPhoneType:'Tel',newRequestContactEmail:'',newRequestStage:'Feasibility',newRequestPlanningDeadline:'',newRequestTagPick:'',newRequestTags:[],newRequestFiles:[],newProjectLead:'',newDesignReviewer:'',newAdditionalMember:'',newAdditionalRoleSelect:'Contributor',newAdditionalRoleCustom:'',newAdditionalMembers:[],showNewMemberPicker:false,showUnsavedConfirm:false,pendingNavigation:'',createdRequests:[],activeDetail:{...DETAIL},toastMsg:'',showNoteInfo:false,showMemberInfo:false,showStatusInfo:false,showStatusMenu:false,showAssignForm:false,showManageTags:false,showEditKeyDates:false,
     members:DETAIL.members.map(m=>({...m})),savedMembers:DETAIL.members.map(m=>({...m})),
     assignPerson:'',assignRoleSelect:'Project lead',assignRoleCustom:'',assignSearch:'',
-    savedStatus:'review',detailStatus:'review',detailDirty:false,statusNote:'',activityAdds:[],
+    savedStatus:'pending',detailStatus:'pending',detailDirty:false,statusNote:'',activityAdds:[],openedIds:{},
     tags:DETAIL.tagList.slice(),savedTags:DETAIL.tagList.slice(),newTag:'',tagPickSelect:'',
     planningDeadline:'2024-09-30',savedPlanningDeadline:'2024-09-30',timelineFilter:'all',
     commentDraft:'',commentOnlyMe:false,removedCommentIds:[],
@@ -1168,6 +1189,11 @@ class Component extends DCLogic {
     this.navigateTo(target);
   }
   openRequest(request,detailTab='manage'){
+    const withUnreadCleared=(patch)=>(s)=>({
+      ...patch,
+      createdRequests:s.createdRequests.map(item=>item.id===request.id?{...item,isnew:false}:item),
+      openedIds:{...(s.openedIds||{}),[request.id]:true}
+    });
     if(!request.detail){
       if(request.id!==DETAIL.id){
         const parent=PARENT_PROJECTS.find(project=>project.id===request.id);
@@ -1195,23 +1221,23 @@ class Component extends DCLogic {
         };
         const files=[{name:'Project-brief.pdf',meta:'1.2 MB · uploaded by Nadia Brandt'}];
         const detail={id:request.id,name:request.name,parentId:'—',parentName:'No parent project',stage:request.stage||'',fields,members,tagList:(request.tags||[]).slice(),files,planningDeadline:parent&&parent.planningDeadline||'2026-10-24'};
-        this.setState({
+        this.setState(withUnreadCleared({
           page:'detail',detailTab,activeDetail:detail,fields,savedFields:{...fields},members,savedMembers:members.map(member=>({...member})),
           tags:(request.tags||[]).slice(),savedTags:(request.tags||[]).slice(),files,savedFiles:files.map(file=>({...file})),
           detailStatus:request.st,savedStatus:request.st,planningDeadline:detail.planningDeadline,savedPlanningDeadline:detail.planningDeadline,
           detailDirty:false,editingDetails:false,activityAdds:[]
-        });
+        }));
         return;
       }
       const fields={kind:DETAIL.kind,service:DETAIL.service,description:DETAIL.description,businessName:DETAIL.businessName||'',siteAddress:DETAIL.siteAddress,contactPhone:DETAIL.contactPhone||'',contactPhoneType:DETAIL.contactPhoneType||'Tel',contactEmail:DETAIL.contactEmail||'',buildingType:DETAIL.buildingType,dateNeeded:'2024-09-20',deliverablesText:DETAIL.deliverablesText,notIncludedText:DETAIL.notIncludedText,assumptionsText:DETAIL.assumptionsText,feeBasis:DETAIL.feeBasis,planningDate:DETAIL.planningDate,siteStart:'2024-11-14'};
       const members=DETAIL.members.map(member=>({...member}));
       const files=DETAIL.files.map(file=>({...file}));
-      this.setState({
+      this.setState(withUnreadCleared({
         page:'detail',detailTab,activeDetail:{...DETAIL},fields,savedFields:{...fields},members,savedMembers:members.map(member=>({...member})),
         tags:DETAIL.tagList.slice(),savedTags:DETAIL.tagList.slice(),files,savedFiles:files.map(file=>({...file})),
-        detailStatus:'review',savedStatus:'review',planningDeadline:'2024-09-30',savedPlanningDeadline:'2024-09-30',
+        detailStatus:'pending',savedStatus:'pending',planningDeadline:'2024-09-30',savedPlanningDeadline:'2024-09-30',
         detailDirty:false,editingDetails:false,activityAdds:[]
-      });
+      }));
       return;
     }
     const detail=request.detail;
@@ -1219,12 +1245,12 @@ class Component extends DCLogic {
     const members=(detail.members||[]).map(member=>({...member}));
     const tags=(detail.tagList||[]).slice();
     const files=(detail.files||[]).map(file=>({...file}));
-    this.setState({
+    this.setState(withUnreadCleared({
       page:'detail',detailTab,activeDetail:detail,fields,savedFields:{...fields},
       members,savedMembers:members.map(member=>({...member})),tags,savedTags:tags.slice(),files,savedFiles:files.map(file=>({...file})),
       detailStatus:request.st,savedStatus:request.st,planningDeadline:detail.planningDeadline||'',savedPlanningDeadline:detail.planningDeadline||'',
       detailDirty:false,editingDetails:false,activityAdds:[]
-    });
+    }));
   }
   showToast(msg){this.setState({toastMsg:msg});clearTimeout(this._t);this._t=setTimeout(()=>this.setState({toastMsg:''}),2600)}
   saveDraft(){
@@ -1350,8 +1376,9 @@ class Component extends DCLogic {
     const merged=[...st.createdRequests,...DATA].map(d=>{
       const effectiveStatus=d.id===st.activeDetail.id?st.savedStatus:d.st;
       const menuOpen=st.activityMenuId===d.id;
+      const isUnread=!!d.isnew && !(st.openedIds&&st.openedIds[d.id]);
       return {
-        ...d,st:effectiveStatus,
+        ...d,st:effectiveStatus,isnew:isUnread,
         statusColor:STATUS[effectiveStatus].color,statusTint:STATUS[effectiveStatus].tint,statusLabel:STATUS[effectiveStatus].label,statusIcon:STATUS[effectiveStatus].icon,
         memAvatars:memAvatars(d.mem),
         menuOpen,
@@ -1400,7 +1427,7 @@ class Component extends DCLogic {
     const counts={};Object.keys(STATUS).forEach(k=>counts[k]=mineRows.filter(d=>d.st===k).length);
     const statusPills=Object.keys(STATUS).map(k=>{
       const on=st.statusFilter===k,s=STATUS[k];
-      return {key:k,label:s.label,icon:s.icon,count:counts[k],select:()=>this.setState({statusFilter:on?'all':k,requestsPage:1,dashPage:1}),isSelected:on,statusColor:s.color,
+      return {key:k,label:s.shortLabel||s.label,icon:s.icon,count:counts[k],select:()=>this.setState({statusFilter:on?'all':k,requestsPage:1,dashPage:1}),isSelected:on,statusColor:s.color,
         bg:on?s.tint:'#FFFFFF',numColor:s.color,labelColor:on?s.color:'#6B7280',iconBg:on?'#FFFFFF':s.tint,
         border:on?s.color:'var(--line)',hoverBorder:s.color,
         shadow:on?'none':'var(--sh)',accent:on?s.color:'transparent'};
@@ -1420,24 +1447,36 @@ class Component extends DCLogic {
     const dashTitle=dashFiltered?`${STATUS[st.statusFilter].label} · assigned to me`:'Assigned to me';
     const dashHasRows=dashRows.length>0;
     const dashEmpty=!dashHasRows;
-    const railDefs=[{key:'raised',label:'Raised'},{key:'review',label:'In review'},{key:'progress',label:'In progress'},{key:'done',label:'Completed'}];
-    const effective=st.detailStatus==='hold'?'progress':st.detailStatus==='cancel'?'review':st.detailStatus;
-    const curIdx=railDefs.findIndex(s=>s.key===effective);
+    const railDefs=[{key:'new',label:'New'},{key:'progress',label:'In progress'},{key:'done',label:'Completed'}];
+    const railKey=(STATUS[st.detailStatus]&&STATUS[st.detailStatus].rail)||'new';
+    const curIdx=railDefs.findIndex(s=>s.key===railKey);
     const lifecycleSteps=railDefs.map((step,i)=>{
       let barColor='#E5E7EB',textColor='#5F6772',when='—',nameWeight='600';
-      if(step.key==='raised'){barColor='#7FB896';textColor='#374151';when='29 Aug';}
-      else if(st.detailStatus==='hold'&&step.key==='progress'){barColor='#3B6B96';textColor='#3B6B96';when='Paused';nameWeight='700';}
-      else if(st.detailStatus==='cancel'){if(step.key==='review'){barColor='#7FB896';textColor='#374151';when='Stopped';}}
-      else if(i<curIdx){barColor='#7FB896';textColor='#374151';when='Done';}
-      else if(i===curIdx){barColor='#3B6B96';textColor='#3B6B96';when=step.key==='review'?'4 days so far':'Current';nameWeight='700';}
+      if(st.detailStatus==='cancel'){
+        if(step.key==='new'){barColor='#D8B4B4';textColor='#7A3B3B';when='Stopped';nameWeight='700';}
+      }else if(st.detailStatus==='pending'){
+        if(step.key==='new'){barColor='#5C6670';textColor='#5C6670';when='Waiting';nameWeight='700';}
+      }else if(st.detailStatus==='hold'){
+        if(i<curIdx){barColor='#7FB896';textColor='#374151';when='Done';}
+        if(step.key==='progress'){barColor='#2F3A4A';textColor='#2F3A4A';when='Paused';nameWeight='700';}
+      }else if(i<curIdx){barColor='#7FB896';textColor='#374151';when=step.key==='new'?'Raised':'Done';}
+      else if(i===curIdx){
+        barColor='#3B6B96';textColor='#3B6B96';nameWeight='700';
+        when=step.key==='new'?'In queue':step.key==='done'?'Closed':'Current';
+      }
       return {label:step.label,barColor,textColor,when,nameWeight};
     });
+    const showStatusSideBanner=STATUS[st.detailStatus].kind!=='flow';
+    const statusSideTitle=st.detailStatus==='pending'?'Waiting before start':st.detailStatus==='hold'?'Paused mid-work':st.detailStatus==='cancel'?'Request closed':STATUS[st.detailStatus].label;
+    const statusSideBody=st.detailStatus==='pending'?'This is a side path off New — not a required step on the main rail.':st.detailStatus==='hold'?'This is a side path off In progress — return there when unblocked.':st.detailStatus==='cancel'?'Cancelled is terminal and sits off the main delivery path.':STATUS[st.detailStatus].desc;
+    const statusSideTint=STATUS[st.detailStatus].tint;
+    const statusSideBorder=STATUS[st.detailStatus].color+'33';
     const pageLabels={dashboard:'Dashboard',requests:'All requests',new:'New request',detail:'Request detail',services:'Services',faq:'Help & FAQ'};
 
     const SEED_TIMELINE=[
       {date:'Today', items:[
         {isChange:true,when:'09:41',segs:[{t:'Tomás Vieira',b:true},{t:' assigned '},{t:'Hana Lindqvist',b:true},{t:' as design reviewer'}]},
-        {id:'seed-c1',isComment:true,i:'TV',n:'Tomás Vieira',c:'#2F6B4F',tm:'09:44',body:'Survey is booked for Tuesday. Once it lands I will move this to In progress — the scope does not need revisiting.'},
+        {id:'seed-c1',isComment:true,i:'TV',n:'Tomás Vieira',c:'#2F6B4F',tm:'09:44',body:'Survey is booked for Tuesday. Once it lands I will move this from Pending details to In progress — the scope does not need revisiting.'},
         {isChange:true,when:'09:38',segs:[{t:'Tomás Vieira',b:true},{t:' uploaded '},{t:'load-schedule.xlsx',b:true},{t:' (rev 2)'}]}
       ]},
       {date:'31 August 2026', items:[
@@ -1649,11 +1688,11 @@ class Component extends DCLogic {
           feeBasis:'',planningDate:formatIsoDate(st.newRequestPlanningDeadline),siteStart:''
         };
         const detail={id,name,parentId:parentProject?parentProject.id:'—',parentName:parentProject?parentProject.name:'No parent project',stage:st.newRequestStage,disc:'',service:'',planningDeadline:st.newRequestPlanningDeadline,fields:{...fields},members:members.map(member=>({...member})),tagList:tags.slice(),files:st.newRequestFiles.map(file=>({...file}))};
-        const request={id,name,st:'review',stage:st.newRequestStage,mem:members.map(member=>member.n),tags:tags.slice(),upd:'Just now',mine:true,isnew:true,detail};
+        const request={id,name,st:'new',stage:st.newRequestStage,mem:members.map(member=>member.n),tags:tags.slice(),upd:'Just now',mine:true,isnew:true,detail};
         this.setState(s=>({
           submitted:true,newReqId:id,newReqName:name,draftId:'',drafts:s.drafts.filter(draft=>draft.id!==s.draftId),createdRequests:[request,...s.createdRequests],activeDetail:detail,
           fields:{...fields},savedFields:{...fields},members:members.map(member=>({...member})),savedMembers:members.map(member=>({...member})),
-          tags:tags.slice(),savedTags:tags.slice(),files:st.newRequestFiles.map(file=>({...file})),savedFiles:st.newRequestFiles.map(file=>({...file})),detailStatus:'review',savedStatus:'review',
+          tags:tags.slice(),savedTags:tags.slice(),files:st.newRequestFiles.map(file=>({...file})),savedFiles:st.newRequestFiles.map(file=>({...file})),detailStatus:'new',savedStatus:'new',
           planningDeadline:st.newRequestPlanningDeadline,savedPlanningDeadline:st.newRequestPlanningDeadline,detailDirty:false,activityAdds:[]
         }));
       },
@@ -1672,16 +1711,20 @@ class Component extends DCLogic {
       childProjectDates,hasChildProjectDates:childProjectDates.length>0,
       detailStatus:st.detailStatus,detailStatusColor:STATUS[st.detailStatus].color,detailStatusTint:STATUS[st.detailStatus].tint,
       detailStatusLabel:STATUS[st.detailStatus].label,detailStatusIcon:STATUS[st.detailStatus].icon,detailStatusDesc:STATUS[st.detailStatus].desc,
+      detailStatusNext:STATUS[st.detailStatus].next,
+      showStatusSideBanner,statusSideTitle,statusSideBody,statusSideTint,statusSideBorder,
       showStatusInfo:st.showStatusInfo,
       toggleStatusInfo:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showStatusInfo:!s.showStatusInfo,showStatusMenu:false,showMemberInfo:false,showAssignForm:false,showManageTags:false,showEditKeyDates:false}));},
       showStatusMenu:st.showStatusMenu,
       toggleStatusMenu:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showStatusMenu:!s.showStatusMenu,showStatusInfo:false,showMemberInfo:false,showAssignForm:false,showManageTags:false,showEditKeyDates:false}));},
-      menuReviewBg:st.detailStatus==='review'?'#F6F0E4':'transparent',
+      menuNewBg:st.detailStatus==='new'?'#F8EFE4':'transparent',
+      menuPendingBg:st.detailStatus==='pending'?'#EEF1F3':'transparent',
       menuProgressBg:st.detailStatus==='progress'?'#EAF1F8':'transparent',
-      menuHoldBg:st.detailStatus==='hold'?'#F1ECF5':'transparent',
+      menuHoldBg:st.detailStatus==='hold'?'#E8EBEE':'transparent',
       menuDoneBg:st.detailStatus==='done'?'#E8F3EC':'transparent',
       menuCancelBg:st.detailStatus==='cancel'?'#F7ECEC':'transparent',
-      pickStatusReview:()=>this.pickDraftStatus('review'),
+      pickStatusNew:()=>this.pickDraftStatus('new'),
+      pickStatusPending:()=>this.pickDraftStatus('pending'),
       pickStatusProgress:()=>this.pickDraftStatus('progress'),
       pickStatusHold:()=>this.pickDraftStatus('hold'),
       pickStatusDone:()=>this.pickDraftStatus('done'),
