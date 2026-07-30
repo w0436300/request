@@ -138,7 +138,7 @@ button,input,select,textarea{font-family:inherit}
         <sc-for list="{{ dashPagedRows }}" as="r" hint-placeholder-count="4">
           <tr class="request-row">
             <td style="font-family:'IBM Plex Mono',monospace;color:var(--muted);padding:13px 22px;border-bottom:1px solid var(--line);white-space:nowrap">#{{ r.id }}</td>
-            <td onclick="{{ r.open }}" style="padding:14px;border-bottom:1px solid var(--line);cursor:pointer"><span style="color:var(--ink);font-weight:600">{{ r.name }}</span><sc-if value="{{ r.isnew }}" hint-placeholder-val="{{ false }}"><span style="margin-left:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 7px;border-radius:6px">NEW</span></sc-if></td>
+            <td onclick="{{ r.open }}" style="padding:14px;border-bottom:1px solid var(--line);cursor:pointer"><span style="color:var(--ink);font-weight:600">{{ r.name }}</span><sc-if value="{{ r.isnew }}" hint-placeholder-val="{{ false }}"><span title="Not opened yet" style="margin-left:8px;background:var(--paper2);color:var(--ink2);border:1px solid var(--line);font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 7px;border-radius:6px">Unread</span></sc-if></td>
             <td style="padding:14px;border-bottom:1px solid var(--line)"><span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ r.statusTint }};color:{{ r.statusColor }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ r.statusIcon }}</span>{{ r.statusLabel }}</span></td>
             <td style="padding:13px 14px;border-bottom:1px solid var(--line)">
               <div style="display:flex;align-items:center">
@@ -1026,7 +1026,7 @@ const FAQS=[
  {q:'Who can move a request to a new status?',a:'Any assigned member can propose a change; the project lead is the one accountable for keeping it current.'},
  {q:'When should I use Pending details vs On hold?',a:'Pending details is before work starts — waiting on funding, approval or missing information. On hold is after work has started and is temporarily paused. Days on hold are excluded from the delivery clock.'},
  {q:'Can I raise a work package inside a live project?',a:'Yes — choose "Work package inside a live project" and pick the parent when raising a new request.'},
- {q:'What does the NEW badge mean?',a:'A short unread marker for requests raised in the last seven days that you have not opened yet. It is separate from the New status, which means the intake is still in its default triage state.'}
+ {q:'What does the Unread badge mean?',a:'It marks requests raised in the last seven days that you have not opened yet. It is not a workflow status — Unread can appear on New, Pending details, or any other status until you open the request.'}
 ];
 const DETAIL={
   id:'0009',name:'Riverside Depot — structural review',parentId:'0016',parentName:'Fenwick Tower',
