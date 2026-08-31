@@ -52,7 +52,7 @@ button,input,select,textarea{font-family:inherit}
 .request-heading-meta>span{white-space:nowrap}
 .request-heading-meta .meta-label{color:var(--ink);font-weight:700}
 .request-heading-meta .meta-value{color:var(--ink2);font-weight:400}
-.plain-detail-section{border:0!important;border-radius:0!important;box-shadow:none!important;padding:18px 2px!important}
+.plain-detail-section{border:0!important;border-radius:0!important;box-shadow:none!important;padding:18px 22px!important}
 .detail-stack-tight{gap:0!important}
 .detail-stack-tight>div{border:0!important;border-radius:0!important;box-shadow:none!important}
 .detail-stack-tight>div+div{border-top:1px solid var(--line)!important;margin-top:14px;padding-top:14px}
@@ -63,7 +63,7 @@ button,input,select,textarea{font-family:inherit}
 .lifecycle-rail>div{flex:1;padding:0 4px;min-width:0}
 .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .unsaved-bar{width:100%}
-.member-grid{display:grid;grid-template-columns:minmax(0,1fr) 180px 48px;gap:16px}
+.member-grid{display:grid;grid-template-columns:minmax(0,1fr) 180px minmax(0,1fr);gap:16px}
 .boxed-list-row:last-child{border-bottom:none!important}
 .sortable-heading{display:inline-flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:inherit;font:inherit;font-weight:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
 .sortable-heading:hover{color:var(--ink)}
@@ -135,7 +135,7 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 @media(max-width:900px){.app-shell{padding:0 6px 6px 0!important}.app-aside{height:auto!important}.app-main>main{padding:8px!important}}
 </style>
 </helmet>
-<div class="app-shell" style="--paper:#FFFFFF;--paper2:#F5F6F4;--surface:#FFFFFF;--ink:#111827;--ink2:#374151;--muted:#5F6772;--faint:#8B929C;--line:#E5E7EB;--lineS:#D1D5DB;--accent:#667EEA;--accent-ink:#5367D4;--accent-tint:#EEF0FF;--cta:#667EEA;--cta-hover:#5367D4;--cobalt:#3B6B96;--cobalt-tint:#EAF1F8;--warn:#B04A4A;--warn-tint:#F7ECEC;--r-s:8px;--r-m:12px;--r-l:16px;--r-xl:20px;--sh:0 1px 2px rgba(17,24,39,.04),0 8px 24px rgba(17,24,39,.05);font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--paper);min-height:100vh;display:flex;gap:16px;padding:16px;font-size:14px;line-height:1.5">
+<div class="app-shell" onclick="{{ closeManageTags }}" onkeydown="{{ handleAppKeydown }}" style="--paper:#FFFFFF;--paper2:#F5F6F4;--surface:#FFFFFF;--ink:#111827;--ink2:#374151;--muted:#5F6772;--faint:#8B929C;--line:#E5E7EB;--lineS:#D1D5DB;--accent:#667EEA;--accent-ink:#5367D4;--accent-tint:#EEF0FF;--cta:#667EEA;--cta-hover:#5367D4;--cobalt:#3B6B96;--cobalt-tint:#EAF1F8;--warn:#B04A4A;--warn-tint:#F7ECEC;--r-s:8px;--r-m:12px;--r-l:16px;--r-xl:20px;--sh:0 1px 2px rgba(17,24,39,.04),0 8px 24px rgba(17,24,39,.05);font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--paper);min-height:100vh;display:flex;gap:16px;padding:16px;font-size:14px;line-height:1.5">
 
 <aside class="app-aside" style="width:236px;flex:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);padding:22px 16px;display:flex;flex-direction:column;position:sticky;top:16px;height:calc(100vh - 32px);box-shadow:var(--sh)">
   <div style="display:flex;align-items:center;gap:10px;padding:0 4px 20px;margin-bottom:16px">
@@ -163,7 +163,7 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 
   <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
     <div style="margin-bottom:20px">
-      <h1 style="font-weight:800;font-size:24px;margin:0;letter-spacing:-.025em">Welcome back, Nadia</h1>
+      <h1 style="font-weight:800;font-size:24px;margin:0;letter-spacing:-.025em">Welcome back, Claire</h1>
     </div>
     <div class="status-pills">
       <sc-for list="{{ statusPills }}" as="p" hint-placeholder-count="5">
@@ -480,9 +480,29 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
       <div style="min-width:0">
         <div class="request-heading-main">
         <h1 style="font-weight:700;font-size:24px;margin:0;letter-spacing:-.02em">#{{ detail.id }} · {{ detail.name }}</h1>
-        <span style="display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ detailStatusTint }};color:{{ detailStatusColor }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ detailStatusIcon }}</span>{{ detailStatusLabel }}</span>
         </div>
+        <span style="display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ detailStatusTint }};color:{{ detailStatusColor }};margin-top:6px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">{{ detailStatusIcon }}</span>{{ detailStatusLabel }}</span>
         <div class="request-heading-meta"><span><strong class="meta-label">Owner:</strong> <span class="meta-value">{{ detailOwnerName }}</span></span><span><strong class="meta-label">Created:</strong> <span class="meta-value">{{ detailCreatedTime }} by {{ detailCreatorName }}</span></span><span><strong class="meta-label">Updated:</strong> <span class="meta-value">{{ detailUpdatedTime }} by {{ detailUpdaterName }}</span></span></div>
+        <div style="position:relative;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;min-height:26px">
+          <sc-for list="{{ detailTagChips }}" as="tg" hint-placeholder-count="3">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:var(--paper2);color:var(--ink2);font-size:12px;padding:4px 10px;border-radius:999px;font-weight:500">{{ tg.name }}<sc-if value="{{ showManageTags }}" hint-placeholder-val="{{ false }}"><button onclick="{{ tg.remove }}" aria-label="Remove tag" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px;line-height:1;padding:0 0 0 2px">×</button></sc-if></span>
+          </sc-for>
+          <button onclick="{{ toggleManageTags }}" title="Add or remove tags" aria-label="Add or remove tags" style="width:26px;height:26px;border:none;border-radius:6px;background:none;color:var(--accent);font-size:18px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="background:var(--accent-tint)">＋</button>
+          <sc-if value="{{ showManageTags }}" hint-placeholder-val="{{ false }}">
+            <div onclick="{{ stopTagsBubble }}" style="position:absolute;left:0;top:34px;z-index:12;width:300px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh)">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px"><strong style="font-size:13px;color:var(--ink)">Add or remove tags</strong><button onclick="{{ closeManageTags }}" title="Close" aria-label="Close tags editor" style="width:24px;height:24px;border:none;border-radius:6px;background:none;color:var(--muted);font-size:16px;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="background:var(--paper2);color:var(--ink)">×</button></div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <select value="{{ tagPickSelect }}" onchange="{{ setTagPickSelect }}" style="flex:1;height:34px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font:inherit;font-size:12.5px;color:inherit;background:#fff">
+                  <option value="">Choose a tag</option>
+                  <sc-for list="{{ availableTagOptions }}" as="to" hint-placeholder-count="4"><option value="{{ to }}">{{ to }}</option></sc-for>
+                  <option value="Other">Other</option>
+                </select>
+                <button onclick="{{ addTag }}" style="height:34px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;font-size:12px;cursor:pointer;opacity:{{ addTagOpacity }}">Add</button>
+              </div>
+              <sc-if value="{{ showTagOther }}" hint-placeholder-val="{{ false }}"><input value="{{ newTag }}" onchange="{{ setNewTag }}" placeholder="Enter a tag name" style="width:100%;height:34px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font-size:12.5px;box-sizing:border-box;margin-top:8px"></sc-if>
+            </div>
+          </sc-if>
+        </div>
       </div>
       <sc-if value="{{ showEditDetailsBtn }}" hint-placeholder-val="{{ true }}">
         <button onclick="{{ startEditDetails }}" style="margin-left:auto;height:32px;padding:0 12px;border:none;border-radius:var(--r-s);background:#fff;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink2);flex:none" style-hover="background:var(--paper2);color:var(--accent)">✎ Edit</button>
@@ -568,10 +588,10 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
             </sc-if>
           </div>
           <div style="display:grid;grid-template-columns:160px minmax(0,1fr);gap:14px;align-items:start">
-            <div style="color:var(--muted);font-size:13px">Request Type</div>
+            <div style="color:var(--ink);font-size:13px">Request Type</div>
             <div style="font-weight:600">{{ requestTypeLabel }}</div>
             <sc-if value="{{ isMainRequest }}" hint-placeholder-val="{{ true }}">
-              <div style="color:var(--muted);font-size:13px">Sub-Requests</div>
+              <div style="color:var(--ink);font-size:13px">Sub-Requests</div>
               <div>
                 <sc-if value="{{ hasSubRequests }}" hint-placeholder-val="{{ false }}">
                   <div style="display:flex;flex-direction:column;gap:8px">
@@ -584,7 +604,7 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
               </div>
             </sc-if>
             <sc-if value="{{ isSubRequest }}" hint-placeholder-val="{{ false }}">
-              <div style="color:var(--muted);font-size:13px">Main Request</div>
+              <div style="color:var(--ink);font-size:13px">Main Request</div>
               <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
                 <span style="font-weight:600">{{ parentProjectLabel }}</span>
                 <button onclick="{{ openParentProject }}" style="padding:0;border:none;background:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer" style-hover="text-decoration:underline">View Main Request</button>
@@ -627,7 +647,46 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
             <div style="padding:14px 0 2px;color:var(--muted);font-size:13.5px;line-height:1.5">No one assigned yet. <button class="empty-action" onclick="{{ toggleAssignForm }}">Assign a member</button> to add a project lead or contributor.</div>
           </sc-if>
         </div>
-        <div class="plain-detail-section" style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px;margin-top:16px">
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px;margin-top:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <h3 style="font-weight:700;font-size:14px;margin:0">Planned release dates</h3>
+            <span style="position:relative;margin-left:auto;display:inline-flex">
+              <button onclick="{{ toggleEditKeyDates }}" style="background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:6px" style-hover="text-decoration:underline">✎ Change</button>
+              <sc-if value="{{ showEditKeyDates }}" hint-placeholder-val="{{ false }}">
+                <div onclick="{{ stopKeyDatesBubble }}" style="position:absolute;right:0;top:28px;z-index:9;width:240px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh)">
+                  <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">{{ planningDateEditorLabel }}</div>
+                  <input type="date" value="{{ planningDeadline }}" onchange="{{ setPlanningDeadline }}" style="width:100%;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font:inherit;font-family:'IBM Plex Mono',monospace;font-size:13px;color:inherit;background:#fff;box-sizing:border-box">
+                </div>
+              </sc-if>
+            </span>
+          </div>
+          <sc-if value="{{ hasParentProject }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:10px;border-bottom:1px solid var(--line)">
+              <button onclick="{{ openParentProject }}" style="padding:0;border:none;background:none;color:var(--accent);font:600 14px inherit;cursor:pointer;text-align:left" style-hover="text-decoration:underline">Main request · {{ parentProjectLabel }}</button>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink2)">{{ parentPlanningDeadlineLabel }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasPlanningDate }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+              <div style="font-size:14px;color:var(--ink)">{{ planningDeadlineTitle }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">{{ planningDeadlineLabel }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasChildProjectDates }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">
+              <sc-for list="{{ childProjectDates }}" as="child" hint-placeholder-count="2">
+                <button onclick="{{ child.open }}" style="display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:7px 0;border:none;background:none;color:var(--accent);font:600 13.5px inherit;text-align:left;cursor:pointer" style-hover="text-decoration:underline">
+                  <span>Sub-request · #{{ child.id }} {{ child.name }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink2);font-weight:400;white-space:nowrap">{{ child.date }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ planningDateEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="color:var(--muted);font-size:13.5px;line-height:1.5">{{ planningDateEmptyMessage }}</div>
+          </sc-if>
+        </div>
+        <div class="plain-detail-section" style="display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px;margin-top:16px">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
             <h3 style="font-weight:700;font-size:14px;margin:0">Tags</h3>
             <button onclick="{{ toggleManageTags }}" style="margin-left:auto;background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:6px" style-hover="text-decoration:underline">✎ Manage tags</button>
@@ -656,45 +715,6 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
             </div>
           </sc-if>
         </div>
-        <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px;margin-top:16px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-            <h3 style="font-weight:700;font-size:14px;margin:0">Key dates</h3>
-            <span style="position:relative;margin-left:auto;display:inline-flex">
-              <button onclick="{{ toggleEditKeyDates }}" style="background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:6px" style-hover="text-decoration:underline">✎ Change</button>
-              <sc-if value="{{ showEditKeyDates }}" hint-placeholder-val="{{ false }}">
-                <div onclick="{{ stopKeyDatesBubble }}" style="position:absolute;right:0;top:28px;z-index:9;width:240px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh)">
-                  <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">{{ planningDateEditorLabel }}</div>
-                  <input type="date" value="{{ planningDeadline }}" onchange="{{ setPlanningDeadline }}" style="width:100%;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font:inherit;font-family:'IBM Plex Mono',monospace;font-size:13px;color:inherit;background:#fff;box-sizing:border-box">
-                </div>
-              </sc-if>
-            </span>
-          </div>
-          <sc-if value="{{ hasParentProject }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:10px;border-bottom:1px solid var(--line)">
-              <button onclick="{{ openParentProject }}" style="padding:0;border:none;background:none;color:var(--accent);font:600 14px inherit;cursor:pointer;text-align:left" style-hover="text-decoration:underline">Main Request · {{ parentProjectLabel }} · Planning submission</button>
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink2)">{{ parentPlanningDeadlineLabel }}</div>
-            </div>
-          </sc-if>
-          <sc-if value="{{ hasPlanningDate }}" hint-placeholder-val="{{ true }}">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-              <div style="font-size:14px;color:var(--muted)">{{ planningDeadlineTitle }}</div>
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">{{ planningDeadlineLabel }}</div>
-            </div>
-          </sc-if>
-          <sc-if value="{{ hasChildProjectDates }}" hint-placeholder-val="{{ false }}">
-            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">
-              <sc-for list="{{ childProjectDates }}" as="child" hint-placeholder-count="2">
-                <button onclick="{{ child.open }}" style="display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:7px 0;border:none;background:none;color:var(--accent);font:600 13.5px inherit;text-align:left;cursor:pointer" style-hover="text-decoration:underline">
-                  <span>Sub-Request · #{{ child.id }} {{ child.name }} · Planning submission</span>
-                  <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink2);font-weight:400;white-space:nowrap">{{ child.date }}</span>
-                </button>
-              </sc-for>
-            </div>
-          </sc-if>
-          <sc-if value="{{ planningDateEmpty }}" hint-placeholder-val="{{ false }}">
-            <div style="color:var(--muted);font-size:13.5px;line-height:1.5">{{ planningDateEmptyMessage }}</div>
-          </sc-if>
-        </div>
       </div>
     </sc-if>
 
@@ -707,26 +727,26 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
           </div>
           <div class="detail-rows" style="padding:8px 24px 0">
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Request Type</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Request Type</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <span>{{ requestTypeLabel }}</span>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Service</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Service</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.service }}">{{ detailFieldDisplay.service }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.service }}" onchange="{{ fieldSetters.service }}" placeholder="Describe the service" style="width:100%;max-width:320px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Main Request</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Main Request</div>
               <div style="flex:1;text-align:left;font-size:14px;line-height:1.45;min-width:0">
                 <span style="color:var(--accent);font-weight:600">{{ parentProjectLabel }}</span>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Description</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Description</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.5;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="white-space:pre-wrap;color:{{ detailFieldColors.description }}">{{ detailFieldDisplay.description }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><textarea value="{{ fields.description }}" onchange="{{ fieldSetters.description }}" placeholder="Describe the scope, constraints and requirements" style="width:100%;min-height:76px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:10px 12px;font:inherit;color:inherit;resize:vertical;background:#fff;text-align:left"></textarea></sc-if>
@@ -741,42 +761,42 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
           </div>
           <div class="detail-rows" style="padding:8px 24px 0">
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Business name</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Business name</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.businessName }}">{{ detailFieldDisplay.businessName }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.businessName }}" onchange="{{ fieldSetters.businessName }}" placeholder="Business name" style="width:100%;max-width:360px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Site address</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Site address</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.siteAddress }}">{{ detailFieldDisplay.siteAddress }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.siteAddress }}" onchange="{{ fieldSetters.siteAddress }}" placeholder="14 Wharf Road, Bristol" style="width:100%;max-width:360px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Phone</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Phone</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.contactPhone }}">{{ detailFieldDisplay.contactPhone }} <sc-if value="{{ hasContactPhone }}" hint-placeholder-val="{{ false }}">· {{ fields.contactPhoneType }}</sc-if></span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;max-width:420px"><input value="{{ fields.contactPhone }}" onchange="{{ fieldSetters.contactPhone }}" placeholder="+44 20 7946 0958" style="flex:1;min-width:0;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"><select value="{{ fields.contactPhoneType }}" onchange="{{ fieldSetters.contactPhoneType }}" style="width:100px;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;background:#fff"><option>Tel</option><option>Home</option></select></div></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Email</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Email</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.contactEmail }}">{{ detailFieldDisplay.contactEmail }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.contactEmail }}" onchange="{{ fieldSetters.contactEmail }}" placeholder="name@company.com" style="width:100%;max-width:360px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Building type</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Building type</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.buildingType }}">{{ detailFieldDisplay.buildingType }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.buildingType }}" onchange="{{ fieldSetters.buildingType }}" placeholder="Commercial office" style="width:100%;max-width:320px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Date needed by</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Date needed by</div>
               <div style="flex:1;text-align:left;font-size:14px;color:{{ dateNeededColor }};line-height:1.45;min-width:0;font-family:'IBM Plex Mono',monospace">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span>{{ dateNeededLabel }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input type="date" value="{{ fields.dateNeeded }}" onchange="{{ fieldSetters.dateNeeded }}" style="width:100%;max-width:220px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;font-family:'IBM Plex Mono',monospace;color:inherit;background:#fff;text-align:left"></sc-if>
@@ -791,21 +811,21 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
           </div>
           <div class="detail-rows" style="padding:8px 24px 0">
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Deliverables</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Deliverables</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.deliverablesText }}">{{ detailFieldDisplay.deliverablesText }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.deliverablesText }}" onchange="{{ fieldSetters.deliverablesText }}" placeholder="List expected deliverables" style="width:100%;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Not included</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Not included</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.notIncludedText }}">{{ detailFieldDisplay.notIncludedText }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.notIncludedText }}" onchange="{{ fieldSetters.notIncludedText }}" placeholder="List exclusions" style="width:100%;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Assumptions</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Assumptions</div>
               <div style="flex:1;text-align:left;font-size:14px;color:var(--ink);line-height:1.45;min-width:0">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span style="color:{{ detailFieldColors.assumptionsText }}">{{ detailFieldDisplay.assumptionsText }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input value="{{ fields.assumptionsText }}" onchange="{{ fieldSetters.assumptionsText }}" placeholder="List assumptions" style="width:100%;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;color:inherit;background:#fff;text-align:left"></sc-if>
@@ -827,14 +847,14 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Planning submission</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Planning submission</div>
               <div style="flex:1;text-align:left;font-size:14px;color:{{ planningDeadlineColor }};line-height:1.45;min-width:0;font-family:'IBM Plex Mono',monospace">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span>{{ planningDeadlineLabel }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input type="date" value="{{ planningDeadline }}" onchange="{{ setPlanningDeadline }}" style="width:100%;max-width:220px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;font-family:'IBM Plex Mono',monospace;color:inherit;background:#fff;text-align:left"></sc-if>
               </div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-              <div style="width:170px;flex:none;color:var(--muted);font-size:13px;line-height:1.45;padding-top:2px">Site start</div>
+              <div style="width:170px;flex:none;color:var(--ink);font-size:13px;line-height:1.45;padding-top:2px">Site start</div>
               <div style="flex:1;text-align:left;font-size:14px;color:{{ siteStartColor }};line-height:1.45;min-width:0;font-family:'IBM Plex Mono',monospace">
                 <sc-if value="{{ viewingDetails }}" hint-placeholder-val="{{ true }}"><span>{{ siteStartLabel }}</span></sc-if>
                 <sc-if value="{{ editingDetails }}" hint-placeholder-val="{{ false }}"><input type="date" value="{{ fields.siteStart }}" onchange="{{ fieldSetters.siteStart }}" style="width:100%;max-width:220px;display:block;height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;font-family:'IBM Plex Mono',monospace;color:inherit;background:#fff;text-align:left"></sc-if>
@@ -880,7 +900,7 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
                 <span style="position:absolute;left:50%;top:22px;transform:translateX(-50%);z-index:5;width:280px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--sh);color:var(--ink2);font-size:12.5px;font-weight:400;line-height:1.45;white-space:normal;text-align:left">Only you can see this. Use it for personal reminders or working notes — other members and the requester will not see it.</span>
               </sc-if>
             </span></label>
-            <button onclick="{{ postComment }}" style="height:32px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer;margin-left:auto">Comment</button>
+            <button onclick="{{ postComment }}" style="height:32px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer;margin-left:auto">Post comment</button>
           </div>
         </div>
         <div style="display:flex;align-items:flex-end;margin-top:24px;border-bottom:1px solid var(--line)">
@@ -933,7 +953,7 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
           <sc-if value="{{ timelineEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 0;color:var(--muted);font-size:13.5px">No comments yet. <button class="empty-action" onclick="{{ focusCommentInput }}">Add the first comment</button></div></sc-if>
           <sc-if value="{{ hasOlderTimeline }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;justify-content:center;padding:2px 0 10px">
-              <button onclick="{{ loadOlderTimeline }}" style="height:36px;padding:0 16px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);color:var(--accent);font-weight:600;font-size:13px;cursor:pointer" style-hover="background:var(--accent-tint);border-color:var(--accent)">Load older activity</button>
+              <button onclick="{{ loadOlderTimeline }}" style="height:36px;padding:0 16px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);color:var(--accent);font-weight:600;font-size:13px;cursor:pointer" style-hover="background:var(--accent-tint);border-color:var(--accent)">Show earlier activity</button>
             </div>
           </sc-if>
         </div>
@@ -1211,12 +1231,19 @@ function sortRequestRows(rows,key,dir){
 }
 
 class Component extends DCLogic {
+  componentDidMount(){
+    this.beforeUnloadHandler=(e)=>{
+      if(this.state.page==='detail'&&this.state.detailDirty){e.preventDefault();e.returnValue='';}
+    };
+    window.addEventListener('beforeunload',this.beforeUnloadHandler);
+  }
+  componentWillUnmount(){window.removeEventListener('beforeunload',this.beforeUnloadHandler);}
   state={page:'dashboard',detailTab:'manage',detailLayout:'a',wizardStep:1,search:'',statusFilter:'all',tagFilter:'all',memberFilter:'all',requestsPage:1,requestsPageSize:10,dashPage:1,dashSortKey:'updated',dashSortDir:'desc',requestsSortKey:'updated',requestsSortDir:'desc',currentUserRole:'Project lead',draftId:'',drafts:[],newRequestName:'',newRequestKind:'Main Request',newParentProjectId:'',newParentSearch:'',newRequestDescription:'',newRequestBusinessName:'',newRequestSiteAddress:'',newRequestContactPhone:'',newRequestPhoneType:'Tel',newRequestContactEmail:'',newRequestStage:'Feasibility',newRequestPlanningDeadline:'',newRequestTagPick:'',newRequestTags:[],newRequestFiles:[],newProjectLead:'',newDesignReviewer:'',newAdditionalMember:'',newAdditionalRoleSelect:'Contributor',newAdditionalRoleCustom:'',newAdditionalMembers:[],showNewMemberPicker:false,showUnsavedConfirm:false,pendingNavigation:'',createdRequests:[],activeDetail:{...DETAIL},toastMsg:'',showNoteInfo:false,showMemberInfo:false,showStatusInfo:false,showStatusMenu:false,showAssignForm:false,showManageTags:false,showEditKeyDates:false,
     members:DETAIL.members.map(m=>({...m})),savedMembers:DETAIL.members.map(m=>({...m})),
     assignPerson:'',assignRoleSelect:'Project lead',assignRoleCustom:'',assignSearch:'',
     savedStatus:'review',detailStatus:'review',detailDirty:false,statusNote:'',activityAdds:[],
     tags:DETAIL.tagList.slice(),savedTags:DETAIL.tagList.slice(),newTag:'',tagPickSelect:'',
-    planningDeadline:'2026-09-30',savedPlanningDeadline:'2026-09-30',timelineFilter:'all',timelineLimit:20,
+    planningDeadline:'2026-09-30',savedPlanningDeadline:'2026-09-30',timelineFilter:'all',timelineLimit:8,
     commentDraft:'',commentOnlyMe:false,removedCommentIds:[],
     showDeleteConfirm:false,deleteConfirmTitle:'',deleteConfirmBody:'',deleteConfirmAction:'Delete',pendingDelete:null,
     showQuickComment:false,quickCommentReqId:'',quickCommentReqName:'',quickCommentDraft:'',quickCommentOnlyMe:false,showQuickNoteInfo:false,activityMenuId:'',
@@ -1316,10 +1343,22 @@ class Component extends DCLogic {
     }
     this.navigateTo(p);
   }
+  goDetailTab(detailTab){
+    if(this.state.detailTab===detailTab)return;
+    if(this.state.detailDirty){
+      this.setState({showUnsavedConfirm:true,pendingNavigation:{kind:'tab',detailTab}});
+      return;
+    }
+    this.setState({detailTab});
+  }
   closeUnsavedConfirm(){this.setState({showUnsavedConfirm:false,pendingNavigation:''})}
   discardAndNavigate(){
     const target=this.state.pendingNavigation;
     this.cancelDetailChanges();
+    if(target&&target.kind==='tab'){
+      this.setState({detailTab:target.detailTab,showUnsavedConfirm:false,pendingNavigation:''});
+      return;
+    }
     if(target&&target.kind==='request'){
       this.openRequest(target.request,target.detailTab,true);
       return;
@@ -1329,6 +1368,10 @@ class Component extends DCLogic {
   saveAndNavigate(){
     const target=this.state.pendingNavigation;
     this.saveDetailChanges();
+    if(target&&target.kind==='tab'){
+      this.setState({detailTab:target.detailTab,showUnsavedConfirm:false,pendingNavigation:''});
+      return;
+    }
     if(target&&target.kind==='request'){
       this.openRequest(target.request,target.detailTab,true);
       return;
@@ -1693,7 +1736,7 @@ class Component extends DCLogic {
     const tf=st.timelineFilter;
     const timelineGroups=tf==='comments'?commentGroups:tf==='changes'?changeGroups:TIMELINE;
     const entriesCount=timelineGroups.reduce((n,g)=>n+g.items.length,0);
-    let timelineRemaining=Math.max(0,Number(st.timelineLimit)||20);
+    let timelineRemaining=Math.max(0,Number(st.timelineLimit)||8);
     const timelineDisplay=timelineGroups.map(group=>{
       if(timelineRemaining<=0)return null;
       const items=group.items.slice(0,timelineRemaining);
@@ -1919,7 +1962,7 @@ class Component extends DCLogic {
       showStatusNote:st.detailStatus!==st.savedStatus,
       statusNote:st.statusNote,
       setStatusNote:(e)=>this.setState({statusNote:e.target.value}),
-      hasDetailDirty:!!st.detailDirty,
+      hasDetailDirty:!!st.detailDirty&&st.detailTab!=='timeline',
       cancelDetailChanges:()=>this.cancelDetailChanges(),
       saveDetailChanges:()=>this.saveDetailChanges(),
       toastBottom:'28px',
@@ -1945,7 +1988,7 @@ class Component extends DCLogic {
         if(!next||st.tags.includes(next))return;
         this.setState(s=>{
           const tags=[...s.tags,next];
-          return {tags,newTag:'',tagPickSelect:'',detailDirty:this.computeDirty({...s,tags})};
+          return {tags,newTag:'',tagPickSelect:'',showManageTags:false,detailDirty:this.computeDirty({...s,tags})};
         });
       },
       showEditKeyDates:st.showEditKeyDates,
@@ -1959,8 +2002,8 @@ class Component extends DCLogic {
         const deadline=parent&&(parent.planningDeadline||(parent.detail&&parent.detail.planningDeadline));
         return deadline?formatIsoDate(deadline):'Not set';
       })(),
-      planningDeadlineTitle:st.activeDetail.parentId&&st.activeDetail.parentId!=='—'?'This request · Planning submission':'Planning submission',
-      planningDateEditorLabel:st.activeDetail.parentId&&st.activeDetail.parentId!=='—'?'This request · Planning submission':'Planning submission',
+      planningDeadlineTitle:st.activeDetail.parentId&&st.activeDetail.parentId!=='—'?'This request':'Main request',
+      planningDateEditorLabel:'Planned release date',
       openParentProject:()=>{
         const parent=merged.find(request=>request.id===st.activeDetail.parentId);
         if(parent)this.openRequest(parent,'manage');
@@ -2091,9 +2134,12 @@ class Component extends DCLogic {
       closeAssignForm:()=>this.setState({showAssignForm:false,assignPerson:'',assignSearch:'',assignRoleSelect:'Project lead',assignRoleCustom:''}),
       stopAssignBubble:(e)=>{e.stopPropagation();},
       showManageTags:st.showManageTags,
-      toggleManageTags:()=>this.setState(s=>({showManageTags:!s.showManageTags,tagPickSelect:'',newTag:'',showMemberInfo:false,showStatusInfo:false,showStatusMenu:false,showAssignForm:false,showEditKeyDates:false})),
+      toggleManageTags:(e)=>{if(e){e.preventDefault();e.stopPropagation();}this.setState(s=>({showManageTags:!s.showManageTags,tagPickSelect:'',newTag:'',showMemberInfo:false,showStatusInfo:false,showStatusMenu:false,showAssignForm:false,showEditKeyDates:false}))},
+      closeManageTags:()=>{if(st.showManageTags)this.setState({showManageTags:false,tagPickSelect:'',newTag:''});},
+      stopTagsBubble:(e)=>{e.stopPropagation();},
+      handleAppKeydown:(e)=>{if(e.key==='Escape'&&st.showManageTags)this.setState({showManageTags:false,tagPickSelect:'',newTag:''});},
       detailTab:st.detailTab,isTabManage:st.detailTab==='manage',isTabDetails:st.detailTab==='details',isTabTimeline:st.detailTab==='timeline',
-      tabManage:()=>this.setState({detailTab:'manage'}),tabDetails:()=>this.setState({detailTab:'details'}),tabTimeline:()=>this.setState({detailTab:'timeline'}),tabComments:()=>this.setState({detailTab:'comments'}),
+      tabManage:()=>this.goDetailTab('manage'),tabDetails:()=>this.goDetailTab('details'),tabTimeline:()=>this.goDetailTab('timeline'),tabComments:()=>this.goDetailTab('comments'),
       tabManageColor:st.detailTab==='manage'?'#5367D4':'#5F6772',tabManageBorder:st.detailTab==='manage'?'#667EEA':'transparent',
       tabDetailsColor:st.detailTab==='details'?'#5367D4':'#5F6772',tabDetailsBorder:st.detailTab==='details'?'#667EEA':'transparent',
       tabTimelineColor:st.detailTab==='timeline'?'#5367D4':'#5F6772',tabTimelineBorder:st.detailTab==='timeline'?'#667EEA':'transparent',
@@ -2104,9 +2150,9 @@ class Component extends DCLogic {
       layoutBBg:st.detailLayout==='b'?'#667EEA':'#FFFFFF',layoutBColor:st.detailLayout==='b'?'#FFFFFF':'#374151',
       layoutCBg:st.detailLayout==='c'?'#667EEA':'#FFFFFF',layoutCColor:st.detailLayout==='c'?'#FFFFFF':'#374151',
       timelineDisplay,entriesCount,timelineEmpty:entriesCount===0,hasOlderTimeline,
-      loadOlderTimeline:()=>this.setState(s=>({timelineLimit:(Number(s.timelineLimit)||20)+20})),
+      loadOlderTimeline:()=>this.setState(s=>({timelineLimit:(Number(s.timelineLimit)||8)+8})),
       focusCommentInput:()=>setTimeout(()=>document.getElementById('request-comment-input')?.focus(),0),activityBadge:2+st.activityAdds.length,
-      setTfAll:()=>this.setState({timelineFilter:'all',timelineLimit:20}),setTfComments:()=>this.setState({timelineFilter:'comments',timelineLimit:20}),setTfChanges:()=>this.setState({timelineFilter:'changes',timelineLimit:20}),
+      setTfAll:()=>this.setState({timelineFilter:'all',timelineLimit:8}),setTfComments:()=>this.setState({timelineFilter:'comments',timelineLimit:8}),setTfChanges:()=>this.setState({timelineFilter:'changes',timelineLimit:8}),
       pAllColor:pAll.color,pAllBorder:pAll.border,pAllWeight:pAll.weight,
       pCColor:pC.color,pCBorder:pC.border,pCWeight:pC.weight,
       pChColor:pCh.color,pChBorder:pCh.border,pChWeight:pCh.weight,
