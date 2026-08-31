@@ -48,6 +48,8 @@ jobs:
 
           cp index.html auth-gate.js support.js site/
           cp "Intake Tracker.dc.html" site/app.html
+          mkdir -p site/knowledge-hub
+          cp "knowledge-hub/Meridian-KB-prototype.html" site/knowledge-hub/index.html
 
           # Inject hash only into the deploy artifact — never commit auth-config.js
           printf '%s\n' "window.__SITE_PASSWORD_HASH__ = \"${HASH}\";" > site/auth-config.js
