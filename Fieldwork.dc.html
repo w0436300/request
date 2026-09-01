@@ -150,7 +150,9 @@ table tbody tr:last-child>td{border-bottom:none!important}
     <div style="font-weight:700;font-size:15px;letter-spacing:-.02em">Fieldwork</div>
   </div>
 
+  <sc-if value="{{ canCreateProject }}" hint-placeholder-val="{{ true }}">
   <button onclick="{{ goNew }}" style="width:100%;height:38px;margin:0 0 18px;border:none;border-radius:8px;background:var(--cta);color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.01em;cursor:pointer;box-shadow:0 1px 2px rgba(102,126,234,.18)" style-hover="background:var(--cta-hover)">+ New project request</button>
+  </sc-if>
 
   <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:0 10px 8px">Workspace</div>
   <nav style="display:flex;flex-direction:column;gap:2px" aria-label="Workspace">
@@ -181,13 +183,23 @@ table tbody tr:last-child>td{border-bottom:none!important}
     </nav>
     <div style="position:relative;border-top:1px solid var(--line);padding-top:12px">
       <button onclick="{{ toggleAccountMenu }}" aria-expanded="{{ showAccountMenu }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:8px 10px;border:none;border-radius:8px;background:{{ accountBg }};cursor:pointer;text-align:left" style-hover="background:#F7F8FA">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">CW</div>
-        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;color:var(--ink)">Claire Wang</div><div style="color:var(--muted);font-size:11.5px">Project lead</div></div>
+        <div style="width:28px;height:28px;border-radius:50%;background:{{ actingColor }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ actingInitials }}</div>
+        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;color:var(--ink)">{{ actingAs }}</div><div style="color:var(--muted);font-size:11.5px">{{ actingRole }} · {{ actingTier }}</div></div>
         <span style="color:var(--faint);font-size:10px;flex:none">▾</span>
       </button>
       <sc-if value="{{ showAccountMenu }}" hint-placeholder-val="{{ false }}">
-        <div onclick="{{ stopBubble }}" style="position:absolute;left:8px;right:8px;bottom:56px;z-index:20;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12)">
-          <button onclick="{{ goSettings }}" style="width:100%;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:transparent;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">Workspace settings</button>
+        <div onclick="{{ stopBubble }}" style="position:absolute;left:8px;right:8px;bottom:56px;z-index:20;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12);max-height:min(420px,70vh);overflow:auto">
+          <div style="padding:8px 10px 6px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">View as</div>
+          <sc-for list="{{ actAsOptions }}" as="u" hint-placeholder-count="8">
+            <button onclick="{{ u.pick }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:8px 10px;border:none;border-radius:var(--r-s);background:{{ u.bg }};cursor:pointer;text-align:left" style-hover="background:var(--paper2)">
+              <span style="width:24px;height:24px;border-radius:50%;background:{{ u.color }};color:#fff;font-size:9.5px;font-weight:700;display:grid;place-items:center;flex:none">{{ u.initials }}</span>
+              <span style="flex:1;min-width:0"><span style="display:block;font-weight:{{ u.weight }};font-size:12.5px;color:var(--ink)">{{ u.name }}</span><span style="display:block;font-size:11px;color:var(--muted)">{{ u.role }} · {{ u.tier }}</span></span>
+            </button>
+          </sc-for>
+          <div style="height:1px;background:var(--line);margin:6px 4px"></div>
+          <sc-if value="{{ canEditSettings }}" hint-placeholder-val="{{ true }}">
+            <button onclick="{{ goSettings }}" style="width:100%;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:transparent;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">Workspace settings</button>
+          </sc-if>
           <button onclick="{{ goSupport }}" style="width:100%;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:transparent;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">Support</button>
         </div>
       </sc-if>
@@ -208,6 +220,13 @@ table tbody tr:last-child>td{border-bottom:none!important}
 </div>
 <div class="work-area">
 <main class="app-canvas">
+
+<sc-if value="{{ showAccessBanner }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px;padding:10px 14px;background:var(--paper2);border:1px solid var(--line);border-radius:var(--r-l);color:var(--ink2);font-size:12.5px">
+    <span style="font-weight:700;color:var(--ink);white-space:nowrap">{{ actingTier }}</span>
+    <span style="flex:1;min-width:180px">{{ accessBannerText }}</span>
+  </div>
+</sc-if>
 
 <!-- ========================= PORTFOLIO ========================= -->
 <sc-if value="{{ isPortfolio }}" hint-placeholder-val="{{ true }}">
@@ -330,7 +349,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
     </sc-if>
     <sc-if value="{{ projectsEmpty }}" hint-placeholder-val="{{ false }}">
       <div style="padding:44px 20px;text-align:center;color:var(--muted)">
-        <div style="font-weight:600;color:var(--ink2);margin-bottom:6px">No projects in this phase</div>
+        <div style="font-weight:600;color:var(--ink2);margin-bottom:6px">{{ listEmptyHint }}</div>
         <div style="font-size:13.5px;margin-bottom:14px">Try another phase, or clear the filters to see the whole portfolio.</div>
         <button onclick="{{ clearAllFilters }}" style="height:36px;padding:0 16px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);font-weight:600;cursor:pointer;color:var(--ink2)">Clear filters</button>
       </div>
@@ -341,7 +360,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 <!-- ========================= PROJECT REQUESTS ========================= -->
 <sc-if value="{{ isIntake }}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;gap:20px;flex-wrap:wrap;background:var(--accent-tint);border:1px solid #DADFFA;border-radius:var(--r-l);padding:14px 18px;margin-bottom:14px">
-    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14.5px;color:var(--ink)">{{ intakeCount }} enquiries waiting to be scoped</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Confirm the brief, target budget and sector, then appoint a project lead. Scoping turns an enquiry into a live job.</div></div>
+    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14.5px;color:var(--ink)">{{ intakeCount }} enquiries waiting to be scoped</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Maintained by Project Lead and Operations only. Confirm brief, budget and sector, then convert to a live job — Designers do not create enquiries unless invited for feasibility.</div></div>
     <div class="metric-grid"><div><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.04em;color:var(--accent-ink);line-height:1">{{ intakeNewCount }}</div><div style="font-size:11.5px;color:var(--muted);margin-top:4px">Received today</div></div></div>
   </div>
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
@@ -426,10 +445,11 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <table style="width:100%;border-collapse:collapse;min-width:900px">
         <thead><tr style="background:#FBFBFD">
           <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">Person</th>
-          <th style="width:160px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Role</th>
-          <th style="width:180px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Discipline</th>
+          <th style="width:150px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Role</th>
+          <th style="width:100px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Access</th>
+          <th style="width:170px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Discipline</th>
           <th style="width:88px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Leading</th>
-          <th style="width:170px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Next 3 weeks</th>
+          <th style="width:160px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Next 3 weeks</th>
           <th style="width:100px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Next due</th>
         </tr></thead>
         <tbody>
@@ -442,6 +462,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               </div>
             </td>
             <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ t.role }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line)"><span style="display:inline-flex;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;align-items:center;background:{{ t.tierTint }};color:{{ t.tierColor }};white-space:nowrap">{{ t.tierLabel }}</span></td>
             <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ t.discipline }}</td>
             <td style="padding:14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)">{{ t.leadingCount }}</td>
             <td style="padding:14px;border-bottom:1px solid var(--line)">
@@ -461,6 +482,18 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= STANDARDS ========================= -->
 <sc-if value="{{ isStandards }}" hint-placeholder-val="{{ false }}">
+  <h2 style="font-weight:700;font-size:15px;margin:0 0 12px;letter-spacing:-.02em">Access model</h2>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:22px">
+    <sc-for list="{{ accessGuide }}" as="ag" hint-placeholder-count="3">
+      <div class="boxed-list-row" style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line)">
+        <span style="display:inline-flex;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;align-items:center;background:{{ ag.tint }};color:{{ ag.color }};flex:none;white-space:nowrap">{{ ag.label }}</span>
+        <div style="flex:1;min-width:220px">
+          <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-bottom:4px">{{ ag.roles }}</div>
+          <div style="color:var(--ink2);font-size:13.5px;line-height:1.6">{{ ag.desc }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
   <h2 style="font-weight:700;font-size:15px;margin:0 0 12px;letter-spacing:-.02em">Delivery phases</h2>
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:22px">
     <sc-for list="{{ phaseGuide }}" as="p" hint-placeholder-count="5">
@@ -634,7 +667,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               <button onclick="{{ toggleNewMemberPicker }}" aria-label="Add collaborator" title="Add collaborator" style="width:24px;height:24px;border:1px solid var(--lineS);border-radius:50%;background:var(--surface);color:var(--accent);font-size:17px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:var(--accent);background:var(--accent-tint)">+</button>
             </div>
             <sc-if value="{{ showNewMemberPicker }}" hint-placeholder-val="{{ false }}">
-              <div style="display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:8px;margin-top:10px"><select value="{{ newCollaborator }}" onchange="{{ setNewCollaborator }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option value="">Choose a person</option><sc-for list="{{ availableCollaborators }}" as="person" hint-placeholder-count="6"><option value="{{ person }}">{{ person }}</option></sc-for></select><select value="{{ newCollaboratorRole }}" onchange="{{ setNewCollaboratorRole }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option>Contributor</option><option>Construction lead</option><option>Technical reviewer</option><option>Compliance lead</option><option>Client contact</option></select><button onclick="{{ addNewCollaborator }}" style="height:40px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer">Add</button></div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:8px;margin-top:10px"><select value="{{ newCollaborator }}" onchange="{{ setNewCollaborator }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option value="">Choose a person</option><sc-for list="{{ availableCollaborators }}" as="person" hint-placeholder-count="6"><option value="{{ person }}">{{ person }}</option></sc-for></select><select value="{{ newCollaboratorRole }}" onchange="{{ setNewCollaboratorRole }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><sc-for list="{{ collabRoleOptions }}" as="cr" hint-placeholder-count="8"><option value="{{ cr }}">{{ cr }}</option></sc-for></select><button onclick="{{ addNewCollaborator }}" style="height:40px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer">Add</button></div>
             </sc-if>
             <sc-if value="{{ hasNewCollaborators }}" hint-placeholder-val="{{ false }}">
               <div style="margin-top:10px"><sc-for list="{{ newCollaboratorChips }}" as="member" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)"><div style="width:28px;height:28px;border-radius:50%;color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;flex:none;background:{{ member.color }}">{{ member.initials }}</div><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px">{{ member.name }}</div><div style="color:var(--muted);font-size:12px">{{ member.role }}</div></div><button onclick="{{ member.remove }}" title="Remove" aria-label="Remove collaborator" style="border:none;background:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:var(--r-s)">×</button></div></sc-for></div>
@@ -719,6 +752,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <div class="detail-card" style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px">
         <div class="status-head">
           <h3 style="font-weight:700;font-size:14px;margin:0">Phase &amp; progress</h3>
+          <sc-if value="{{ canChangePhase }}" hint-placeholder-val="{{ true }}">
           <span style="position:relative;margin-left:auto;display:inline-flex">
             <button onclick="{{ togglePhaseMenu }}" aria-label="Change phase" aria-expanded="{{ showPhaseMenu }}" style="display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 10px 0 11px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid transparent;background:{{ draftPhaseTint }};color:{{ draftPhaseColor }}">
               <span style="width:6px;height:6px;border-radius:50%;background:{{ draftPhaseColor }};flex:none"></span>{{ draftPhaseLabel }}<span style="font-size:10px;opacity:.75;margin-left:2px">▾</span>
@@ -733,6 +767,10 @@ table tbody tr:last-child>td{border-bottom:none!important}
               </div>
             </sc-if>
           </span>
+          </sc-if>
+          <sc-if value="{{ showPhaseReadonly }}" hint-placeholder-val="{{ false }}">
+            <span style="margin-left:auto;display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ draftPhaseTint }};color:{{ draftPhaseColor }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ draftPhaseColor }};flex:none"></span>{{ draftPhaseLabel }}</span>
+          </sc-if>
         </div>
         <div class="lifecycle-rail">
           <sc-for list="{{ lifecycleSteps }}" as="ls" hint-placeholder-count="4">
@@ -755,6 +793,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <div class="detail-card" style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
           <h3 style="font-weight:700;font-size:14px;margin:0">Milestones</h3>
+          <sc-if value="{{ canManageMilestones }}" hint-placeholder-val="{{ true }}">
           <span style="position:relative;margin-left:auto;display:inline-flex">
             <button onclick="{{ toggleEditMilestone }}" aria-expanded="{{ showEditMilestone }}" style="background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0" style-hover="text-decoration:underline">✎ Change</button>
             <sc-if value="{{ showEditMilestone }}" hint-placeholder-val="{{ false }}">
@@ -765,6 +804,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               </div>
             </sc-if>
           </span>
+          </sc-if>
         </div>
         <sc-for list="{{ milestonePlan }}" as="ms" hint-placeholder-count="4">
           <div class="boxed-list-row" style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)">
@@ -782,12 +822,14 @@ table tbody tr:last-child>td{border-bottom:none!important}
             <button onclick="{{ toggleMemberInfo }}" aria-label="About roles" title="About roles" style="width:16px;height:16px;border-radius:50%;border:1.3px solid var(--faint);color:var(--faint);background:none;cursor:pointer;font:800 10px 'IBM Plex Mono',monospace;display:grid;place-items:center;padding:0;line-height:1">i</button>
             <sc-if value="{{ showMemberInfo }}" hint-placeholder-val="{{ false }}">
               <span style="position:absolute;left:0;top:22px;z-index:5;width:270px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12);color:var(--ink2);font-size:12.5px;font-weight:400;line-height:1.45">
-                <b style="display:block;margin-bottom:6px;color:var(--ink)">What each role does</b>
-                <b>Project lead</b> owns the job and keeps the phase honest. <b>Construction lead</b> runs the site. <b>Technical reviewer</b> checks design packages before issue. <b>Compliance lead</b> owns permits and shielding sign-off. <b>Contributor</b> produces the work. <b>Client contact</b> receives issues and returns comments.
+                <b style="display:block;margin-bottom:6px;color:var(--ink)">Access tiers</b>
+                <b>Owner / Manager</b> (Project Lead, Operations) own lifecycle, intake and commercial. <b>Contributors</b> (Design Lead, Construction Lead, Specialist) update assigned work only. <b>Viewers</b> (Director, Finance) read portfolio, schedule and budget.
               </span>
             </sc-if>
           </span>
+          <sc-if value="{{ canAssignTeam }}" hint-placeholder-val="{{ true }}">
           <button onclick="{{ toggleAssignForm }}" style="margin-left:auto;background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0" style-hover="text-decoration:underline">+ Add collaborator</button>
+          </sc-if>
         </div>
         <div class="member-grid" style="padding:8px 0 7px;border-bottom:1px solid var(--line);color:var(--faint);font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">
           <div>Name</div><div style="text-align:center">Role</div><div style="text-align:right">Remove</div>
@@ -895,6 +937,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
   <sc-if value="{{ isTabActivity }}" hint-placeholder-val="{{ false }}">
     <div class="detail-stack">
+      <sc-if value="{{ canComment }}" hint-placeholder-val="{{ true }}">
       <div style="background:var(--surface);border:1px solid var(--lineS);border-radius:var(--r-m);padding:14px 14px 12px">
         <textarea id="project-comment-input" value="{{ commentDraft }}" onchange="{{ setCommentDraft }}" placeholder="Add a comment for the project team." style="width:100%;border:none;background:transparent;resize:vertical;min-height:64px;outline:none;font-family:inherit;padding:0"></textarea>
         <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
@@ -902,6 +945,10 @@ table tbody tr:last-child>td{border-bottom:none!important}
           <button onclick="{{ postComment }}" style="height:32px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer;margin-left:auto">Post comment</button>
         </div>
       </div>
+      </sc-if>
+      <sc-if value="{{ isViewerOnly }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:12px 14px;background:var(--paper2);border:1px solid var(--line);border-radius:var(--r-m);color:var(--muted);font-size:13px">Viewer access is read-only. Notes and issues are added by Owner / Manager or Contributor roles.</div>
+      </sc-if>
       <div style="display:flex;align-items:flex-end;margin-top:10px;border-bottom:1px solid var(--line)">
         <div style="display:flex;gap:22px">
           <button onclick="{{ setTfAll }}" style="border:none;border-bottom:2px solid {{ pAllBorder }};margin-bottom:-1px;cursor:pointer;font-weight:{{ pAllWeight }};font-size:13px;padding:8px 0;background:none;color:{{ pAllColor }}">All</button>
@@ -982,6 +1029,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px">
     <span style="display:inline-flex;align-items:center;gap:7px;height:25px;padding:0 11px;border-radius:999px;font-size:12px;font-weight:600;background:{{ peek.phaseTint }};color:{{ peek.phaseColor }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ peek.phaseColor }};flex:none"></span>{{ peek.phaseLabel }}</span>
+    <sc-if value="{{ canChangePhase }}" hint-placeholder-val="{{ true }}">
     <span style="position:relative;margin-left:auto;display:inline-flex">
       <button onclick="{{ togglePeekPhaseMenu }}" aria-expanded="{{ showPeekPhaseMenu }}" style="border:none;background:none;color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer;padding:4px 0;white-space:nowrap" style-hover="color:#111827">Change phase ▾</button>
       <sc-if value="{{ showPeekPhaseMenu }}" hint-placeholder-val="{{ false }}">
@@ -994,6 +1042,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
         </div>
       </sc-if>
     </span>
+    </sc-if>
   </div>
 
   <div class="peek-rail">
@@ -1028,7 +1077,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
           </div>
         </sc-for>
       </div>
-      <button onclick="{{ peek.addCollaborator }}" style="margin-top:13px;border:none;background:none;color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:7px" style-hover="text-decoration:underline">＋ Add collaborator</button>
+      <button onclick="{{ peek.addCollaborator }}" style="margin-top:13px;border:none;background:none;color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;padding:0;display:{{ peekAddCollabDisplay }};align-items:center;gap:7px" style-hover="text-decoration:underline">＋ Add collaborator</button>
 
       <div style="height:1px;background:var(--line);margin:18px 0"></div>
       <div style="font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px">Scope</div>
@@ -1090,12 +1139,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <div>
         <label style="display:block;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Role</label>
         <select value="{{ assignRoleSelect }}" onchange="{{ setAssignRoleSelect }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font-size:14px;background:var(--surface)">
-          <option value="Project lead">Project lead</option>
-          <option value="Technical reviewer">Technical reviewer</option>
-          <option value="Construction lead">Construction lead</option>
-          <option value="Compliance lead">Compliance lead</option>
-          <option value="Contributor">Contributor</option>
-          <option value="Client contact">Client contact</option>
+          <sc-for list="{{ collabRoleOptions }}" as="cr" hint-placeholder-count="8"><option value="{{ cr }}">{{ cr }}</option></sc-for>
         </select>
       </div>
       <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:4px;border-top:1px solid var(--line)">
@@ -1219,20 +1263,65 @@ function dueLabel(iso){
 }
 
 const SECTORS=['Cinema','Pet hospital','Medical imaging','Health checkup','Mid hotel','Chain dining','Other commercial'];
+
+/* Three access tiers. Titles sit inside a tier; permissions come from the tier. */
+const TIER={
+  owner:{key:'owner',label:'Owner / Manager',short:'Owner'},
+  contributor:{key:'contributor',label:'Contributor',short:'Contributor'},
+  viewer:{key:'viewer',label:'Viewer / Reviewer',short:'Viewer'}
+};
 const PEOPLE=[
-  {n:'Sophia Chen',role:'Associate director',discipline:'Programme & cost',c:'#2F6B4F'},
-  {n:'Maya Lin',role:'Project lead',discipline:'Cinema systems',c:'#6E5688'},
-  {n:'Daniel Wu',role:'Construction lead',discipline:'Site delivery',c:'#8F3209'},
-  {n:'Olivia Wang',role:'Project lead',discipline:'Medical fit-out',c:'#C0566B'},
-  {n:'Ethan Zhao',role:'Project lead',discipline:'Design development',c:'#3B6B96'},
-  {n:'Lucas Huang',role:'Specialist',discipline:'Acoustics & optics',c:'#0F5C58'},
-  {n:'Noah Li',role:'Engineer',discipline:'Structure & shielding',c:'#4A5A7A'},
-  {n:'Claire Wang',role:'Project lead',discipline:'Commercial interiors',c:'#111827'}
+  {n:'Claire Wang',role:'Project lead',tier:'owner',discipline:'Commercial interiors',c:'#111827'},
+  {n:'Sophia Chen',role:'Operations manager',tier:'owner',discipline:'Programme & cost',c:'#2F6B4F'},
+  {n:'Maya Lin',role:'Project lead',tier:'owner',discipline:'Cinema systems',c:'#6E5688'},
+  {n:'Olivia Wang',role:'Project lead',tier:'owner',discipline:'Medical fit-out',c:'#C0566B'},
+  {n:'Ethan Zhao',role:'Design lead',tier:'contributor',discipline:'Design development',c:'#3B6B96'},
+  {n:'Daniel Wu',role:'Construction lead',tier:'contributor',discipline:'Site delivery',c:'#8F3209'},
+  {n:'Lucas Huang',role:'Specialist',tier:'contributor',discipline:'Acoustics & optics',c:'#0F5C58'},
+  {n:'Noah Li',role:'Specialist',tier:'contributor',discipline:'Structure & shielding',c:'#4A5A7A'},
+  {n:'Jordan Park',role:'Director',tier:'viewer',discipline:'Executive oversight',c:'#6E5688'},
+  {n:'Avery Kim',role:'Finance',tier:'viewer',discipline:'Commercial',c:'#8F6318'}
 ];
 const PEOPLE_NAMES=PEOPLE.map(p=>p.n);
-function personOf(name){return PEOPLE.find(p=>p.n===name)||{n:name,role:'Contributor',discipline:'—',c:'#4A5A7A'};}
+const DEFAULT_USER='Claire Wang';
+function personOf(name){return PEOPLE.find(p=>p.n===name)||{n:name,role:'Contributor',tier:'contributor',discipline:'—',c:'#4A5A7A'};}
 function initialsOf(name){return String(name||'').split(' ').map(w=>w[0]).filter(Boolean).join('').slice(0,2).toUpperCase();}
 function colorOf(name){return personOf(name).c;}
+function tierOf(name){return personOf(name).tier||'contributor';}
+function permsFor(name){
+  const tier=tierOf(name);
+  const owner=tier==='owner';
+  const contrib=tier==='contributor';
+  const viewer=tier==='viewer';
+  return {
+    tier,tierLabel:(TIER[tier]||TIER.contributor).label,tierShort:(TIER[tier]||TIER.contributor).short,
+    /* Owner / Manager */
+    canManageIntake:owner,
+    canCreateProject:owner,
+    canConvertEnquiry:owner,
+    canAssignTeam:owner,
+    canChangePhase:owner,
+    canEditSchedule:owner,
+    canManageMilestones:owner,
+    canManageHealth:owner,
+    canCloseProject:owner,
+    canEditCommercial:owner,
+    canEditSettings:owner,
+    /* Contributors */
+    canUpdateAssignedMilestones:owner||contrib,
+    canUpload:owner||contrib,
+    canComment:owner||contrib,
+    canUpdateProgress:owner||contrib,
+    /* Viewers + everyone */
+    canViewPortfolio:true,
+    canViewSchedule:true,
+    canViewBudget:true,
+    isViewerOnly:viewer,
+    isContributor:contrib,
+    isOwner:owner
+  };
+}
+const COLLAB_ROLES=['Project lead','Operations manager','Design lead','Designer','Construction lead','Specialist','Director','Finance','Client contact'];
 
 const DELIVERABLES=['Site survey report','Concept pack','Design package','Permit package','Shielding completion','Equipment install','Acoustic commissioning','Practical completion','Client sign-off','Handover pack'];
 const SERVICES=[
@@ -1342,10 +1431,10 @@ const INTAKE_STATES={
 };
 
 const FAQS=[
-  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handed over. A milestone is a dated deliverable inside that phase, such as a permit package or acoustic commissioning.'},
-  {q:'Who can change a project phase?',a:'Any collaborator can propose a change, but the project lead is accountable for keeping the phase honest. Every change is written to the project activity with the person and time.'},
-  {q:'What happens when a project goes on hold?',a:'On hold sits on top of the phase, so the job keeps its place in the programme. Use it for authority waits, client decisions or long equipment lead times. Days on hold are excluded from the milestone clock.'},
-  {q:'How does an enquiry become a project?',a:'Project requests holds everything that has come in. Scoping a request confirms the brief, budget band, sector and lead, and issues a PR- code. It then appears in the portfolio in Scoping.'},
+  {q:'Who can create and convert enquiries?',a:'Only Owner / Manager roles — Project Lead and Operations Manager. Designers and specialists do not create enquiries unless invited for technical feasibility. That keeps the intake queue from filling with every overheard client remark.'},
+  {q:'What can Contributors change on a project?',a:'Contributors (Design Lead, Designer, Construction Lead, Specialist) can open assigned projects, update their milestones, upload deliverables, add notes or issues, and record discipline progress. They cannot change phase, commercial terms, team assignment or close the job.'},
+  {q:'What do Viewers / Reviewers see?',a:'Directors, Finance and senior management get portfolio, schedule, budget and status for oversight and reporting. Access is read-only — they do not edit lifecycle or intake.'},
+  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handed over. A milestone is a dated deliverable inside that phase, such as a permit package or acoustic commissioning. Only Owner / Manager roles move the phase.'},
   {q:'What is a work package?',a:'A delivery slice under a parent job — for example projection-booth MEP under a cinema design & build. It carries its own phase, team and milestones but rolls up to the parent. Core packages stay in-house.'}
 ];
 
@@ -1411,7 +1500,7 @@ class Component extends DCLogic {
   componentWillUnmount(){window.removeEventListener('beforeunload',this.beforeUnloadHandler);}
 
   state={
-    page:'portfolio',navOpen:false,
+    page:'portfolio',navOpen:false,actingAs:DEFAULT_USER,
     phaseTab:'all',search:'',serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,
     showFilters:false,sortKey:'milestone',sortDir:'asc',listPage:1,listPageSize:8,
     peekId:'029',peekTab:'brief',
@@ -1425,7 +1514,7 @@ class Component extends DCLogic {
     editingBrief:false,detailDirty:false,
     showPhaseMenu:false,showEditMilestone:false,showManageTags:false,showMemberInfo:false,showAssignForm:false,
     tagPickSelect:'',newTag:'',
-    assignPerson:'',assignSearch:'',assignRoleSelect:'Contributor',
+    assignPerson:'',assignSearch:'',assignRoleSelect:'Specialist',
     activityAdds:[],removedCommentIds:[],timelineFilter:'all',timelineLimit:8,
     commentDraft:'',commentOnlyMe:false,
     showQuickComment:false,quickCommentCode:'',quickCommentName:'',quickCommentDraft:'',quickCommentOnlyMe:false,
@@ -1434,7 +1523,7 @@ class Component extends DCLogic {
     wizardStep:1,submitted:false,draftId:'',drafts:[],
     newName:'',newKind:'New project',newParentId:'',parentSearch:'',newBrief:'',newService:'Cinema design & build',newClient:'',
     newSite:'',newPhone:'',newEmail:'',newBuilding:'Cinema',newProgramme:'12 months',newBudget:'',
-    newTagPick:'',newTags:[],newFiles:[],newLead:'',newCollaborator:'',newCollaboratorRole:'Contributor',newCollaborators:[],
+    newTagPick:'',newTags:[],newFiles:[],newLead:'',newCollaborator:'',newCollaboratorRole:'Specialist',newCollaborators:[],
     showNewMemberPicker:false,newMilestoneDate:'',newMilestoneLabel:'Site survey report',
     newReqCode:'',newReqName:'',
     reminderLead:'3',reviewWindow:'5',
@@ -1475,7 +1564,21 @@ class Component extends DCLogic {
 
   /* ---------- navigation ---------- */
   navigateTo(p){
-    if(p==='new'){this.resetWizard();return;}
+    if(p==='new'){
+      if(!permsFor(this.state.actingAs||DEFAULT_USER).canCreateProject){
+        this.showToast('Only Project Lead or Operations can create a project request.');
+        return;
+      }
+      this.resetWizard();return;
+    }
+    if(p==='intake'&&!permsFor(this.state.actingAs||DEFAULT_USER).canManageIntake){
+      this.showToast('Enquiries are maintained by Project Lead and Operations only.');
+      return;
+    }
+    if(p==='settings'&&!permsFor(this.state.actingAs||DEFAULT_USER).canEditSettings){
+      this.showToast('Workspace settings are limited to Owner / Manager roles.');
+      return;
+    }
     this.setState({page:p,navOpen:false,showUnsavedConfirm:false,pendingNavigation:'',showAccountMenu:false,showAlerts:false});
   }
   go(p){
@@ -1498,7 +1601,7 @@ class Component extends DCLogic {
     const held=this.holdOf(project);
     const members=(project.mem||[]).map((name,i)=>({
       i:initialsOf(name),n:name,c:colorOf(name),
-      role:name===project.lead?'Project lead':(i===1?'Technical reviewer':'Contributor')
+      role:name===project.lead?'Project lead':personOf(name).role
     }));
     const files=[{name:project.code+'-brief.pdf',meta:'1.2 MB · uploaded by Emily Zhang'},
       {name:project.code+'-coordination.dwg',meta:'8.1 MB · uploaded by '+project.lead}];
@@ -1532,6 +1635,11 @@ class Component extends DCLogic {
 
   /* ---------- phase changes ---------- */
   setPhaseDirect(id,phase){
+    if(!permsFor(this.state.actingAs||DEFAULT_USER).canChangePhase){
+      this.showToast('Only Owner / Manager roles can change project phase.');
+      this.setState({showPeekPhaseMenu:false,showPhaseMenu:false});
+      return;
+    }
     const project=this.projectById(id);
     if(!project)return;
     const wasPhase=this.phaseOf(project);
@@ -1549,6 +1657,11 @@ class Component extends DCLogic {
     this.showToast(msg,{id,phase:wasPhase,hold:wasHold});
   }
   toggleHoldDirect(id){
+    if(!permsFor(this.state.actingAs||DEFAULT_USER).canManageHealth){
+      this.showToast('Only Owner / Manager roles can change project health.');
+      this.setState({showPeekPhaseMenu:false});
+      return;
+    }
     const project=this.projectById(id);
     if(!project)return;
     const next=!this.holdOf(project);
@@ -1671,7 +1784,7 @@ class Component extends DCLogic {
       page:'new',navOpen:false,wizardStep:1,submitted:false,draftId:'',
       newName:'',newKind:'New project',newParentId:'',parentSearch:'',newBrief:'',newService:'Cinema design & build',newClient:'',
       newSite:'',newPhone:'',newEmail:'',newBuilding:'Cinema',newProgramme:'12 months',newBudget:'',
-      newTagPick:'',newTags:[],newFiles:[],newLead:'',newCollaborator:'',newCollaboratorRole:'Contributor',newCollaborators:[],
+      newTagPick:'',newTags:[],newFiles:[],newLead:'',newCollaborator:'',newCollaboratorRole:'Specialist',newCollaborators:[],
       showNewMemberPicker:false,newMilestoneDate:'',newMilestoneLabel:'Site survey report',
       showUnsavedConfirm:false,pendingNavigation:'',showAccountMenu:false,showAlerts:false,
       ...(extra||{})
@@ -1695,15 +1808,22 @@ class Component extends DCLogic {
   renderVals(){
     const st=this.state;
     window.onbeforeunload=st.detailDirty?(e)=>{e.preventDefault();e.returnValue='';}:null;
-    const me='Claire Wang';
+    const me=st.actingAs||DEFAULT_USER;
+    const mePerson=personOf(me);
+    const perms=permsFor(me);
 
     /* ---------- decorated project list ---------- */
-    const projects=this.allProjects().map(p=>{
+    const projectsAll=this.allProjects().map(p=>{
       const phase=this.phaseOf(p);
       const held=this.holdOf(p);
       const chip=held?HOLD:PHASES[phase];
       return {...p,phase,held,chip};
     });
+    /* Contributors only see jobs they lead or are assigned to.
+       Owners and viewers see the full portfolio for delivery / oversight. */
+    const projects=perms.isContributor
+      ?projectsAll.filter(p=>p.lead===me||(p.mem||[]).includes(me))
+      :projectsAll;
 
     const q=st.search.trim().toLowerCase();
     const matchesTab=(p)=>st.phaseTab==='all'?true:p.phase===st.phaseTab;
@@ -1777,13 +1897,13 @@ class Component extends DCLogic {
     });
 
     /* ---------- peek panel ---------- */
-    const peekProject=st.peekId?(projects.find(p=>p.id===st.peekId)||null):null;
+    const peekProject=st.peekId?(projectsAll.find(p=>p.id===st.peekId)||null):null;
     let peek=null,peekRail=[],peekPhaseMenu=[];
     if(peekProject){
       const brief=briefFor(peekProject);
-      const people=(peekProject.mem||[]).map((name,i)=>({
+      const people=(peekProject.mem||[]).map((name)=>({
         name,initials:initialsOf(name),color:colorOf(name),
-        role:name===peekProject.lead?'Project lead':(i===1?'Technical reviewer':'Contributor')
+        role:name===peekProject.lead?'Project lead':personOf(name).role
       }));
       const days=daysFromToday(peekProject.ms.iso);
       const activityCount=peekProject.id===st.detailId?3+st.activityAdds.length:3;
@@ -1812,8 +1932,9 @@ class Component extends DCLogic {
         openActivity:()=>this.openProject(peekProject.id,'activity'),
         comment:()=>this.setState({showQuickComment:true,quickCommentCode:peekProject.code,quickCommentName:peekProject.name,quickCommentDraft:'',quickCommentOnlyMe:false,showPeekMenu:false}),
         addCollaborator:()=>{
+          if(!perms.canAssignTeam){this.showToast('Only Owner / Manager roles can assign the team.');return;}
           this.setState(this.loadProjectState(peekProject,'delivery'));
-          this.setState({showAssignForm:true,assignPerson:'',assignSearch:'',assignRoleSelect:'Contributor'});
+          this.setState({showAssignForm:true,assignPerson:'',assignSearch:'',assignRoleSelect:'Specialist'});
         }
       };
       const cur=railIndexFor(peekProject.phase);
@@ -1862,8 +1983,12 @@ class Component extends DCLogic {
       const leading=liveProjects.filter(p=>p.lead===person.n);
       const next=leading.slice().sort(MILESTONE_SORT)[0];
       const imminent=leading.filter(p=>{const n=daysFromToday(p.ms.iso);return n>=0&&n<=21;}).length;
+      const tierMeta=TIER[person.tier]||TIER.contributor;
       return {
         name:person.n,initials:initialsOf(person.n),color:person.c,role:person.role,discipline:person.discipline,
+        tierLabel:tierMeta.short,
+        tierTint:person.tier==='owner'?'var(--accent-tint)':person.tier==='viewer'?'#F5F6F4':'#EAF1F8',
+        tierColor:person.tier==='owner'?'var(--accent-ink)':person.tier==='viewer'?'#5F6772':'#3B6B96',
         leadingCount:leading.length,loadWidth:Math.min(100,imminent*25)+'%',
         loadColor:imminent>=4?'#B04A4A':imminent>=2?'#8F6318':'#3B6B96',
         loadLabel:imminent===0?'Clear':imminent+' due',
@@ -2024,9 +2149,56 @@ class Component extends DCLogic {
       pageLabel:PAGE_LABELS[st.page]||'Fieldwork',
       toggleNav:(e)=>{if(e){e.preventDefault();e.stopPropagation();}this.setState(s=>({navOpen:!s.navOpen,showAccountMenu:false,showAlerts:false}));},
       closeNav:()=>this.setState({navOpen:false}),
-      workspaceNav:[navItem('portfolio','Portfolio'),navItem('intake','Project requests',String(INTAKE.length)),navItem('schedule','Schedule')],
+      canManageIntake:perms.canManageIntake,
+      canCreateProject:perms.canCreateProject,
+      canChangePhase:perms.canChangePhase,
+      canAssignTeam:perms.canAssignTeam,
+      canEditSchedule:perms.canEditSchedule,
+      canManageMilestones:perms.canManageMilestones||perms.canUpdateAssignedMilestones,
+      canManageOwnerMilestones:perms.canManageMilestones,
+      canEditCommercial:perms.canEditCommercial,
+      canUpload:perms.canUpload,
+      canComment:perms.canComment,
+      canEditSettings:perms.canEditSettings,
+      isViewerOnly:perms.isViewerOnly,
+      isContributor:perms.isContributor,
+      isOwner:perms.isOwner,
+      showAccessBanner:perms.isContributor||perms.isViewerOnly,
+      accessBannerText:perms.isViewerOnly
+        ?'Viewing as '+mePerson.role+' · read-only portfolio, schedule and budget'
+        :'Viewing as '+mePerson.role+' · assigned projects only · lifecycle locked',
+      actingAs:me,actingRole:mePerson.role,actingTier:perms.tierShort,actingInitials:initialsOf(me),actingColor:mePerson.c,
+      actAsOptions:PEOPLE.map(p=>{
+        const on=p.n===me;
+        const tierMeta=TIER[p.tier]||TIER.contributor;
+        return {
+          name:p.n,role:p.role,tier:tierMeta.short,initials:initialsOf(p.n),color:p.c,
+          bg:on?'var(--accent-tint)':'transparent',weight:on?'700':'600',
+          pick:(e)=>{if(e){e.preventDefault();e.stopPropagation();}
+            const nextPerms=permsFor(p.n);
+            const nextProjects=nextPerms.isContributor
+              ?this.allProjects().filter(x=>x.lead===p.n||(x.mem||[]).includes(p.n))
+              :this.allProjects();
+            const peekOk=!st.peekId||nextProjects.some(x=>x.id===st.peekId)||!nextPerms.isContributor;
+            this.setState({
+              actingAs:p.n,showAccountMenu:false,
+              page:(st.page==='intake'&&!nextPerms.canManageIntake)||(st.page==='new'&&!nextPerms.canCreateProject)||(st.page==='settings'&&!nextPerms.canEditSettings)?'portfolio':st.page,
+              peekId:peekOk?st.peekId:''
+            });
+            this.showToast('Now viewing as '+p.n+' · '+p.role);
+          }
+        };
+      }),
+      workspaceNav:[
+        navItem('portfolio','Portfolio'),
+        ...(perms.canManageIntake?[navItem('intake','Project requests',String(INTAKE.length))]:[]),
+        navItem('schedule','Schedule')
+      ],
       studioNav:[navItem('team','Team'),navItem('standards','Standards')],
-      footerNav:[navItem('support','Support'),navItem('settings','Settings')],
+      footerNav:[
+        navItem('support','Support'),
+        ...(perms.canEditSettings?[navItem('settings','Settings')]:[])
+      ],
       isPortfolio:st.page==='portfolio',isIntake:st.page==='intake',isSchedule:st.page==='schedule',
       isTeam:st.page==='team',isStandards:st.page==='standards',isSupport:st.page==='support',isSettings:st.page==='settings',
       isNew:st.page==='new',isDetail:st.page==='detail',
@@ -2053,8 +2225,9 @@ class Component extends DCLogic {
       toggleAlerts:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showAlerts:!s.showAlerts,showAccountMenu:false}));},
 
       /* project list */
-      listTitle:st.phaseTab==='all'?'Projects':PHASES[st.phaseTab].label,
+      listTitle:st.phaseTab==='all'?(perms.isContributor?'My projects':'Projects'):PHASES[st.phaseTab].label,
       listCount:sorted.length,
+      listEmptyHint:perms.isContributor?'No assigned projects in this phase.':'No projects in this phase',
       phaseBoxes,projectRows,hasProjectRows:sorted.length>0,projectsEmpty:sorted.length===0,
       search:st.search,setSearch:(e)=>this.setState({search:e.target.value,listPage:1}),
       showFilters:st.showFilters,filtersColor:st.showFilters?'var(--accent-ink)':'var(--muted)',
@@ -2079,11 +2252,17 @@ class Component extends DCLogic {
       previousOpacity:currentPage===1?'.4':'1',nextOpacity:currentPage===totalPages?'.4':'1',
 
       /* peek */
-      showPeek:st.page==='portfolio'&&!!peek,peek,peekRail,peekPhaseMenu,
+      showPeek:st.page==='portfolio'&&!!peek&&(!perms.isContributor||projects.some(p=>p.id===peekProject.id)),
+      peek,peekRail,peekPhaseMenu,
+      peekAddCollabDisplay:perms.canAssignTeam?'inline-flex':'none',
       showPeekMenu:st.showPeekMenu,peekMenuBg:st.showPeekMenu?'var(--paper2)':'transparent',
       togglePeekMenu:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showPeekMenu:!s.showPeekMenu,showPeekPhaseMenu:false}));},
       showPeekPhaseMenu:st.showPeekPhaseMenu,
-      togglePeekPhaseMenu:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showPeekPhaseMenu:!s.showPeekPhaseMenu,showPeekMenu:false}));},
+      togglePeekPhaseMenu:(e)=>{
+        e.preventDefault();e.stopPropagation();
+        if(!perms.canChangePhase){this.showToast('Only Owner / Manager roles can change project phase.');return;}
+        this.setState(s=>({showPeekPhaseMenu:!s.showPeekPhaseMenu,showPeekMenu:false}));
+      },
       peekHoldBg:peekProject&&peekProject.held?HOLD.tint:'transparent',
       peekHoldLabel:peekProject&&peekProject.held?'Resume project':'Put on hold',
       peekToggleHold:()=>{if(peekProject)this.toggleHoldDirect(peekProject.id);},
@@ -2102,11 +2281,22 @@ class Component extends DCLogic {
       intakeRows:INTAKE.map(q=>{
         const s=INTAKE_STATES[q.state]||INTAKE_STATES['New'];
         return {...q,color:s.color,tint:s.tint,
-          scope:()=>this.resetWizard({newName:q.name,newClient:q.client,newService:q.service,newBrief:q.need,newMilestoneLabel:DELIVERABLES.includes(q.need)?q.need:'Design package'})};
+          scope:()=>{
+            if(!perms.canConvertEnquiry){this.showToast('Only Project Lead or Operations can convert an enquiry.');return;}
+            this.resetWizard({newName:q.name,newClient:q.client,newService:q.service,newBrief:q.need,newMilestoneLabel:DELIVERABLES.includes(q.need)?q.need:'Site survey report'});
+          }};
       }),
 
       /* schedule + team + standards + support */
       scheduleGroups,teamRows,
+      accessGuide:[
+        {label:'Owner / Manager',roles:'Project Lead · Operations Manager',color:'var(--accent-ink)',tint:'var(--accent-tint)',
+          desc:'Create and convert enquiries, assign team, change phase, edit schedule and milestones, manage project health, close / handover. Primary users of Fieldwork.'},
+        {label:'Contributor',roles:'Design Lead · Designer · Construction Lead · Specialist',color:'#3B6B96',tint:'#EAF1F8',
+          desc:'Open assigned projects, update assigned milestones, upload deliverables, add notes or issues, and record discipline progress. Cannot change commercial terms or lifecycle.'},
+        {label:'Viewer / Reviewer',roles:'Director · Finance · Senior management',color:'#5F6772',tint:'#F5F6F4',
+          desc:'Portfolio, schedule, budget and status for oversight and reporting. Read-only. Enquiries stay with Business / Project Lead / Operations.'}
+      ],
       phaseGuide:PHASE_KEYS.map(k=>({label:PHASES[k].label,color:PHASES[k].color,tint:PHASES[k].tint,desc:PHASES[k].desc,exit:PHASES[k].exit}))
         .concat([{label:HOLD.label,color:HOLD.color,tint:HOLD.tint,desc:HOLD.desc,exit:'Blocker cleared and the milestone date reissued.'}]),
       services:SERVICES,faqs:FAQS,
@@ -2146,7 +2336,12 @@ class Component extends DCLogic {
       draftPhaseLabel:draftChip.label,draftPhaseColor:draftChip.color,draftPhaseTint:draftChip.tint,
       draftPhaseDesc:draftChip.desc,
       showPhaseMenu:st.showPhaseMenu,
-      togglePhaseMenu:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showPhaseMenu:!s.showPhaseMenu,showEditMilestone:false,showManageTags:false,showMemberInfo:false}));},
+      togglePhaseMenu:(e)=>{
+        e.preventDefault();e.stopPropagation();
+        if(!perms.canChangePhase){this.showToast('Only Owner / Manager roles can change project phase.');return;}
+        this.setState(s=>({showPhaseMenu:!s.showPhaseMenu,showEditMilestone:false,showManageTags:false,showMemberInfo:false}));
+      },
+      showPhaseReadonly:!perms.canChangePhase,
       phaseMenu:PHASE_KEYS.map(k=>({
         label:PHASES[k].label,color:PHASES[k].color,
         bg:draftPhaseKey===k?PHASES[k].tint:'transparent',
@@ -2161,15 +2356,22 @@ class Component extends DCLogic {
 
       /* milestone editing */
       showEditMilestone:st.showEditMilestone,
-      toggleEditMilestone:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showEditMilestone:!s.showEditMilestone,showPhaseMenu:false}));},
+      toggleEditMilestone:(e)=>{
+        e.preventDefault();e.stopPropagation();
+        if(!(perms.canManageMilestones||perms.canUpdateAssignedMilestones)){this.showToast('You cannot edit milestones in this role.');return;}
+        this.setState(s=>({showEditMilestone:!s.showEditMilestone,showPhaseMenu:false}));
+      },
       milestoneIso:st.milestoneIso,setMilestoneIso:(e)=>this.patch({milestoneIso:e.target.value}),
       milestoneLabel:st.milestoneLabel,setMilestoneLabel:(e)=>this.patch({milestoneLabel:e.target.value,showEditMilestone:false}),
       deliverableOptions:DELIVERABLES,
 
       /* brief tab */
       briefSections,editingBrief:st.editingBrief,viewingBrief:!st.editingBrief,
-      showEditBriefBtn:st.detailTab==='brief'&&!st.editingBrief,
-      startEditBrief:()=>this.setState({editingBrief:true,detailTab:'brief'}),
+      showEditBriefBtn:st.detailTab==='brief'&&!st.editingBrief&&perms.canEditCommercial,
+      startEditBrief:()=>{
+        if(!perms.canEditCommercial){this.showToast('Only Owner / Manager roles can edit commercial brief fields.');return;}
+        this.setState({editingBrief:true,detailTab:'brief'});
+      },
 
       /* tags */
       detailTagChips:st.tags.map(t=>({name:t,remove:()=>this.setState(s=>{
@@ -2203,7 +2405,10 @@ class Component extends DCLogic {
       showMemberInfo:st.showMemberInfo,
       toggleMemberInfo:(e)=>{e.preventDefault();e.stopPropagation();this.setState(s=>({showMemberInfo:!s.showMemberInfo}));},
       showAssignForm:st.showAssignForm,
-      toggleAssignForm:()=>this.setState({showAssignForm:true,assignPerson:'',assignSearch:'',assignRoleSelect:'Contributor'}),
+      toggleAssignForm:()=>{
+        if(!perms.canAssignTeam){this.showToast('Only Owner / Manager roles can assign the team.');return;}
+        this.setState({showAssignForm:true,assignPerson:'',assignSearch:'',assignRoleSelect:'Specialist'});
+      },
       closeAssignForm:()=>this.setState({showAssignForm:false,assignPerson:'',assignSearch:''}),
       assignSearch:st.assignSearch,setAssignSearch:(e)=>this.setState({assignSearch:e.target.value}),
       assignRoleSelect:st.assignRoleSelect,setAssignRoleSelect:(e)=>this.setState({assignRoleSelect:e.target.value}),
@@ -2274,6 +2479,7 @@ class Component extends DCLogic {
       commentOnlyMe:!!st.commentOnlyMe,setCommentOnlyMe:(e)=>this.setState({commentOnlyMe:!!(e.target&&e.target.checked)}),
       focusCommentInput:()=>setTimeout(()=>{const el=document.getElementById('project-comment-input');if(el)el.focus();},0),
       postComment:()=>{
+        if(!perms.canComment){this.showToast('Viewer roles cannot post comments.');return;}
         const body=(st.commentDraft||'').trim();
         if(!body)return;
         const entry={id:'c-'+Date.now(),isComment:true,i:initialsOf(me),n:me,c:colorOf(me),tm:'Just now',onlyMe:!!st.commentOnlyMe,body};
@@ -2336,12 +2542,12 @@ class Component extends DCLogic {
         if(selected.length)this.setState(s=>({newFiles:[...s.newFiles,...selected]}));
         e.target.value='';
       },
-      peopleOptions:PEOPLE_NAMES,
+      peopleOptions:PEOPLE_NAMES,collabRoleOptions:COLLAB_ROLES,
       newLead:st.newLead,setNewLead:(e)=>this.setState({newLead:e.target.value}),
       newMilestoneDate:st.newMilestoneDate,setNewMilestoneDate:(e)=>this.setState({newMilestoneDate:e.target.value}),
       newMilestoneLabel:st.newMilestoneLabel,setNewMilestoneLabel:(e)=>this.setState({newMilestoneLabel:e.target.value}),
       showNewMemberPicker:st.showNewMemberPicker,
-      toggleNewMemberPicker:()=>this.setState(s=>({showNewMemberPicker:!s.showNewMemberPicker,newCollaborator:'',newCollaboratorRole:'Contributor'})),
+      toggleNewMemberPicker:()=>this.setState(s=>({showNewMemberPicker:!s.showNewMemberPicker,newCollaborator:'',newCollaboratorRole:'Specialist'})),
       newCollaborator:st.newCollaborator,setNewCollaborator:(e)=>this.setState({newCollaborator:e.target.value}),
       newCollaboratorRole:st.newCollaboratorRole,setNewCollaboratorRole:(e)=>this.setState({newCollaboratorRole:e.target.value}),
       availableCollaborators:PEOPLE_NAMES.filter(n=>n!==st.newLead&&!st.newCollaborators.some(m=>m.n===n)),
