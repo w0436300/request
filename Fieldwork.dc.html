@@ -151,11 +151,11 @@ table tbody tr:last-child>td{border-bottom:none!important}
   </div>
 
   <sc-if value="{{ canCreateProject }}" hint-placeholder-val="{{ true }}">
-  <button onclick="{{ goNew }}" style="width:100%;height:38px;margin:0 0 18px;border:none;border-radius:8px;background:var(--cta);color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.01em;cursor:pointer;box-shadow:0 1px 2px rgba(102,126,234,.18)" style-hover="background:var(--cta-hover)">+ New project request</button>
+  <button onclick="{{ goNew }}" style="width:100%;height:38px;margin:0 0 18px;border:none;border-radius:8px;background:var(--cta);color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.01em;cursor:pointer;box-shadow:0 1px 2px rgba(102,126,234,.18)" style-hover="background:var(--cta-hover)">+ New enquiry</button>
   </sc-if>
 
-  <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:0 10px 8px">Workspace</div>
-  <nav style="display:flex;flex-direction:column;gap:2px" aria-label="Workspace">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:0 10px 8px">Work</div>
+  <nav style="display:flex;flex-direction:column;gap:2px" aria-label="Work">
     <sc-for list="{{ workspaceNav }}" as="n" hint-placeholder-count="3">
       <a href="#" aria-current="{{ n.current }}" onclick="{{ n.go }}" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;font-weight:600;font-size:12.5px;text-decoration:none;color:{{ n.color }};background:{{ n.bg }}" style-hover="background:#F7F8FA">
         <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ n.label }}</span>
@@ -198,7 +198,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
           </sc-for>
           <div style="height:1px;background:var(--line);margin:6px 4px"></div>
           <sc-if value="{{ canEditSettings }}" hint-placeholder-val="{{ true }}">
-            <button onclick="{{ goSettings }}" style="width:100%;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:transparent;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">Workspace settings</button>
+            <button onclick="{{ goSettings }}" style="width:100%;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:transparent;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">Company settings</button>
           </sc-if>
           <button onclick="{{ goSupport }}" style="width:100%;height:34px;padding:0 10px;border:none;border-radius:var(--r-s);background:transparent;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">Support</button>
         </div>
@@ -350,7 +350,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
     <sc-if value="{{ projectsEmpty }}" hint-placeholder-val="{{ false }}">
       <div style="padding:44px 20px;text-align:center;color:var(--muted)">
         <div style="font-weight:600;color:var(--ink2);margin-bottom:6px">{{ listEmptyHint }}</div>
-        <div style="font-size:13.5px;margin-bottom:14px">Try another phase, or clear the filters to see the whole portfolio.</div>
+        <div style="font-size:13.5px;margin-bottom:14px">Try another phase, or clear the filters to see all projects.</div>
         <button onclick="{{ clearAllFilters }}" style="height:36px;padding:0 16px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);font-weight:600;cursor:pointer;color:var(--ink2)">Clear filters</button>
       </div>
     </sc-if>
@@ -573,7 +573,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= NEW PROJECT REQUEST ========================= -->
 <sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
-  <button onclick="{{ goPortfolio }}" style="display:inline-flex;align-items:center;gap:7px;margin:0 0 14px;padding:0;border:none;background:none;color:var(--accent);font:600 13px inherit;cursor:pointer">← Back to portfolio</button>
+  <button onclick="{{ goPortfolio }}" style="display:inline-flex;align-items:center;gap:7px;margin:0 0 14px;padding:0;border:none;background:none;color:var(--accent);font:600 13px inherit;cursor:pointer">← Back to projects</button>
   <sc-if value="{{ isSubmitted }}" hint-placeholder-val="{{ false }}">
     <div style="max-width:560px;margin:32px auto 0;text-align:center">
       <div style="width:52px;height:52px;border-radius:50%;background:var(--accent-tint);color:var(--accent-ink);display:grid;place-items:center;font-size:24px;font-weight:700;margin:0 auto 18px">✓</div>
@@ -583,12 +583,12 @@ table tbody tr:last-child>td{border-bottom:none!important}
         <div style="font-weight:700;font-size:13px;margin-bottom:14px">What happens next</div>
         <div style="display:flex;flex-direction:column;gap:14px">
           <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">1</div><div style="font-size:13.5px;color:var(--ink2)">The project lead confirms scope, target budget and programme — usually within two working days.</div></div>
-          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">2</div><div style="font-size:13.5px;color:var(--ink2)">Once resourced it moves to Design and appears on the delivery schedule with its first milestone.</div></div>
+          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">2</div><div style="font-size:13.5px;color:var(--ink2)">Once resourced it moves to Design and appears under Milestones with its first due date.</div></div>
           <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">3</div><div style="font-size:13.5px;color:var(--ink2)">Track phase, milestones, files and comments from the project page at any time.</div></div>
         </div>
       </div>
       <div style="display:flex;gap:10px;justify-content:center;margin-top:22px">
-        <button onclick="{{ goPortfolio }}" style="height:40px;padding:0 18px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);font-weight:600;cursor:pointer">Back to portfolio</button>
+        <button onclick="{{ goPortfolio }}" style="height:40px;padding:0 18px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);font-weight:600;cursor:pointer">Back to projects</button>
         <button onclick="{{ viewSubmitted }}" style="height:40px;padding:0 20px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:700;cursor:pointer">Open project</button>
       </div>
     </div>
@@ -675,7 +675,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
           </div>
           <div style="margin-top:20px;background:#F6F0E4;border-radius:var(--r-m);padding:14px 16px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
             <div style="font-weight:700;color:#8F6318;white-space:nowrap">Starts in Scoping</div>
-            <div style="color:var(--ink2);font-size:13px;flex:1;min-width:200px">New requests sit in Scoping until the brief, target budget and programme are agreed. They move to Design once the package is booked, and only then appear on the delivery schedule.</div>
+            <div style="color:var(--ink2);font-size:13px;flex:1;min-width:200px">New requests sit in Scoping until the brief, target budget and programme are agreed. They move to Design once the package is booked, and only then appear under Milestones.</div>
           </div>
         </sc-if>
         <div style="height:1px;background:var(--line);margin:22px 0"></div>
@@ -705,7 +705,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= FULL PROJECT ========================= -->
 <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
-  <button onclick="{{ goPortfolio }}" style="display:inline-flex;align-items:center;gap:7px;margin:0 0 12px;padding:0;border:none;background:none;color:var(--accent);font:600 13px inherit;cursor:pointer">← Back to portfolio</button>
+  <button onclick="{{ goPortfolio }}" style="display:inline-flex;align-items:center;gap:7px;margin:0 0 12px;padding:0;border:none;background:none;color:var(--accent);font:600 13px inherit;cursor:pointer">← Back to projects</button>
   <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap">
     <div style="min-width:0;flex:1">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.05em;color:var(--muted);margin-bottom:4px">{{ detailCode }}</div>
@@ -793,6 +793,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <div class="detail-card" style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
           <h3 style="font-weight:700;font-size:14px;margin:0">Milestones</h3>
+          <span style="color:var(--muted);font-size:12.5px;font-weight:500">Delivery gates for this sector</span>
           <sc-if value="{{ canManageMilestones }}" hint-placeholder-val="{{ true }}">
           <span style="position:relative;margin-left:auto;display:inline-flex">
             <button onclick="{{ toggleEditMilestone }}" aria-expanded="{{ showEditMilestone }}" style="background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0" style-hover="text-decoration:underline">✎ Change</button>
@@ -823,7 +824,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
             <sc-if value="{{ showMemberInfo }}" hint-placeholder-val="{{ false }}">
               <span style="position:absolute;left:0;top:22px;z-index:5;width:270px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12);color:var(--ink2);font-size:12.5px;font-weight:400;line-height:1.45">
                 <b style="display:block;margin-bottom:6px;color:var(--ink)">Access tiers</b>
-                <b>Owner / Manager</b> (Project Lead, Operations) own lifecycle, intake and commercial. <b>Contributors</b> (Design Lead, Construction Lead, Specialist) update assigned work only. <b>Viewers</b> (Director, Finance) read portfolio, schedule and budget.
+                <b>Owner / Manager</b> (Project Lead, Operations) own lifecycle, enquiries and commercial. <b>Contributors</b> (Design Lead, Construction Lead, Specialist) update assigned work only. <b>Viewers</b> (Director, Finance) read projects, milestones and budget.
               </span>
             </sc-if>
           </span>
@@ -1509,10 +1510,10 @@ const INTAKE_STATES={
 };
 
 const FAQS=[
-  {q:'Who can create and convert enquiries?',a:'Only Owner / Manager roles — Project Lead and Operations Manager. Designers and specialists do not create enquiries unless invited for technical feasibility. That keeps the intake queue from filling with every overheard client remark.'},
+  {q:'Who can create and convert enquiries?',a:'Only Owner / Manager roles — Project Lead and Operations Manager. Designers and specialists do not create enquiries unless invited for technical feasibility. That keeps the enquiry queue from filling with every overheard client remark.'},
   {q:'What can Contributors change on a project?',a:'Contributors (Design Lead, Designer, Construction Lead, Specialist) can open assigned projects, update their milestones, upload deliverables, add notes or issues, and record discipline progress. They cannot change phase, commercial terms, team assignment or close the job.'},
-  {q:'What do Viewers / Reviewers see?',a:'Directors, Finance and senior management get portfolio, schedule, budget and status for oversight and reporting. Access is read-only — they do not edit lifecycle or intake.'},
-  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handed over. A milestone is a dated deliverable inside that phase, such as a permit package or acoustic commissioning. Only Owner / Manager roles move the phase.'},
+  {q:'What do Viewers / Reviewers see?',a:'Directors, Finance and senior management get Projects, Milestones, budget and status for oversight and reporting. Access is read-only — they do not edit lifecycle or enquiries.'},
+  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handed over. A milestone is a dated deliverable inside that phase, such as a permit package or acoustic commissioning. Only Owner / Manager roles move the phase. Milestones is the page that lists those due dates across jobs.'},
   {q:'What is a work package?',a:'A delivery slice under a parent job — for example projection-booth MEP under a cinema design & build. It carries its own phase, team and milestones but rolls up to the parent. Core packages stay in-house.'}
 ];
 
@@ -1654,7 +1655,7 @@ class Component extends DCLogic {
       return;
     }
     if(p==='settings'&&!permsFor(this.state.actingAs||DEFAULT_USER).canEditSettings){
-      this.showToast('Workspace settings are limited to Owner / Manager roles.');
+      this.showToast('Company settings are limited to Owner / Manager roles.');
       return;
     }
     this.setState({page:p,navOpen:false,showUnsavedConfirm:false,pendingNavigation:'',showAccountMenu:false,showAlerts:false});
@@ -2205,9 +2206,9 @@ class Component extends DCLogic {
     };
 
     const PAGE_LABELS={
-      portfolio:'Portfolio',intake:'Project requests',schedule:'Schedule',
+      portfolio:'Projects',intake:'Enquiries',schedule:'Milestones',
       team:'Team',standards:'Standards',support:'Support',settings:'Settings',
-      new:'New project request',detail:detailProject?detailProject.code:'Project'
+      new:'New enquiry',detail:detailProject?detailProject.code:'Project'
     };
 
     return {
@@ -2233,7 +2234,7 @@ class Component extends DCLogic {
       isOwner:perms.isOwner,
       showAccessBanner:perms.isContributor||perms.isViewerOnly,
       accessBannerText:perms.isViewerOnly
-        ?'Viewing as '+mePerson.role+' · read-only portfolio, schedule and budget'
+        ?'Viewing as '+mePerson.role+' · read-only projects, milestones and budget'
         :'Viewing as '+mePerson.role+' · assigned projects only · lifecycle locked',
       actingAs:me,actingRole:mePerson.role,actingTier:perms.tierShort,actingInitials:initialsOf(me),actingColor:mePerson.c,
       actAsOptions:PEOPLE.map(p=>{
@@ -2258,9 +2259,9 @@ class Component extends DCLogic {
         };
       }),
       workspaceNav:[
-        navItem('portfolio','Portfolio'),
-        ...(perms.canManageIntake?[navItem('intake','Project requests',String(INTAKE.length))]:[]),
-        navItem('schedule','Schedule')
+        navItem('portfolio','Projects'),
+        ...(perms.canManageIntake?[navItem('intake','Enquiries',String(INTAKE.length))]:[]),
+        navItem('schedule','Milestones')
       ],
       studioNav:[navItem('team','Team'),navItem('standards','Standards')],
       footerNav:[
@@ -2359,11 +2360,11 @@ class Component extends DCLogic {
       scheduleGroups,teamRows,
       accessGuide:[
         {label:'Owner / Manager',roles:'Project Lead · Operations Manager',color:'var(--accent-ink)',tint:'var(--accent-tint)',
-          desc:'Create and convert enquiries, assign team, change phase, edit schedule and milestones, manage project health, close / handover. Primary users of Fieldwork.'},
+          desc:'Create and convert enquiries, assign team, change phase, edit milestones, manage project health, close / handover. Primary users of Fieldwork.'},
         {label:'Contributor',roles:'Design Lead · Designer · Construction Lead · Specialist',color:'#3B6B96',tint:'#EAF1F8',
           desc:'Open assigned projects, update assigned milestones, upload deliverables, add notes or issues, and record discipline progress. Cannot change commercial terms or lifecycle.'},
         {label:'Viewer / Reviewer',roles:'Director · Finance · Senior management',color:'#5F6772',tint:'#F5F6F4',
-          desc:'Portfolio, schedule, budget and status for oversight and reporting. Read-only. Enquiries stay with Business / Project Lead / Operations.'}
+          desc:'Projects, Milestones, budget and status for oversight and reporting. Read-only. Enquiries stay with Project Lead and Operations.'}
       ],
       phaseGuide:PHASE_KEYS.map(k=>({label:PHASES[k].label,color:PHASES[k].color,tint:PHASES[k].tint,desc:PHASES[k].desc,exit:PHASES[k].exit}))
         .concat([{label:HOLD.label,color:HOLD.color,tint:HOLD.tint,desc:HOLD.desc,exit:'Blocker cleared and the milestone date reissued.'}]),
