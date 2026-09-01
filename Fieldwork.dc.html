@@ -397,6 +397,9 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= SCHEDULE ========================= -->
 <sc-if value="{{ isSchedule }}" hint-placeholder-val="{{ false }}">
+  <div style="margin:0 0 12px;padding:12px 16px;background:var(--paper2);border:1px solid var(--line);border-radius:var(--r-l);color:var(--ink2);font-size:13px;line-height:1.55;max-width:920px">
+    Each row is the <b style="color:var(--ink);font-weight:700">next dated gate</b> on a live project. The full gate sequence comes from the sector template (see Playbook); Owner / Manager can add gates on the project Delivery tab.
+  </div>
   <sc-for list="{{ scheduleGroups }}" as="g" hint-placeholder-count="3">
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--line)">
@@ -828,22 +831,41 @@ table tbody tr:last-child>td{border-bottom:none!important}
       </div>
 
       <div class="detail-card" style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px 22px">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
           <h3 style="font-weight:700;font-size:14px;margin:0">Milestones</h3>
-          <span style="color:var(--muted);font-size:12.5px;font-weight:500">Delivery gates for this sector</span>
-          <sc-if value="{{ canManageMilestones }}" hint-placeholder-val="{{ true }}">
-          <span style="position:relative;margin-left:auto;display:inline-flex">
-            <button onclick="{{ toggleEditMilestone }}" aria-expanded="{{ showEditMilestone }}" style="background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0" style-hover="text-decoration:underline">✎ Change</button>
-            <sc-if value="{{ showEditMilestone }}" hint-placeholder-val="{{ false }}">
-              <div onclick="{{ stopBubble }}" style="position:absolute;right:0;top:28px;z-index:9;width:250px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12)">
-                <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Next milestone</div>
-                <input type="date" value="{{ milestoneIso }}" onchange="{{ setMilestoneIso }}" style="width:100%;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font:inherit;font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--surface)">
-                <select value="{{ milestoneLabel }}" onchange="{{ setMilestoneLabel }}" style="width:100%;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font-size:13px;background:var(--surface);margin-top:8px"><sc-for list="{{ deliverableOptions }}" as="d" hint-placeholder-count="5"><option value="{{ d }}">{{ d }}</option></sc-for></select>
-              </div>
+          <span style="color:var(--muted);font-size:12.5px;font-weight:500">{{ milestonePlanHint }}</span>
+          <span style="margin-left:auto;display:inline-flex;align-items:center;gap:14px">
+            <sc-if value="{{ canManageOwnerMilestones }}" hint-placeholder-val="{{ true }}">
+              <button onclick="{{ toggleAddGate }}" aria-expanded="{{ showAddGate }}" style="background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0" style-hover="text-decoration:underline">+ Add gate</button>
+            </sc-if>
+            <sc-if value="{{ canManageMilestones }}" hint-placeholder-val="{{ true }}">
+              <span style="position:relative;display:inline-flex">
+                <button onclick="{{ toggleEditMilestone }}" aria-expanded="{{ showEditMilestone }}" style="background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0" style-hover="text-decoration:underline">✎ Change next</button>
+                <sc-if value="{{ showEditMilestone }}" hint-placeholder-val="{{ false }}">
+                  <div onclick="{{ stopBubble }}" style="position:absolute;right:0;top:28px;z-index:9;width:250px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12)">
+                    <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Next milestone</div>
+                    <input type="date" value="{{ milestoneIso }}" onchange="{{ setMilestoneIso }}" style="width:100%;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font:inherit;font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--surface)">
+                    <select value="{{ milestoneLabel }}" onchange="{{ setMilestoneLabel }}" style="width:100%;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font-size:13px;background:var(--surface);margin-top:8px"><sc-for list="{{ deliverableOptions }}" as="d" hint-placeholder-count="5"><option value="{{ d }}">{{ d }}</option></sc-for></select>
+                  </div>
+                </sc-if>
+              </span>
             </sc-if>
           </span>
-          </sc-if>
         </div>
+        <sc-if value="{{ showAddGate }}" hint-placeholder-val="{{ false }}">
+          <div onclick="{{ stopBubble }}" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 14px;padding:12px 14px;background:var(--paper2);border:1px solid var(--line);border-radius:var(--r-m)">
+            <select value="{{ addGatePick }}" onchange="{{ setAddGatePick }}" style="flex:1;min-width:180px;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font-size:13px;background:var(--surface)">
+              <option value="">Choose a gate</option>
+              <sc-for list="{{ addGateOptions }}" as="ag" hint-placeholder-count="4"><option value="{{ ag }}">{{ ag }}</option></sc-for>
+              <option value="__custom__">Custom gate…</option>
+            </select>
+            <sc-if value="{{ addGateIsCustom }}" hint-placeholder-val="{{ false }}">
+              <input type="text" value="{{ addGateCustom }}" onchange="{{ setAddGateCustom }}" placeholder="e.g. Soft opening rehearsal" style="flex:1;min-width:180px;height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;font:inherit;font-size:13px;background:var(--surface)">
+            </sc-if>
+            <button onclick="{{ confirmAddGate }}" style="height:36px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;font-size:13px;cursor:pointer">Add</button>
+            <button onclick="{{ cancelAddGate }}" style="height:36px;padding:0 12px;border:none;border-radius:var(--r-s);background:transparent;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer">Cancel</button>
+          </div>
+        </sc-if>
         <sc-for list="{{ milestonePlan }}" as="ms" hint-placeholder-count="4">
           <div class="boxed-list-row" style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)">
             <span style="width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 10px 'IBM Plex Mono',monospace;background:{{ ms.dotBg }};color:{{ ms.dotColor }};border:1.5px solid {{ ms.dotBorder }}">{{ ms.mark }}</span>
@@ -1396,9 +1418,18 @@ const MILESTONE_BY_SERVICE={
   'Design & build':MILESTONE_BY_SECTOR['Other commercial']
 };
 function deliveryGatesFor(project){
+  if(project&&Array.isArray(project.gates)&&project.gates.length)return project.gates.slice();
   return (MILESTONE_BY_SERVICE[project.service]
     ||MILESTONE_BY_SECTOR[project.sector]
     ||MILESTONE_BY_SECTOR['Other commercial']).slice();
+}
+function insertGateBeforeHandover(gates,label){
+  const next=gates.slice();
+  if(next.includes(label))return next;
+  const hi=next.lastIndexOf('Handover pack');
+  if(hi>=0)next.splice(hi,0,label);
+  else next.push(label);
+  return next;
 }
 function milestoneIndexFor(gates,label,phase){
   const hit=gates.indexOf(label);
@@ -1577,7 +1608,8 @@ const FAQS=[
   {q:'Who can create and convert enquiries?',a:'Only Owner / Manager roles — Project Lead and Operations Manager. Designers and specialists do not create enquiries unless invited for technical feasibility. That keeps the enquiry queue from filling with every overheard client remark.'},
   {q:'What can Contributors change on a project?',a:'Contributors (Design Lead, Designer, Construction Lead, Specialist) can open assigned projects, update their milestones, upload deliverables, add notes or issues, and record discipline progress. They cannot change phase, commercial terms, team assignment or close the job.'},
   {q:'What do Viewers / Reviewers see?',a:'Directors, Finance and senior management get Projects, Milestones, budget and status for oversight and reporting. Access is read-only — they do not edit lifecycle or enquiries.'},
-  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handed over. A milestone is a dated deliverable inside that phase, such as a permit package or acoustic commissioning. Only Owner / Manager roles move the phase. Milestones is the page that lists those due dates across jobs.'},
+  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handed over. A milestone is a dated deliverable inside that phase, such as a permit package or acoustic commissioning. Only Owner / Manager roles move the phase. The Milestones page lists each live project’s next dated gate.'},
+  {q:'Where do project milestones come from?',a:'Each project starts with a gate sequence from its sector / service template (Cinema, Pet hospital, Medical imaging, and so on — see Playbook). The current gate and due date are stored on the project. Owner / Manager can change the next gate, and can add extra gates to that project’s plan without changing the company template.'},
   {q:'What is a work package?',a:'A delivery slice under a parent job — for example projection-booth MEP under a cinema design & build. It carries its own phase, team and milestones but rolls up to the parent. Core packages stay in-house.'}
 ];
 
@@ -1648,14 +1680,15 @@ class Component extends DCLogic {
     showFilters:false,sortKey:'milestone',sortDir:'asc',listPage:1,listPageSize:8,
     peekId:'029',peekTab:'brief',
     showAlerts:false,showAccountMenu:false,showPeekMenu:false,showPeekPhaseMenu:false,
-    phaseOverrides:{},holdOverrides:{},
+    phaseOverrides:{},holdOverrides:{},gateOverrides:{},
     createdProjects:[],
     detailId:'029',detailTab:'delivery',
     draftPhase:'',savedPhase:'',phaseNote:'',draftHold:false,savedHold:false,
     fields:{},savedFields:{},members:[],savedMembers:[],tags:[],savedTags:[],files:[],savedFiles:[],
     milestoneIso:'',savedMilestoneIso:'',milestoneLabel:'',savedMilestoneLabel:'',
     editingBrief:false,detailDirty:false,
-    showPhaseMenu:false,showEditMilestone:false,showManageTags:false,showMemberInfo:false,showAssignForm:false,
+    showPhaseMenu:false,showEditMilestone:false,showAddGate:false,addGatePick:'',addGateCustom:'',
+    showManageTags:false,showMemberInfo:false,showAssignForm:false,
     tagPickSelect:'',newTag:'',
     assignPerson:'',assignSearch:'',assignRoleSelect:'Specialist',
     activityAdds:[],removedCommentIds:[],timelineFilter:'all',timelineLimit:8,
@@ -1685,6 +1718,25 @@ class Component extends DCLogic {
   chipFor(project){
     const held=this.holdOf(project);
     return held?HOLD:PHASES[this.phaseOf(project)];
+  }
+  gatesOf(project){
+    const o=this.state.gateOverrides[project.id];
+    if(o&&o.length)return o.slice();
+    return deliveryGatesFor(project);
+  }
+  addGateToProject(projectId,label){
+    const clean=String(label||'').trim();
+    if(!clean){this.showToast('Enter a gate name.');return;}
+    const project=this.projectById(projectId);
+    if(!project)return;
+    const current=this.gatesOf(project);
+    if(current.includes(clean)){this.showToast('That gate is already on this plan.');return;}
+    const next=insertGateBeforeHandover(current,clean);
+    this.setState(s=>({
+      gateOverrides:{...s.gateOverrides,[projectId]:next},
+      showAddGate:false,addGatePick:'',addGateCustom:'',showEditMilestone:false
+    }));
+    this.showToast('Added gate · '+clean);
   }
 
   /* Phase changes made from the preview panel apply immediately, so the
@@ -1758,7 +1810,7 @@ class Component extends DCLogic {
       milestoneIso:project.ms.iso,savedMilestoneIso:project.ms.iso,
       milestoneLabel:project.ms.label,savedMilestoneLabel:project.ms.label,
       detailDirty:false,editingBrief:false,activityAdds:[],removedCommentIds:[],
-      showPhaseMenu:false,showEditMilestone:false,showManageTags:false,showAssignForm:false,showAccountMenu:false,showAlerts:false,navOpen:false
+      showPhaseMenu:false,showEditMilestone:false,showAddGate:false,addGatePick:'',addGateCustom:'',showManageTags:false,showAssignForm:false,showAccountMenu:false,showAlerts:false,navOpen:false
     };
   }
   openProject(id,detailTab='delivery',skipDirty=false){
@@ -1960,7 +2012,8 @@ class Component extends DCLogic {
       const phase=this.phaseOf(p);
       const held=this.holdOf(p);
       const chip=held?HOLD:PHASES[phase];
-      return {...p,phase,held,chip};
+      const gates=this.gatesOf(p);
+      return {...p,phase,held,chip,gates};
     });
     /* Contributors only see jobs they lead or are assigned to.
        Owners and viewers see the full portfolio for delivery / oversight. */
@@ -2166,9 +2219,14 @@ class Component extends DCLogic {
       return {label:step.label,barColor,textColor,when,nameWeight};
     });
 
+    const detailGates=detailProject?this.gatesOf(detailProject):[];
     const milestonePlan=detailProject
-      ?buildMilestonePlan(detailProject,st.milestoneLabel||detailProject.ms.label,st.milestoneIso||detailProject.ms.iso,draftPhaseKey)
+      ?buildMilestonePlan({...detailProject,gates:detailGates},st.milestoneLabel||detailProject.ms.label,st.milestoneIso||detailProject.ms.iso,draftPhaseKey)
       :[];
+    const milestonePlanHint=detailProject
+      ?(st.gateOverrides[detailProject.id]?'Customised from '+(detailProject.sector||'sector')+' template':(detailProject.sector||'Sector')+' template')
+      :'Delivery gates';
+    const addGateOptions=DELIVERABLES.filter(d=>!detailGates.includes(d));
 
     const fieldSetters={};
     BRIEF_FIELDS.forEach(f=>{
@@ -2351,7 +2409,7 @@ class Component extends DCLogic {
       stopBubble:(e)=>{e.stopPropagation();},
       closePopovers:()=>{
         if(st.showAccountMenu||st.showAlerts||st.showPeekMenu||st.showPeekPhaseMenu||st.showManageTags||st.showPhaseMenu||st.showEditMilestone||st.showMemberInfo){
-          this.setState({showAccountMenu:false,showAlerts:false,showPeekMenu:false,showPeekPhaseMenu:false,showManageTags:false,showPhaseMenu:false,showEditMilestone:false,showMemberInfo:false,tagPickSelect:'',newTag:''});
+          this.setState({showAccountMenu:false,showAlerts:false,showPeekMenu:false,showPeekPhaseMenu:false,showManageTags:false,showPhaseMenu:false,showEditMilestone:false,showAddGate:false,showMemberInfo:false,tagPickSelect:'',newTag:''});
         }
       },
       handleAppKeydown:(e)=>{
@@ -2503,18 +2561,34 @@ class Component extends DCLogic {
       toggleHold:()=>this.patch({draftHold:!st.draftHold,showPhaseMenu:false}),
       showPhaseNote:st.draftPhase!==st.savedPhase||st.draftHold!==st.savedHold,
       phaseNote:st.phaseNote,setPhaseNote:(e)=>this.setState({phaseNote:e.target.value}),
-      lifecycleSteps,milestonePlan,
+      lifecycleSteps,milestonePlan,milestonePlanHint,
 
       /* milestone editing */
       showEditMilestone:st.showEditMilestone,
       toggleEditMilestone:(e)=>{
         e.preventDefault();e.stopPropagation();
         if(!(perms.canManageMilestones||perms.canUpdateAssignedMilestones)){this.showToast('You cannot edit milestones in this role.');return;}
-        this.setState(s=>({showEditMilestone:!s.showEditMilestone,showPhaseMenu:false}));
+        this.setState(s=>({showEditMilestone:!s.showEditMilestone,showAddGate:false,showPhaseMenu:false}));
       },
       milestoneIso:st.milestoneIso,setMilestoneIso:(e)=>this.patch({milestoneIso:e.target.value}),
       milestoneLabel:st.milestoneLabel,setMilestoneLabel:(e)=>this.patch({milestoneLabel:e.target.value,showEditMilestone:false}),
       deliverableOptions:DELIVERABLES,
+      showAddGate:st.showAddGate,
+      toggleAddGate:(e)=>{
+        e.preventDefault();e.stopPropagation();
+        if(!perms.canManageMilestones){this.showToast('Only Owner / Manager roles can add gates.');return;}
+        this.setState(s=>({showAddGate:!s.showAddGate,showEditMilestone:false,showPhaseMenu:false,addGatePick:'',addGateCustom:''}));
+      },
+      addGatePick:st.addGatePick,setAddGatePick:(e)=>this.setState({addGatePick:e.target.value}),
+      addGateCustom:st.addGateCustom,setAddGateCustom:(e)=>this.setState({addGateCustom:e.target.value}),
+      addGateIsCustom:st.addGatePick==='__custom__',
+      addGateOptions,
+      cancelAddGate:()=>this.setState({showAddGate:false,addGatePick:'',addGateCustom:''}),
+      confirmAddGate:()=>{
+        if(!perms.canManageMilestones){this.showToast('Only Owner / Manager roles can add gates.');return;}
+        const label=st.addGatePick==='__custom__'?st.addGateCustom:st.addGatePick;
+        if(detailProject)this.addGateToProject(detailProject.id,label);
+      },
 
       /* brief tab */
       briefSections,editingBrief:st.editingBrief,viewingBrief:!st.editingBrief,
