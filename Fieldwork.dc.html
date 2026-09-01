@@ -118,10 +118,12 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= SIDEBAR ========================= -->
 <aside class="app-aside" style="width:216px;flex:none;background:var(--surface);border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;position:sticky;top:0;height:calc(100vh - 52px)">
-  <div style="display:flex;align-items:center;gap:10px;padding:0 6px 14px;margin-bottom:8px">
+  <div style="display:flex;align-items:center;gap:10px;padding:0 6px 12px">
     <div style="width:24px;height:24px;border:2px solid var(--ink);border-radius:6px;flex:none;position:relative"><div style="position:absolute;inset:4px;border:1.5px solid var(--accent);border-radius:2px"></div></div>
     <div style="font-weight:700;font-size:15px;letter-spacing:-.02em">Fieldwork</div>
   </div>
+
+  <button onclick="{{ goNew }}" style="width:100%;height:38px;margin:0 0 18px;border:none;border-radius:8px;background:var(--cta);color:#fff;font-weight:700;font-size:12.5px;letter-spacing:.01em;cursor:pointer;box-shadow:0 1px 2px rgba(102,126,234,.18)" style-hover="background:var(--cta-hover)">+ New project request</button>
 
   <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:0 10px 8px">Workspace</div>
   <nav style="display:flex;flex-direction:column;gap:2px" aria-label="Workspace">
@@ -195,7 +197,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
           </div>
         </sc-if>
       </span>
-      <button onclick="{{ goNew }}" style="height:38px;padding:0 16px;border:none;border-radius:9px;background:var(--cta);color:#fff;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 1px 2px rgba(102,126,234,.18)" style-hover="background:var(--cta-hover)">+ New project request</button>
     </div>
   </div>
 
@@ -317,12 +318,9 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= PROJECT REQUESTS ========================= -->
 <sc-if value="{{ isIntake }}" hint-placeholder-val="{{ false }}">
-  <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px">
-    <div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Intake queue</div>
-      <h1 style="font-weight:800;font-size:26px;margin:0;letter-spacing:-.03em">Project requests</h1>
-    </div>
-    <button onclick="{{ goNew }}" style="margin-left:auto;height:38px;padding:0 16px;border:none;border-radius:9px;background:var(--cta);color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 1px 2px rgba(102,126,234,.18)" style-hover="background:var(--cta-hover)">+ New project request</button>
+  <div style="margin-bottom:16px">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Intake queue</div>
+    <h1 style="font-weight:800;font-size:26px;margin:0;letter-spacing:-.03em">Project requests</h1>
   </div>
   <div style="display:flex;gap:20px;flex-wrap:wrap;background:var(--accent-tint);border:1px solid #DADFFA;border-radius:var(--r-l);padding:14px 18px;margin-bottom:14px">
     <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14.5px;color:var(--ink)">{{ intakeCount }} enquiries waiting to be scoped</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Confirm the brief, agree a fee basis and appoint a project lead. Scoping turns an enquiry into a live project.</div></div>
