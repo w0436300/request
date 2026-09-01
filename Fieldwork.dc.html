@@ -164,8 +164,8 @@ table tbody tr:last-child>td{border-bottom:none!important}
     </sc-for>
   </nav>
 
-  <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:18px 10px 8px">Studio</div>
-  <nav style="display:flex;flex-direction:column;gap:2px" aria-label="Studio">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:18px 10px 8px">Delivery</div>
+  <nav style="display:flex;flex-direction:column;gap:2px" aria-label="Delivery">
     <sc-for list="{{ studioNav }}" as="n" hint-placeholder-count="2">
       <a href="#" aria-current="{{ n.current }}" onclick="{{ n.go }}" style="display:flex;align-items:center;padding:8px 10px;border-radius:7px;font-weight:600;font-size:12.5px;text-decoration:none;color:{{ n.color }};background:{{ n.bg }}" style-hover="background:#F7F8FA">
         <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ n.label }}</span>
@@ -258,6 +258,10 @@ table tbody tr:last-child>td{border-bottom:none!important}
           <option value="all">Any service</option>
           <sc-for list="{{ serviceOptions }}" as="so" hint-placeholder-count="6"><option value="{{ so }}">{{ so }}</option></sc-for>
         </select>
+        <select value="{{ sectorFilter }}" onchange="{{ setSectorFilter }}" aria-label="Filter by sector" style="height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2)">
+          <option value="all">Any sector</option>
+          <sc-for list="{{ sectorOptions }}" as="sec" hint-placeholder-count="7"><option value="{{ sec }}">{{ sec }}</option></sc-for>
+        </select>
         <select value="{{ leadFilter }}" onchange="{{ setLeadFilter }}" aria-label="Filter by project lead" style="height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2)">
           <option value="all">Any lead</option>
           <sc-for list="{{ leadOptions }}" as="lo" hint-placeholder-count="6"><option value="{{ lo }}">{{ lo }}</option></sc-for>
@@ -273,14 +277,15 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
     <sc-if value="{{ hasProjectRows }}" hint-placeholder-val="{{ true }}">
       <div class="table-scroll">
-        <table style="width:100%;border-collapse:collapse;min-width:952px">
+        <table style="width:100%;border-collapse:collapse;min-width:1000px">
           <thead><tr style="background:#FBFBFD">
             <th style="width:76px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
             <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Project</th>
             <th style="width:144px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Client</th>
-            <th style="width:186px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Service</th>
-            <th style="width:130px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px"><button class="sortable-heading" onclick="{{ sortByPhase }}" aria-label="Sort by phase">Phase <span class="sort-indicator" style="transform:rotate({{ phaseSortRotation }})"></span></button></th>
-            <th style="width:142px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Lead</th>
+            <th style="width:120px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Sector</th>
+            <th style="width:122px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px"><button class="sortable-heading" onclick="{{ sortByPhase }}" aria-label="Sort by phase">Phase <span class="sort-indicator" style="transform:rotate({{ phaseSortRotation }})"></span></button></th>
+            <th style="width:132px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Lead</th>
+            <th style="width:88px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Budget</th>
             <th style="width:90px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px"><button class="sortable-heading" onclick="{{ sortByMilestone }}" aria-label="Sort by due date">Due <span class="sort-indicator" style="transform:rotate({{ milestoneSortRotation }})"></span></button></th>
           </tr></thead>
           <tbody>
@@ -289,7 +294,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               <td style="padding:14px 14px 14px 20px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap">{{ p.code }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ p.name }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.client }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.service }}</td>
+              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.sector }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line)">
                 <span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 11px;border-radius:999px;font-size:12px;font-weight:600;background:{{ p.phaseTint }};color:{{ p.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.phaseColor }};flex:none"></span>{{ p.phaseLabel }}</span>
               </td>
@@ -299,6 +304,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
                   <span style="font-size:13px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.lead }}</span>
                 </div>
               </td>
+              <td style="padding:14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);white-space:nowrap">{{ p.budget }}</td>
               <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:{{ p.milestoneColor }};white-space:nowrap">{{ p.milestoneDate }}</td>
             </tr>
           </sc-for>
@@ -335,7 +341,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 <!-- ========================= PROJECT REQUESTS ========================= -->
 <sc-if value="{{ isIntake }}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;gap:20px;flex-wrap:wrap;background:var(--accent-tint);border:1px solid #DADFFA;border-radius:var(--r-l);padding:14px 18px;margin-bottom:14px">
-    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14.5px;color:var(--ink)">{{ intakeCount }} enquiries waiting to be scoped</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Confirm the brief, agree a fee basis and appoint a project lead. Scoping turns an enquiry into a live project.</div></div>
+    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14.5px;color:var(--ink)">{{ intakeCount }} enquiries waiting to be scoped</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Confirm the brief, target budget and sector, then appoint a project lead. Scoping turns an enquiry into a live job.</div></div>
     <div class="metric-grid"><div><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.04em;color:var(--accent-ink);line-height:1">{{ intakeNewCount }}</div><div style="font-size:11.5px;color:var(--muted);margin-top:4px">Received today</div></div></div>
   </div>
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
@@ -491,7 +497,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
     </sc-for>
   </div>
   <div style="background:var(--accent-tint);border:1px solid #DADFFA;border-radius:var(--r-xl);padding:18px 20px;max-width:780px;display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14px;color:var(--ink)">Still stuck?</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Studio operations answer platform questions within one working day.</div></div>
+    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14px;color:var(--ink)">Still stuck?</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Delivery operations answer platform questions within one working day.</div></div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--accent-ink)">ops@banshan-design.example</div>
   </div>
 </sc-if>
@@ -499,9 +505,9 @@ table tbody tr:last-child>td{border-bottom:none!important}
 <!-- ========================= SETTINGS ========================= -->
 <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);max-width:720px;margin-bottom:12px">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--line)"><h2 style="font-weight:700;font-size:14px;margin:0">Studio</h2></div>
+    <div style="padding:16px 20px;border-bottom:1px solid var(--line)"><h2 style="font-weight:700;font-size:14px;margin:0">Company</h2></div>
     <div class="detail-rows" style="padding:6px 20px">
-      <div style="display:flex;align-items:center;gap:16px;padding:12px 0"><div style="width:200px;flex:none;color:var(--ink);font-size:13px">Studio name</div><div style="flex:1;font-size:14px">Banshan Decoration Design Engineering Co., Ltd.</div></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px 0"><div style="width:200px;flex:none;color:var(--ink);font-size:13px">Company name</div><div style="flex:1;font-size:14px">Banshan Decoration Design Engineering Co., Ltd.</div></div>
       <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid var(--line)"><div style="width:200px;flex:none;color:var(--ink);font-size:13px">Working week</div><div style="flex:1;font-size:14px">Monday – Friday · 09:00–18:00</div></div>
       <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid var(--line)"><div style="width:200px;flex:none;color:var(--ink);font-size:13px">Project code prefix</div><div style="flex:1;font-size:14px;font-family:'IBM Plex Mono',monospace">PR-</div></div>
     </div>
@@ -514,7 +520,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
         <div style="flex:1"><select value="{{ reminderLead }}" onchange="{{ setReminderLead }}" style="height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;background:var(--surface);font-size:13.5px;color:var(--ink2)"><option value="1">1 day before</option><option value="3">3 days before</option><option value="7">7 days before</option></select></div>
       </div>
       <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid var(--line)">
-        <div style="width:200px;flex:none;color:var(--ink);font-size:13px">Client review window</div>
+        <div style="width:200px;flex:none;color:var(--ink);font-size:13px">Acceptance window</div>
         <div style="flex:1"><select value="{{ reviewWindow }}" onchange="{{ setReviewWindow }}" style="height:36px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 10px;background:var(--surface);font-size:13.5px;color:var(--ink2)"><option value="5">5 working days</option><option value="10">10 working days</option></select></div>
       </div>
     </div>
@@ -543,8 +549,8 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:22px 24px;text-align:left">
         <div style="font-weight:700;font-size:13px;margin-bottom:14px">What happens next</div>
         <div style="display:flex;flex-direction:column;gap:14px">
-          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">1</div><div style="font-size:13.5px;color:var(--ink2)">The project lead confirms scope, fee basis and programme — usually within two working days.</div></div>
-          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">2</div><div style="font-size:13.5px;color:var(--ink2)">Once resourced it moves to Scheduled and appears in the studio schedule with its first milestone.</div></div>
+          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">1</div><div style="font-size:13.5px;color:var(--ink2)">The project lead confirms scope, target budget and programme — usually within two working days.</div></div>
+          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">2</div><div style="font-size:13.5px;color:var(--ink2)">Once resourced it moves to Design and appears on the delivery schedule with its first milestone.</div></div>
           <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">3</div><div style="font-size:13.5px;color:var(--ink2)">Track phase, milestones, files and comments from the project page at any time.</div></div>
         </div>
       </div>
@@ -587,23 +593,24 @@ table tbody tr:last-child>td{border-bottom:none!important}
               <input value="{{ newClient }}" onchange="{{ setNewClient }}" placeholder="Northline Hotels" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px"></div>
           </div>
           <div style="margin-top:18px"><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Brief <span style="color:var(--accent)">*</span></label>
-            <textarea value="{{ newBrief }}" onchange="{{ setNewBrief }}" placeholder="Assess the site, refine guest circulation, coordinate equipment and deliver the soft furnishing package." style="width:100%;min-height:96px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:10px 12px;resize:vertical"></textarea></div>
+            <textarea value="{{ newBrief }}" onchange="{{ setNewBrief }}" placeholder="Assess ceiling height and structure, coordinate cinema acoustics / MRI shielding as required, and deliver the in-house design & build package." style="width:100%;min-height:96px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:10px 12px;resize:vertical"></textarea></div>
         </sc-if>
         <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
             <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Client organisation</label><input value="{{ newClient }}" onchange="{{ setNewClient }}" placeholder="Northline Hotels" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px"></div>
-            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Site address</label><input value="{{ newSite }}" onchange="{{ setNewSite }}" placeholder="18 Market Street, Bristol" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px"></div>
+            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Site address</label><input value="{{ newSite }}" onchange="{{ setNewSite }}" placeholder="Yuanhong Plaza, Shenyang" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px"></div>
           </div>
           <div style="margin-top:18px">
             <label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Client contact</label>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;max-width:520px">
-              <input value="{{ newPhone }}" onchange="{{ setNewPhone }}" placeholder="+44 20 7946 0958" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px">
+              <input value="{{ newPhone }}" onchange="{{ setNewPhone }}" placeholder="+86 24 8888 0000" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px">
               <input value="{{ newEmail }}" onchange="{{ setNewEmail }}" placeholder="name@company.com" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px">
             </div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:18px">
-            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Building type</label><select value="{{ newBuilding }}" onchange="{{ setNewBuilding }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option>Hospitality</option><option>Residential</option><option>Workplace</option><option>Cultural</option><option>Retail</option></select></div>
-            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Programme</label><select value="{{ newProgramme }}" onchange="{{ setNewProgramme }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option>4 weeks</option><option>8 weeks</option><option>12 weeks</option><option>6 months</option></select></div>
+            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Sector</label><select value="{{ newBuilding }}" onchange="{{ setNewBuilding }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><sc-for list="{{ sectorOptions }}" as="sec" hint-placeholder-count="7"><option value="{{ sec }}">{{ sec }}</option></sc-for></select></div>
+            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Programme</label><select value="{{ newProgramme }}" onchange="{{ setNewProgramme }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option>8 weeks</option><option>3 months</option><option>6 months</option><option>12 months</option><option>18 months</option></select></div>
+            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Target budget</label><input value="{{ newBudget }}" onchange="{{ setNewBudget }}" placeholder="¥12.0M" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font-family:'IBM Plex Mono',monospace"></div>
           </div>
           <div style="margin-top:18px"><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Tags</label>
             <div style="display:flex;gap:8px"><select value="{{ newTagPick }}" onchange="{{ setNewTagPick }}" style="flex:1;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option value="">Choose a tag</option><sc-for list="{{ availableNewTags }}" as="tag" hint-placeholder-count="6"><option value="{{ tag }}">{{ tag }}</option></sc-for></select><button onclick="{{ addNewTag }}" style="height:40px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer">Add</button></div>
@@ -627,7 +634,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               <button onclick="{{ toggleNewMemberPicker }}" aria-label="Add collaborator" title="Add collaborator" style="width:24px;height:24px;border:1px solid var(--lineS);border-radius:50%;background:var(--surface);color:var(--accent);font-size:17px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0" style-hover="border-color:var(--accent);background:var(--accent-tint)">+</button>
             </div>
             <sc-if value="{{ showNewMemberPicker }}" hint-placeholder-val="{{ false }}">
-              <div style="display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:8px;margin-top:10px"><select value="{{ newCollaborator }}" onchange="{{ setNewCollaborator }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option value="">Choose a person</option><sc-for list="{{ availableCollaborators }}" as="person" hint-placeholder-count="6"><option value="{{ person }}">{{ person }}</option></sc-for></select><select value="{{ newCollaboratorRole }}" onchange="{{ setNewCollaboratorRole }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option>Contributor</option><option>Design reviewer</option><option>Client contact</option></select><button onclick="{{ addNewCollaborator }}" style="height:40px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer">Add</button></div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:8px;margin-top:10px"><select value="{{ newCollaborator }}" onchange="{{ setNewCollaborator }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option value="">Choose a person</option><sc-for list="{{ availableCollaborators }}" as="person" hint-placeholder-count="6"><option value="{{ person }}">{{ person }}</option></sc-for></select><select value="{{ newCollaboratorRole }}" onchange="{{ setNewCollaboratorRole }}" style="height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option>Contributor</option><option>Construction lead</option><option>Technical reviewer</option><option>Compliance lead</option><option>Client contact</option></select><button onclick="{{ addNewCollaborator }}" style="height:40px;padding:0 14px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:600;cursor:pointer">Add</button></div>
             </sc-if>
             <sc-if value="{{ hasNewCollaborators }}" hint-placeholder-val="{{ false }}">
               <div style="margin-top:10px"><sc-for list="{{ newCollaboratorChips }}" as="member" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)"><div style="width:28px;height:28px;border-radius:50%;color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;flex:none;background:{{ member.color }}">{{ member.initials }}</div><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px">{{ member.name }}</div><div style="color:var(--muted);font-size:12px">{{ member.role }}</div></div><button onclick="{{ member.remove }}" title="Remove" aria-label="Remove collaborator" style="border:none;background:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:var(--r-s)">×</button></div></sc-for></div>
@@ -635,7 +642,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
           </div>
           <div style="margin-top:20px;background:#F6F0E4;border-radius:var(--r-m);padding:14px 16px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
             <div style="font-weight:700;color:#8F6318;white-space:nowrap">Starts in Scoping</div>
-            <div style="color:var(--ink2);font-size:13px;flex:1;min-width:200px">New requests sit in Scoping until the brief, fee basis and programme are agreed. They only appear in the schedule once they are Scheduled.</div>
+            <div style="color:var(--ink2);font-size:13px;flex:1;min-width:200px">New requests sit in Scoping until the brief, target budget and programme are agreed. They move to Design once the package is booked, and only then appear on the delivery schedule.</div>
           </div>
         </sc-if>
         <div style="height:1px;background:var(--line);margin:22px 0"></div>
@@ -776,7 +783,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
             <sc-if value="{{ showMemberInfo }}" hint-placeholder-val="{{ false }}">
               <span style="position:absolute;left:0;top:22px;z-index:5;width:270px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12);color:var(--ink2);font-size:12.5px;font-weight:400;line-height:1.45">
                 <b style="display:block;margin-bottom:6px;color:var(--ink)">What each role does</b>
-                <b>Project lead</b> owns delivery and keeps the phase current. <b>Design reviewer</b> checks the package before it is issued. <b>Contributor</b> produces the work. <b>Client contact</b> receives issues and returns comments.
+                <b>Project lead</b> owns the job and keeps the phase honest. <b>Construction lead</b> runs the site. <b>Technical reviewer</b> checks design packages before issue. <b>Compliance lead</b> owns permits and shielding sign-off. <b>Contributor</b> produces the work. <b>Client contact</b> receives issues and returns comments.
               </span>
             </sc-if>
           </span>
@@ -1084,7 +1091,9 @@ table tbody tr:last-child>td{border-bottom:none!important}
         <label style="display:block;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Role</label>
         <select value="{{ assignRoleSelect }}" onchange="{{ setAssignRoleSelect }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font-size:14px;background:var(--surface)">
           <option value="Project lead">Project lead</option>
-          <option value="Design reviewer">Design reviewer</option>
+          <option value="Technical reviewer">Technical reviewer</option>
+          <option value="Construction lead">Construction lead</option>
+          <option value="Compliance lead">Compliance lead</option>
           <option value="Contributor">Contributor</option>
           <option value="Client contact">Client contact</option>
         </select>
@@ -1157,29 +1166,29 @@ table tbody tr:last-child>td{border-bottom:none!important}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 /* ============================================================
-   Fieldwork — studio project delivery platform
-   Phases are the studio-facing state of a project; `hold` is a
-   flag layered on top so a paused project keeps its phase.
+   Fieldwork — commercial design + construction delivery
+   Phases track where a job sits in design→approvals→site→
+   acceptance. `hold` sits on top so a paused job keeps its phase.
    ============================================================ */
 const PHASES={
   scoping:{label:'Scoping',color:'#8F6318',tint:'#F6F0E4',
-    desc:'The brief, fee basis and programme are being agreed. Nothing is drawn yet and no studio time is booked.',
-    exit:'Signed brief, agreed fee basis and an appointed project lead.'},
-  scheduled:{label:'Scheduled',color:'#3B6B96',tint:'#EAF1F8',
-    desc:'Scope is agreed and the work is resourced and booked into the studio programme with a first milestone.',
-    exit:'Team confirmed and the first deliverable date accepted by the client.'},
-  delivery:{label:'In delivery',color:'#5367D4',tint:'#EEF0FF',
-    desc:'The package is actively being produced against the agreed milestones.',
-    exit:'Deliverable complete, checked by the design reviewer and ready to issue.'},
-  review:{label:'Client review',color:'#6E5688',tint:'#F1ECF5',
-    desc:'The package has been issued and is with the client. The review window is running.',
-    exit:'Written sign-off, or comments returned and folded into the next revision.'},
+    desc:'Brief, target budget and programme are being agreed. Design and site teams are not yet committed.',
+    exit:'Signed brief, agreed budget band, contract basis and an appointed project lead.'},
+  scheduled:{label:'Design',color:'#3B6B96',tint:'#EAF1F8',
+    desc:'Scope is locked. Design development, coordination drawings and equipment layouts are under way.',
+    exit:'Design package issued for client review and any required authority submissions.'},
+  delivery:{label:'Construction',color:'#5367D4',tint:'#EEF0FF',
+    desc:'Works are on site under the in-house delivery team — structure, fit-out, systems and finishes.',
+    exit:'Practical completion reached; snagging closed enough to enter acceptance.'},
+  review:{label:'Acceptance',color:'#6E5688',tint:'#F1ECF5',
+    desc:'Client, authorities and equipment vendors are signing off. Compliance packs and commissioning are running.',
+    exit:'Written acceptance, commissioning records and a clear punch-list for handover.'},
   handover:{label:'Handed over',color:'#374151',tint:'#F5F6F4',
-    desc:'Signed off and handed over. The record stays readable for comments and lessons learned.',
-    exit:'Handover pack issued and the record archived.'}
+    desc:'Accepted and handed over. As-builts, O&M and lessons learned stay on the record.',
+    exit:'Handover pack issued and the job archived.'}
 };
 const HOLD={label:'On hold',color:'#B04A4A',tint:'#F7ECEC',
-  desc:'Paused by something outside the studio. Days on hold do not count towards the milestone date.'};
+  desc:'Paused by something outside the delivery team — client decision, authority wait or equipment lead time. Days on hold do not count towards the milestone clock.'};
 const PHASE_KEYS=Object.keys(PHASES);
 const PHASE_ORDER={};PHASE_KEYS.forEach((k,i)=>{PHASE_ORDER[k]=i;});
 
@@ -1209,100 +1218,105 @@ function dueLabel(iso){
   return 'Due '+shortIsoDate(iso);
 }
 
+const SECTORS=['Cinema','Pet hospital','Medical imaging','Health checkup','Mid hotel','Chain dining','Other commercial'];
 const PEOPLE=[
-  {n:'Sophia Chen',role:'Associate director',discipline:'Interior design',c:'#2F6B4F'},
-  {n:'Maya Lin',role:'Project lead',discipline:'Technical design',c:'#6E5688'},
-  {n:'Daniel Wu',role:'Project lead',discipline:'Equipment integration',c:'#8F3209'},
-  {n:'Olivia Wang',role:'Senior designer',discipline:'Site assessment',c:'#C0566B'},
-  {n:'Ethan Zhao',role:'Project lead',discipline:'Concept design',c:'#3B6B96'},
-  {n:'Lucas Huang',role:'Designer',discipline:'Lighting and controls',c:'#0F5C58'},
-  {n:'Noah Li',role:'Designer',discipline:'Soft furnishing',c:'#4A5A7A'},
-  {n:'Claire Wang',role:'Project lead',discipline:'Interior design',c:'#111827'}
+  {n:'Sophia Chen',role:'Associate director',discipline:'Programme & cost',c:'#2F6B4F'},
+  {n:'Maya Lin',role:'Project lead',discipline:'Cinema systems',c:'#6E5688'},
+  {n:'Daniel Wu',role:'Construction lead',discipline:'Site delivery',c:'#8F3209'},
+  {n:'Olivia Wang',role:'Project lead',discipline:'Medical fit-out',c:'#C0566B'},
+  {n:'Ethan Zhao',role:'Project lead',discipline:'Design development',c:'#3B6B96'},
+  {n:'Lucas Huang',role:'Specialist',discipline:'Acoustics & optics',c:'#0F5C58'},
+  {n:'Noah Li',role:'Engineer',discipline:'Structure & shielding',c:'#4A5A7A'},
+  {n:'Claire Wang',role:'Project lead',discipline:'Commercial interiors',c:'#111827'}
 ];
 const PEOPLE_NAMES=PEOPLE.map(p=>p.n);
 function personOf(name){return PEOPLE.find(p=>p.n===name)||{n:name,role:'Contributor',discipline:'—',c:'#4A5A7A'};}
 function initialsOf(name){return String(name||'').split(' ').map(w=>w[0]).filter(Boolean).join('').slice(0,2).toUpperCase();}
 function colorOf(name){return personOf(name).c;}
 
-const DELIVERABLES=['Design package','Concept pack','Site survey report','Equipment schedule','Furniture schedule','Client sign-off','Handover pack'];
+const DELIVERABLES=['Site survey report','Concept pack','Design package','Permit package','Shielding completion','Equipment install','Acoustic commissioning','Practical completion','Client sign-off','Handover pack'];
 const SERVICES=[
-  {name:'Site assessment',desc:'Evaluate location, access, servicing and operational constraints before the client commits.',time:'1–2 weeks',deliverable:'Site survey report'},
-  {name:'Concept design',desc:'Establish the spatial idea, material direction and guest experience narrative.',time:'3–4 weeks',deliverable:'Concept pack'},
-  {name:'Technical design',desc:'Develop circulation, detailing and coordinated drawings ready for construction.',time:'6–10 weeks',deliverable:'Design package'},
-  {name:'Equipment integration',desc:'Coordinate kitchen, AV, lighting and specialist equipment with the interior.',time:'Ongoing',deliverable:'Equipment schedule'},
-  {name:'Full-service design',desc:'Concept through to soft furnishing delivery under a single appointment.',time:'6–12 months',deliverable:'Design package'},
-  {name:'Soft furnishing delivery',desc:'Specify, procure and install textiles, styling and loose furniture on site.',time:'2–5 weeks',deliverable:'Furniture schedule'}
+  {name:'Site assessment',desc:'Feasibility for commercial and medical sites — height, structure, access, servicing and programme risk before the client commits.',time:'1–3 weeks',deliverable:'Site survey report'},
+  {name:'Cinema design & build',desc:'End-to-end cinema delivery: auditorium planning, acoustics and optics, circulation, process walls and finishes, through to on-site build.',time:'6–14 months',deliverable:'Design package'},
+  {name:'Medical space fit-out',desc:'Imaging and clinical rooms with MRI / CT / DR coordination, structural reinforcement and radiation shielding for approval.',time:'4–10 months',deliverable:'Permit package'},
+  {name:'Pet hospital design & build',desc:'Veterinary hospitals with equipment rooms, human–animal circulation and compliance packages under one in-house team.',time:'5–12 months',deliverable:'Handover pack'},
+  {name:'Hotel & F&B fit-out',desc:'Mid hotels and chain dining interiors tuned for northern climate envelopes, brand differentiation and buildable detailing.',time:'3–9 months',deliverable:'Practical completion'},
+  {name:'Design & build',desc:'Full-process design through construction for large commercial jobs — no trade subcontracting of the core package.',time:'6–18 months',deliverable:'Handover pack'}
 ];
 const SERVICE_NAMES=SERVICES.map(s=>s.name);
 
-/* The five live projects the studio is actively moving. */
+/* Live commercial design+build jobs that sell the firm’s real sectors. */
 const SEED_PROJECTS=[
-  {id:'016',code:'PR-016',name:'Harbour Club full-service design',client:'Harbour Club',service:'Full-service design',
-   ph:'delivery',lead:'Sophia Chen',mem:['Sophia Chen','Daniel Wu','Maya Lin'],
-   ms:{iso:'2026-10-18',label:'Design package',time:'4:00 PM'},
-   site:'12 Harbour Parade, Bristol',programme:'9 months',fee:'Fixed fee',kind:'New project',
-   tags:['Hospitality','Equipment integration'],upd:'2 hours ago'},
-  {id:'029',code:'PR-029',name:'Guest circulation drawing package',client:'Northline Hotels',service:'Technical design',
-   ph:'review',lead:'Maya Lin',mem:['Maya Lin','Olivia Wang'],
+  {id:'016',code:'PR-016',name:'Yuanhong Cinema full design & build',client:'Yuanhong Cinema',service:'Cinema design & build',
+   ph:'delivery',lead:'Maya Lin',mem:['Maya Lin','Daniel Wu','Lucas Huang'],
+   ms:{iso:'2026-10-18',label:'Acoustic commissioning',time:'4:00 PM'},
+   site:'Yuanhong Plaza L3–L5, Shenyang',programme:'12 months',fee:'Lump-sum build',budget:'¥48.0M',
+   sector:'Cinema',kind:'New project',tags:['Cinema','Acoustics'],upd:'2 hours ago'},
+  {id:'029',code:'PR-029',name:'Modern Era auditorium package',client:'Modern Era Cinemas',service:'Cinema design & build',
+   ph:'review',lead:'Maya Lin',mem:['Maya Lin','Lucas Huang'],
    ms:{iso:'2026-09-01',label:'Client sign-off',time:'4:00 PM'},
-   site:'18 Market Street, Bristol',programme:'8 weeks',fee:'Fixed fee',kind:'New project',
-   tags:['Circulation','Phase 2'],upd:'4 hours ago'},
-  {id:'061',code:'PR-061',name:'Restaurant kitchen equipment review',client:'Maison Alder',service:'Equipment integration',
-   ph:'scoping',lead:'Daniel Wu',mem:['Daniel Wu','Lucas Huang'],
-   ms:{iso:'2026-09-03',label:'Equipment schedule',time:'12:00 PM'},
-   site:'44 Corn Street, Bristol',programme:'5 weeks',fee:'Time charge',kind:'New project',
-   tags:['Equipment integration','Site critical'],upd:'Today'},
-  {id:'068',code:'PR-068',name:'Boutique hotel site assessment',client:'Lakeshore Group',service:'Site assessment',
+   site:'Modern Era Mall, Changchun',programme:'9 months',fee:'Lump-sum build',budget:'¥22.5M',
+   sector:'Cinema',kind:'New project',tags:['Cinema','Optics'],upd:'4 hours ago'},
+  {id:'061',code:'PR-061',name:'Paws & Care MRI suite',client:'Paws & Care Vet',service:'Medical space fit-out',
+   ph:'scoping',lead:'Olivia Wang',mem:['Olivia Wang','Noah Li'],
+   ms:{iso:'2026-09-03',label:'Permit package',time:'12:00 PM'},
+   site:'12 Beilin Road, Harbin',programme:'7 months',fee:'Design fee + build',budget:'¥6.8M',
+   sector:'Pet hospital',kind:'New project',tags:['MRI','Shielding'],upd:'Today'},
+  {id:'068',code:'PR-068',name:'Dalian cinema site assessment',client:'Modern Era Cinemas',service:'Site assessment',
    ph:'scheduled',lead:'Olivia Wang',mem:['Olivia Wang'],
    ms:{iso:'2026-09-05',label:'Site survey report',time:'5:00 PM'},
-   site:'Lakeshore Road, Windermere',programme:'2 weeks',fee:'Fixed fee',kind:'New project',
-   tags:['Site selection','Hospitality'],upd:'Yesterday',isnew:true},
-  {id:'071',code:'PR-071',name:'Mountain retreat interior concept',client:'Ridge House',service:'Concept design',
-   ph:'delivery',lead:'Ethan Zhao',mem:['Ethan Zhao','Noah Li'],
-   ms:{iso:'2026-11-07',label:'Concept pack',time:'3:00 PM'},
-   site:'Ridge House, Snowdonia',programme:'12 weeks',fee:'Fixed fee',kind:'New project',
-   tags:['Hospitality','Phase 1'],upd:'5 days ago'},
-  {id:'030',code:'PR-030',name:'Soft furnishing specification',client:'Northline Hotels',service:'Soft furnishing delivery',
-   ph:'delivery',lead:'Noah Li',mem:['Noah Li','Maya Lin'],
-   ms:{iso:'2026-09-18',label:'Furniture schedule',time:'11:00 AM'},
-   site:'18 Market Street, Bristol',programme:'4 weeks',fee:'Fixed fee',kind:'Work package',parentId:'029',
-   tags:['Soft furnishing','Phase 2'],upd:'Yesterday'},
-  {id:'072',code:'PR-072',name:'City gallery lighting coordination',client:'Civic Trust',service:'Equipment integration',
-   ph:'delivery',lead:'Lucas Huang',mem:['Lucas Huang','Maya Lin'],
-   ms:{iso:'2026-09-24',label:'Equipment schedule',time:'2:00 PM'},
-   site:'Queen Square, Bristol',programme:'6 weeks',fee:'Time charge',kind:'New project',
-   tags:['Equipment integration','Cultural'],upd:'6 days ago'},
-  {id:'074',code:'PR-074',name:'Lakeside residence space planning',client:'Private client',service:'Concept design',
-   ph:'scheduled',lead:'Sophia Chen',mem:['Sophia Chen'],hold:true,holdReason:'Awaiting client planning decision',
-   ms:{iso:'2026-10-02',label:'Concept pack',time:'4:00 PM'},
-   site:'Lakeside Drive, Windermere',programme:'8 weeks',fee:'Fixed fee',kind:'New project',
-   tags:['Residential','Circulation'],upd:'11 days ago'},
-  {id:'073',code:'PR-073',name:'Executive lounge soft furnishing',client:'Harbour Club',service:'Soft furnishing delivery',
-   ph:'handover',lead:'Noah Li',mem:['Noah Li'],
+   site:'Xinghai Bay plot B2, Dalian',programme:'3 weeks',fee:'Fixed fee',budget:'¥180K',
+   sector:'Cinema',kind:'New project',tags:['Site selection','Cinema'],upd:'Yesterday',isnew:true},
+  {id:'071',code:'PR-071',name:'Northern Lights hotel lobby & rooms',client:'Northern Lights Hotel',service:'Hotel & F&B fit-out',
+   ph:'delivery',lead:'Ethan Zhao',mem:['Ethan Zhao','Claire Wang','Daniel Wu'],
+   ms:{iso:'2026-11-07',label:'Practical completion',time:'3:00 PM'},
+   site:'88 Zhongshan Ave, Shenyang',programme:'8 months',fee:'Lump-sum build',budget:'¥15.2M',
+   sector:'Mid hotel',kind:'New project',tags:['Mid hotel','Climate'],upd:'5 days ago'},
+  {id:'030',code:'PR-030',name:'Yuanhong projection booth MEP',client:'Yuanhong Cinema',service:'Cinema design & build',
+   ph:'delivery',lead:'Daniel Wu',mem:['Daniel Wu','Lucas Huang'],
+   ms:{iso:'2026-09-18',label:'Equipment install',time:'11:00 AM'},
+   site:'Yuanhong Plaza L5, Shenyang',programme:'10 weeks',fee:'Lump-sum build',budget:'¥2.1M',
+   sector:'Cinema',kind:'Work package',parentId:'016',tags:['MEP','Projection'],upd:'Yesterday'},
+  {id:'072',code:'PR-072',name:'VitalScan checkup centre fit-out',client:'VitalScan Checkup',service:'Design & build',
+   ph:'delivery',lead:'Claire Wang',mem:['Claire Wang','Noah Li','Daniel Wu'],
+   ms:{iso:'2026-09-24',label:'Equipment install',time:'2:00 PM'},
+   site:'VitalScan Tower floors 6–8, Dalian',programme:'6 months',fee:'Design fee + build',budget:'¥11.4M',
+   sector:'Health checkup',kind:'New project',tags:['Health checkup','DR'],upd:'6 days ago'},
+  {id:'074',code:'PR-074',name:'CT room shielding upgrade',client:'Lakeside Medical',service:'Medical space fit-out',
+   ph:'scheduled',lead:'Olivia Wang',mem:['Olivia Wang','Noah Li'],hold:true,holdReason:'Awaiting radiation authority clearance',
+   ms:{iso:'2026-10-02',label:'Shielding completion',time:'4:00 PM'},
+   site:'Lakeside Medical B1, Changchun',programme:'4 months',fee:'Design fee + build',budget:'¥3.6M',
+   sector:'Medical imaging',kind:'New project',tags:['CT','Shielding'],upd:'11 days ago'},
+  {id:'073',code:'PR-073',name:'Modern Era Phase 1 cinema',client:'Modern Era Cinemas',service:'Cinema design & build',
+   ph:'handover',lead:'Maya Lin',mem:['Maya Lin','Daniel Wu'],
    ms:{iso:'2026-08-21',label:'Handover pack',time:'10:00 AM'},
-   site:'12 Harbour Parade, Bristol',programme:'3 weeks',fee:'Fixed fee',kind:'Work package',parentId:'016',
-   tags:['Soft furnishing','Hospitality'],upd:'3 weeks ago'},
-  {id:'066',code:'PR-066',name:'Workplace selection study',client:'Meridian Partners',service:'Site assessment',
-   ph:'handover',lead:'Olivia Wang',mem:['Olivia Wang'],
-   ms:{iso:'2026-08-14',label:'Site survey report',time:'9:00 AM'},
-   site:'Temple Quay, Bristol',programme:'2 weeks',fee:'Fixed fee',kind:'New project',
-   tags:['Site selection','Workplace'],upd:'1 month ago'}
+   site:'Modern Era Mall Phase 1, Changchun',programme:'11 months',fee:'Lump-sum build',budget:'¥31.0M',
+   sector:'Cinema',kind:'New project',tags:['Cinema','Handover'],upd:'3 weeks ago'},
+  {id:'066',code:'PR-066',name:'Ember Grill flagship dining',client:'Ember Grill Group',service:'Hotel & F&B fit-out',
+   ph:'handover',lead:'Claire Wang',mem:['Claire Wang','Daniel Wu'],
+   ms:{iso:'2026-08-14',label:'Handover pack',time:'9:00 AM'},
+   site:'Ember Grill, Heping District, Shenyang',programme:'5 months',fee:'Lump-sum build',budget:'¥4.9M',
+   sector:'Chain dining',kind:'New project',tags:['Chain dining','Kitchen'],upd:'1 month ago'}
 ];
 
 /* Portfolio volume so filtering, sorting and paging behave like the real thing. */
-const MOCK_CLIENTS=['Northline Hotels','Harbour Club','Maison Alder','Lakeshore Group','Ridge House','Civic Trust','Meridian Partners'];
-const MOCK_NAMES=['Back-of-house planning','Guest corridor detailing','Wayfinding design review','Material sample approval','Lighting control coordination','Furniture procurement package','Reception joinery detailing','Spa circulation study'];
+const MOCK_CLIENTS=['Yuanhong Cinema','Modern Era Cinemas','Paws & Care Vet','Northern Lights Hotel','Ember Grill Group','VitalScan Checkup','Lakeside Medical'];
+const MOCK_NAMES=['Auditorium acoustic lining','MRI equipment room coordination','Hotel corridor climate detailing','Dining brand fit-out package','Shielding board installation','Projection booth services','Checkup circulation redesign','Pet ward human–animal route'];
 const MOCK_PROJECTS=Array.from({length:46},(_,i)=>{
   const phase=PHASE_KEYS[i%PHASE_KEYS.length];
   const lead=PEOPLE_NAMES[i%6];
   const service=SERVICE_NAMES[i%SERVICE_NAMES.length];
+  const sector=SECTORS[i%SECTORS.length];
   const id=String(100+i);
+  const budgets=['¥1.2M','¥3.4M','¥6.8M','¥12.0M','¥22.5M','¥48.0M'];
   return {
     id,code:'PR-'+id,name:MOCK_NAMES[i%MOCK_NAMES.length]+' '+(i+1),client:MOCK_CLIENTS[i%MOCK_CLIENTS.length],
     service,ph:phase,lead,mem:[lead],hold:i%17===0,
     ms:{iso:isoPlusDays(12+(i*7)%120),label:DELIVERABLES[i%DELIVERABLES.length],time:'4:00 PM'},
-    site:'18 Market Street, Bristol',programme:['4 weeks','8 weeks','12 weeks'][i%3],fee:i%2?'Fixed fee':'Time charge',kind:'New project',
-    tags:[['Hospitality','Residential','Workplace','Cultural'][i%4]],upd:(i%28+1)+' days ago'
+    site:['Shenyang','Changchun','Dalian','Harbin'][i%4]+' commercial plot',
+    programme:['8 weeks','3 months','6 months','12 months'][i%4],
+    fee:i%2?'Lump-sum build':'Design fee + build',budget:budgets[i%budgets.length],
+    sector,kind:'New project',tags:[sector],upd:(i%28+1)+' days ago'
   };
 });
 const PROJECTS=[...SEED_PROJECTS,...MOCK_PROJECTS];
@@ -1312,14 +1326,14 @@ const LEADS=[...new Set(PROJECTS.map(p=>p.lead))].sort();
 
 /* Enquiries waiting to be scoped into projects. */
 const INTAKE=[
-  {code:'RQ-118',name:'Rooftop bar concept study',client:'Northline Hotels',service:'Concept design',need:'Feasibility sketch pack',received:'Today, 09:12',state:'New',today:true},
-  {code:'RQ-117',name:'Staff canteen refit',client:'Meridian Partners',service:'Technical design',need:'Measured survey and layouts',received:'Today, 08:40',state:'New',today:true},
-  {code:'RQ-116',name:'Spa wet area detailing',client:'Lakeshore Group',service:'Technical design',need:'Waterproofing details',received:'Yesterday, 16:20',state:'Reading brief'},
-  {code:'RQ-115',name:'Guest room prototype',client:'Harbour Club',service:'Full-service design',need:'Prototype room specification',received:'Yesterday, 11:05',state:'Reading brief'},
-  {code:'RQ-114',name:'Gallery shop fit-out',client:'Civic Trust',service:'Concept design',need:'Concept and budget estimate',received:'28 Aug, 15:48',state:'Awaiting client'},
-  {code:'RQ-113',name:'Kitchen extract coordination',client:'Maison Alder',service:'Equipment integration',need:'Extract route coordination',received:'28 Aug, 10:02',state:'Awaiting client'},
-  {code:'RQ-112',name:'Lobby lighting refresh',client:'Harbour Club',service:'Equipment integration',need:'Lighting schedule review',received:'27 Aug, 14:31',state:'Reading brief'},
-  {code:'RQ-111',name:'Terrace furniture package',client:'Ridge House',service:'Soft furnishing delivery',need:'External furniture specification',received:'26 Aug, 09:55',state:'Awaiting client'}
+  {code:'RQ-118',name:'Eight-screen cinema feasibility',client:'Yuanhong Cinema',service:'Site assessment',need:'Site survey report',received:'Today, 09:12',state:'New',today:true},
+  {code:'RQ-117',name:'Pet hospital MRI expansion',client:'Paws & Care Vet',service:'Pet hospital design & build',need:'Permit package',received:'Today, 08:40',state:'New',today:true},
+  {code:'RQ-116',name:'CT room structural upgrade',client:'Lakeside Medical',service:'Medical space fit-out',need:'Shielding completion',received:'Yesterday, 16:20',state:'Reading brief'},
+  {code:'RQ-115',name:'Northern climate hotel refresh',client:'Northern Lights Hotel',service:'Hotel & F&B fit-out',need:'Concept pack',received:'Yesterday, 11:05',state:'Reading brief'},
+  {code:'RQ-114',name:'VitalScan floor 9 fit-out',client:'VitalScan Checkup',service:'Design & build',need:'Design package',received:'28 Aug, 15:48',state:'Awaiting client'},
+  {code:'RQ-113',name:'Ember Grill kitchen services',client:'Ember Grill Group',service:'Hotel & F&B fit-out',need:'Equipment install',received:'28 Aug, 10:02',state:'Awaiting client'},
+  {code:'RQ-112',name:'Modern Era optics re-commission',client:'Modern Era Cinemas',service:'Cinema design & build',need:'Acoustic commissioning',received:'27 Aug, 14:31',state:'Reading brief'},
+  {code:'RQ-111',name:'New dining brand prototype',client:'Ember Grill Group',service:'Hotel & F&B fit-out',need:'Concept pack',received:'26 Aug, 09:55',state:'Awaiting client'}
 ];
 const INTAKE_STATES={
   'New':{color:'#8F6318',tint:'#F6F0E4'},
@@ -1328,27 +1342,28 @@ const INTAKE_STATES={
 };
 
 const FAQS=[
-  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the project is with the studio — Scoping, Scheduled, In delivery, Client review, Handed over. A milestone is a dated deliverable inside that phase. A project in delivery can have three milestones ahead of it.'},
+  {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handed over. A milestone is a dated deliverable inside that phase, such as a permit package or acoustic commissioning.'},
   {q:'Who can change a project phase?',a:'Any collaborator can propose a change, but the project lead is accountable for keeping the phase honest. Every change is written to the project activity with the person and time.'},
-  {q:'What happens when a project goes on hold?',a:'On hold sits on top of the phase, so the project keeps its place in the programme. You record a reason, and days on hold are excluded from the milestone clock.'},
-  {q:'How does an enquiry become a project?',a:'Project requests holds everything that has come in. Scoping a request confirms the brief, fee basis and lead, and issues a PR- code. It then appears in the portfolio in Scoping.'},
-  {q:'What is a work package?',a:'A slice of delivery under a parent project — a soft furnishing package under a full-service appointment, for example. It carries its own phase, team and milestones but rolls up to the parent.'}
+  {q:'What happens when a project goes on hold?',a:'On hold sits on top of the phase, so the job keeps its place in the programme. Use it for authority waits, client decisions or long equipment lead times. Days on hold are excluded from the milestone clock.'},
+  {q:'How does an enquiry become a project?',a:'Project requests holds everything that has come in. Scoping a request confirms the brief, budget band, sector and lead, and issues a PR- code. It then appears in the portfolio in Scoping.'},
+  {q:'What is a work package?',a:'A delivery slice under a parent job — for example projection-booth MEP under a cinema design & build. It carries its own phase, team and milestones but rolls up to the parent. Core packages stay in-house.'}
 ];
 
 const BRIEF_FIELDS=[
-  {key:'brief',label:'Brief',type:'area',section:1,placeholder:'Describe the scope, constraints and requirements'},
-  {key:'service',label:'Service',type:'text',section:1,placeholder:'Technical design'},
+  {key:'brief',label:'Brief',type:'area',section:1,placeholder:'Describe scope, site constraints, equipment and compliance requirements'},
+  {key:'service',label:'Service',type:'text',section:1,placeholder:'Cinema design & build'},
   {key:'deliverables',label:'Deliverables',type:'text',section:1,placeholder:'List expected deliverables'},
   {key:'exclusions',label:'Not included',type:'text',section:1,placeholder:'List exclusions'},
-  {key:'client',label:'Client organisation',type:'text',section:2,placeholder:'Northline Hotels'},
-  {key:'site',label:'Site address',type:'text',section:2,placeholder:'18 Market Street, Bristol'},
+  {key:'client',label:'Client organisation',type:'text',section:2,placeholder:'Yuanhong Cinema'},
+  {key:'site',label:'Site address',type:'text',section:2,placeholder:'Yuanhong Plaza, Shenyang'},
   {key:'contactName',label:'Client contact',type:'text',section:2,placeholder:'Contact name'},
   {key:'contactEmail',label:'Email',type:'text',section:2,placeholder:'name@company.com'},
-  {key:'contactPhone',label:'Phone',type:'text',section:2,placeholder:'+44 20 7946 0958'},
-  {key:'buildingType',label:'Building type',type:'text',section:2,placeholder:'Hospitality'},
-  {key:'programme',label:'Programme',type:'text',section:3,placeholder:'8 weeks'},
+  {key:'contactPhone',label:'Phone',type:'text',section:2,placeholder:'+86 24 8888 0000'},
+  {key:'buildingType',label:'Sector',type:'text',section:2,placeholder:'Cinema'},
+  {key:'programme',label:'Programme',type:'text',section:3,placeholder:'12 months'},
   {key:'startDate',label:'Start on site',type:'date',section:3,placeholder:''},
-  {key:'fee',label:'Fee basis',type:'text',section:3,placeholder:'Fixed fee'},
+  {key:'budget',label:'Target budget',type:'text',section:3,placeholder:'¥48.0M'},
+  {key:'fee',label:'Contract basis',type:'text',section:3,placeholder:'Lump-sum build'},
   {key:'assumptions',label:'Assumptions',type:'text',section:3,placeholder:'List assumptions'}
 ];
 const BRIEF_SECTIONS=[
@@ -1359,27 +1374,29 @@ const BRIEF_SECTIONS=[
 
 function briefFor(project){
   return {
-    brief:'Coordinate '+project.service.toLowerCase()+' for '+project.client+', protecting the approved guest journey and the agreed programme.',
+    brief:'Deliver '+project.service.toLowerCase()+' for '+project.client+' at '+project.site+', holding the agreed programme and target budget while meeting sector compliance.',
     service:project.service,
     deliverables:project.ms.label+' · Coordination review',
-    exclusions:'Statutory application fees · Contractor design portions',
+    exclusions:'Client FF&E outside the build package · Third-party operator systems not listed in the brief',
     client:project.client,
     site:project.site,
     contactName:'Emily Zhang',
     contactEmail:'projects@banshan-design.example',
-    contactPhone:'+44 20 7946 0958',
-    buildingType:project.tags[0]||'Hospitality',
+    contactPhone:'+86 24 8888 0000',
+    buildingType:project.sector||project.tags[0]||'Cinema',
     programme:project.programme,
     startDate:'2026-11-14',
+    budget:project.budget||'—',
     fee:project.fee,
-    assumptions:'Current survey information is accurate · Supplier dimensions confirmed'
+    assumptions:'Measured survey is current · Equipment vendor drawings issued · Authority pathway agreed'
   };
 }
 
-const RAIL=[{key:'received',label:'Received'},{key:'scoped',label:'Scoped'},{key:'delivery',label:'Delivery'},{key:'review',label:'Review'}];
+const RAIL=[{key:'received',label:'Enquiry'},{key:'scoped',label:'Design'},{key:'delivery',label:'On site'},{key:'review',label:'Accept'}];
 function railIndexFor(phase){
-  if(phase==='scoping')return 1;
-  if(phase==='scheduled'||phase==='delivery')return 2;
+  if(phase==='scoping')return 0;
+  if(phase==='scheduled')return 1;
+  if(phase==='delivery')return 2;
   if(phase==='review')return 3;
   return 4;
 }
@@ -1395,7 +1412,7 @@ class Component extends DCLogic {
 
   state={
     page:'portfolio',navOpen:false,
-    phaseTab:'all',search:'',serviceFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,
+    phaseTab:'all',search:'',serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,
     showFilters:false,sortKey:'milestone',sortDir:'asc',listPage:1,listPageSize:8,
     peekId:'029',peekTab:'brief',
     showAlerts:false,showAccountMenu:false,showPeekMenu:false,showPeekPhaseMenu:false,
@@ -1415,10 +1432,10 @@ class Component extends DCLogic {
     showDeleteConfirm:false,deleteConfirmTitle:'',deleteConfirmBody:'',deleteConfirmAction:'Delete',pendingDelete:null,
     showUnsavedConfirm:false,pendingNavigation:'',
     wizardStep:1,submitted:false,draftId:'',drafts:[],
-    newName:'',newKind:'New project',newParentId:'',parentSearch:'',newBrief:'',newService:'Technical design',newClient:'',
-    newSite:'',newPhone:'',newEmail:'',newBuilding:'Hospitality',newProgramme:'8 weeks',
+    newName:'',newKind:'New project',newParentId:'',parentSearch:'',newBrief:'',newService:'Cinema design & build',newClient:'',
+    newSite:'',newPhone:'',newEmail:'',newBuilding:'Cinema',newProgramme:'12 months',newBudget:'',
     newTagPick:'',newTags:[],newFiles:[],newLead:'',newCollaborator:'',newCollaboratorRole:'Contributor',newCollaborators:[],
-    showNewMemberPicker:false,newMilestoneDate:'',newMilestoneLabel:'Design package',
+    showNewMemberPicker:false,newMilestoneDate:'',newMilestoneLabel:'Site survey report',
     newReqCode:'',newReqName:'',
     reminderLead:'3',reviewWindow:'5',
     notifications:{milestone:true,phase:true,digest:false},
@@ -1481,7 +1498,7 @@ class Component extends DCLogic {
     const held=this.holdOf(project);
     const members=(project.mem||[]).map((name,i)=>({
       i:initialsOf(name),n:name,c:colorOf(name),
-      role:name===project.lead?'Project lead':(i===1?'Design reviewer':'Contributor')
+      role:name===project.lead?'Project lead':(i===1?'Technical reviewer':'Contributor')
     }));
     const files=[{name:project.code+'-brief.pdf',meta:'1.2 MB · uploaded by Emily Zhang'},
       {name:project.code+'-coordination.dwg',meta:'8.1 MB · uploaded by '+project.lead}];
@@ -1652,10 +1669,10 @@ class Component extends DCLogic {
   resetWizard(extra){
     this.setState({
       page:'new',navOpen:false,wizardStep:1,submitted:false,draftId:'',
-      newName:'',newKind:'New project',newParentId:'',parentSearch:'',newBrief:'',newService:'Technical design',newClient:'',
-      newSite:'',newPhone:'',newEmail:'',newBuilding:'Hospitality',newProgramme:'8 weeks',
+      newName:'',newKind:'New project',newParentId:'',parentSearch:'',newBrief:'',newService:'Cinema design & build',newClient:'',
+      newSite:'',newPhone:'',newEmail:'',newBuilding:'Cinema',newProgramme:'12 months',newBudget:'',
       newTagPick:'',newTags:[],newFiles:[],newLead:'',newCollaborator:'',newCollaboratorRole:'Contributor',newCollaborators:[],
-      showNewMemberPicker:false,newMilestoneDate:'',newMilestoneLabel:'Design package',
+      showNewMemberPicker:false,newMilestoneDate:'',newMilestoneLabel:'Site survey report',
       showUnsavedConfirm:false,pendingNavigation:'',showAccountMenu:false,showAlerts:false,
       ...(extra||{})
     });
@@ -1665,7 +1682,7 @@ class Component extends DCLogic {
     const id=st.draftId||'draft-'+Date.now();
     const draft={id,name:st.newName.trim()||'Untitled request',step:st.wizardStep,updated:'just now',
       newKind:st.newKind,newParentId:st.newParentId,newBrief:st.newBrief,newService:st.newService,newClient:st.newClient,
-      newSite:st.newSite,newPhone:st.newPhone,newEmail:st.newEmail,newBuilding:st.newBuilding,newProgramme:st.newProgramme,
+      newSite:st.newSite,newPhone:st.newPhone,newEmail:st.newEmail,newBuilding:st.newBuilding,newProgramme:st.newProgramme,newBudget:st.newBudget,
       newTags:st.newTags.slice(),newFiles:st.newFiles.map(f=>({...f})),newLead:st.newLead,
       newCollaborators:st.newCollaborators.map(m=>({...m})),newMilestoneDate:st.newMilestoneDate,newMilestoneLabel:st.newMilestoneLabel};
     this.setState(s=>({draftId:id,drafts:[draft,...s.drafts.filter(d=>d.id!==id)]}));
@@ -1692,10 +1709,11 @@ class Component extends DCLogic {
     const matchesTab=(p)=>st.phaseTab==='all'?true:p.phase===st.phaseTab;
     const filtered=projects.filter(p=>matchesTab(p)
       &&(st.serviceFilter==='all'||p.service===st.serviceFilter)
+      &&(st.sectorFilter==='all'||(p.sector||'')===st.sectorFilter)
       &&(st.leadFilter==='all'||p.lead===st.leadFilter)
       &&(st.clientFilter==='all'||p.client===st.clientFilter)
       &&(!st.holdOnly||p.held)
-      &&(!q||p.name.toLowerCase().includes(q)||p.client.toLowerCase().includes(q)||p.code.toLowerCase().includes(q)));
+      &&(!q||p.name.toLowerCase().includes(q)||p.client.toLowerCase().includes(q)||p.code.toLowerCase().includes(q)||(p.sector||'').toLowerCase().includes(q)));
     const dir=st.sortDir==='desc'?-1:1;
     const sorted=[...filtered].sort((a,b)=>{
       const av=st.sortKey==='phase'?PHASE_ORDER[a.phase]:daysFromToday(a.ms.iso);
@@ -1723,7 +1741,7 @@ class Component extends DCLogic {
       const selected=p.id===st.peekId;
       const days=daysFromToday(p.ms.iso);
       return {
-        id:p.id,code:p.code,name:p.name,client:p.client,service:p.service,isnew:!!p.isnew,
+        id:p.id,code:p.code,name:p.name,client:p.client,service:p.service,sector:p.sector||'—',budget:p.budget||'—',isnew:!!p.isnew,
         phaseLabel:p.chip.label,phaseColor:p.chip.color,phaseTint:p.chip.tint,
         lead:p.lead,leadInitials:initialsOf(p.lead),leadColor:colorOf(p.lead),
         milestoneDate:shortIsoDate(p.ms.iso),milestoneLabel:p.ms.label,
@@ -1765,7 +1783,7 @@ class Component extends DCLogic {
       const brief=briefFor(peekProject);
       const people=(peekProject.mem||[]).map((name,i)=>({
         name,initials:initialsOf(name),color:colorOf(name),
-        role:name===peekProject.lead?'Project lead':(i===1?'Design reviewer':'Contributor')
+        role:name===peekProject.lead?'Project lead':(i===1?'Technical reviewer':'Contributor')
       }));
       const days=daysFromToday(peekProject.ms.iso);
       const activityCount=peekProject.id===st.detailId?3+st.activityAdds.length:3;
@@ -1777,10 +1795,12 @@ class Component extends DCLogic {
         milestoneColor:days<0?'#B04A4A':days<=1?'var(--accent-ink)':'var(--muted)',
         people,activityCount,
         scope:[
+          {label:'Sector',value:peekProject.sector||'—'},
           {label:'Service',value:peekProject.service},
           {label:'Site',value:peekProject.site},
           {label:'Programme',value:peekProject.programme},
-          {label:'Fee basis',value:peekProject.fee}
+          {label:'Contract',value:peekProject.fee},
+          {label:'Budget',value:peekProject.budget||'—'}
         ],
         activity:[
           {initials:initialsOf(peekProject.lead),color:colorOf(peekProject.lead),text:peekProject.lead+' moved this project into '+peekProject.chip.label+'.',when:peekProject.upd},
@@ -1872,7 +1892,7 @@ class Component extends DCLogic {
 
     const milestonePlan=detailProject?[
       {label:'Brief agreed',date:'29 Aug',note:'Signed by the client',state:'done'},
-      {label:'Fee basis confirmed',date:'30 Aug',note:detailProject.fee,state:'done'},
+      {label:'Budget & contract confirmed',date:'30 Aug',note:(detailProject.budget||'')+' · '+detailProject.fee,state:'done'},
       {label:st.milestoneLabel||detailProject.ms.label,date:shortIsoDate(st.milestoneIso||detailProject.ms.iso),note:dueLabel(st.milestoneIso||detailProject.ms.iso),state:'current'},
       {label:'Handover pack',date:'To be set',note:'After client sign-off',state:'todo'}
     ].map(m=>({
@@ -1928,7 +1948,7 @@ class Component extends DCLogic {
       ]},
       {date:'31 August 2026',items:[
         {id:'seed-c2',isComment:true,i:'SC',n:'Sophia Chen',c:'#2F6B4F',tm:'16:24',
-         body:'Please protect the approved guest journey while resolving the interfaces. The appointment includes a final circulation check.'},
+         body:'Please protect the approved circulation and compliance path while resolving interfaces. The package includes a final coordination check before site acceptance.'},
         {isChange:true,when:'16:20',segs:[{t:'Sophia Chen',b:true},{t:' moved the project into '},{t:detailChip.label,b:true}]}
       ]},
       {date:'29 August 2026',items:[
@@ -2039,13 +2059,14 @@ class Component extends DCLogic {
       search:st.search,setSearch:(e)=>this.setState({search:e.target.value,listPage:1}),
       showFilters:st.showFilters,filtersColor:st.showFilters?'var(--accent-ink)':'var(--muted)',
       toggleFilters:(e)=>{e.stopPropagation();this.setState(s=>({showFilters:!s.showFilters}));},
-      serviceOptions:SERVICE_NAMES,leadOptions:LEADS,clientOptions:CLIENTS,
+      serviceOptions:SERVICE_NAMES,sectorOptions:SECTORS,leadOptions:LEADS,clientOptions:CLIENTS,
       serviceFilter:st.serviceFilter,setServiceFilter:(e)=>this.setState({serviceFilter:e.target.value,listPage:1}),
+      sectorFilter:st.sectorFilter,setSectorFilter:(e)=>this.setState({sectorFilter:e.target.value,listPage:1}),
       leadFilter:st.leadFilter,setLeadFilter:(e)=>this.setState({leadFilter:e.target.value,listPage:1}),
       clientFilter:st.clientFilter,setClientFilter:(e)=>this.setState({clientFilter:e.target.value,listPage:1}),
       holdOnly:st.holdOnly,setHoldOnly:(e)=>this.setState({holdOnly:!!(e.target&&e.target.checked),listPage:1}),
-      clearFilters:()=>this.setState({serviceFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,listPage:1}),
-      clearAllFilters:()=>this.setState({serviceFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,search:'',phaseTab:'all',listPage:1}),
+      clearFilters:()=>this.setState({serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,listPage:1}),
+      clearAllFilters:()=>this.setState({serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,search:'',phaseTab:'all',listPage:1}),
       phaseSortRotation:st.sortKey==='phase'&&st.sortDir==='asc'?'0deg':'180deg',
       milestoneSortRotation:st.sortKey==='milestone'&&st.sortDir==='asc'?'0deg':'180deg',
       sortByPhase:()=>this.setState(s=>({sortKey:'phase',sortDir:s.sortKey==='phase'&&s.sortDir==='asc'?'desc':'asc',listPage:1})),
@@ -2096,7 +2117,7 @@ class Component extends DCLogic {
       notificationToggles:[
         {key:'milestone',label:'Milestone reminders',desc:'Email me before a deliverable I lead is due.'},
         {key:'phase',label:'Phase changes',desc:'Notify me when a project I collaborate on changes phase.'},
-        {key:'digest',label:'Monday digest',desc:'A weekly summary of the studio schedule.'}
+        {key:'digest',label:'Monday digest',desc:'A weekly summary of the delivery schedule.'}
       ].map(t=>{
         const on=!!st.notifications[t.key];
         return {label:t.label,desc:t.desc,on:on?'true':'false',
@@ -2296,6 +2317,8 @@ class Component extends DCLogic {
       newEmail:st.newEmail,setNewEmail:(e)=>this.setState({newEmail:e.target.value}),
       newBuilding:st.newBuilding,setNewBuilding:(e)=>this.setState({newBuilding:e.target.value}),
       newProgramme:st.newProgramme,setNewProgramme:(e)=>this.setState({newProgramme:e.target.value}),
+      newBudget:st.newBudget,setNewBudget:(e)=>this.setState({newBudget:e.target.value}),
+      sectorOptions:SECTORS,
       newTagPick:st.newTagPick,setNewTagPick:(e)=>this.setState({newTagPick:e.target.value}),
       availableNewTags:TAGS.filter(t=>!st.newTags.includes(t)),
       hasNewTags:st.newTags.length>0,
@@ -2355,9 +2378,11 @@ class Component extends DCLogic {
           id,code,name,client:st.newClient.trim()||'New client',service:st.newService,
           ph:'scoping',lead:st.newLead,mem:members.map(m=>m.n),hold:false,
           ms:{iso:st.newMilestoneDate||'2026-09-30',label:st.newMilestoneLabel,time:'4:00 PM'},
-          site:st.newSite.trim()||'To be confirmed',programme:st.newProgramme,fee:'To be agreed',
+          site:st.newSite.trim()||'To be confirmed',programme:st.newProgramme,
+          fee:'To be agreed',budget:st.newBudget.trim()||'—',
+          sector:st.newBuilding||'Other commercial',
           kind:st.newKind,parentId:st.newKind==='Work package'?st.newParentId:undefined,
-          tags:st.newTags.slice(),upd:'Just now',isnew:true
+          tags:st.newTags.length?st.newTags.slice():[st.newBuilding||'Cinema'],upd:'Just now',isnew:true
         };
         this.setState(s=>({
           submitted:true,newReqCode:code,newReqName:name,newProjectId:id,
