@@ -1324,6 +1324,84 @@ function permsFor(name){
 const COLLAB_ROLES=['Project lead','Operations manager','Design lead','Designer','Construction lead','Specialist','Director','Finance','Client contact'];
 
 const DELIVERABLES=['Site survey report','Concept pack','Design package','Permit package','Shielding completion','Equipment install','Acoustic commissioning','Practical completion','Client sign-off','Handover pack'];
+
+/* Delivery milestones are fieldwork gates — not intake/commercial gates.
+   Brief and contract live on the project brief; this list tracks what the
+   delivery team must land on site. */
+const MILESTONE_NOTES={
+  'Site survey report':'Measured survey, height, structure and access confirmed',
+  'Concept pack':'Spatial direction and material approach agreed',
+  'Design package':'Coordinated drawings ready for build',
+  'Permit package':'Authority submissions lodged and tracked',
+  'Shielding completion':'Radiation / acoustic shielding installed and checked',
+  'Equipment install':'Specialist equipment set and connected',
+  'Acoustic commissioning':'Cinema acoustics / optics commissioned',
+  'Practical completion':'Works complete enough to enter acceptance',
+  'Client sign-off':'Client and vendor acceptance recorded',
+  'Handover pack':'As-builts, O&M and lessons issued'
+};
+const MILESTONE_BY_SECTOR={
+  Cinema:['Site survey report','Design package','Equipment install','Acoustic commissioning','Practical completion','Client sign-off','Handover pack'],
+  'Pet hospital':['Site survey report','Design package','Permit package','Shielding completion','Equipment install','Practical completion','Client sign-off','Handover pack'],
+  'Medical imaging':['Site survey report','Design package','Permit package','Shielding completion','Equipment install','Practical completion','Client sign-off','Handover pack'],
+  'Health checkup':['Site survey report','Design package','Equipment install','Practical completion','Client sign-off','Handover pack'],
+  'Mid hotel':['Site survey report','Concept pack','Design package','Practical completion','Client sign-off','Handover pack'],
+  'Chain dining':['Site survey report','Concept pack','Design package','Practical completion','Client sign-off','Handover pack'],
+  'Other commercial':['Site survey report','Design package','Practical completion','Client sign-off','Handover pack']
+};
+const MILESTONE_BY_SERVICE={
+  'Site assessment':['Site survey report','Client sign-off','Handover pack'],
+  'Cinema design & build':MILESTONE_BY_SECTOR.Cinema,
+  'Medical space fit-out':MILESTONE_BY_SECTOR['Medical imaging'],
+  'Pet hospital design & build':MILESTONE_BY_SECTOR['Pet hospital'],
+  'Hotel & F&B fit-out':MILESTONE_BY_SECTOR['Mid hotel'],
+  'Design & build':MILESTONE_BY_SECTOR['Other commercial']
+};
+function deliveryGatesFor(project){
+  return (MILESTONE_BY_SERVICE[project.service]
+    ||MILESTONE_BY_SECTOR[project.sector]
+    ||MILESTONE_BY_SECTOR['Other commercial']).slice();
+}
+function milestoneIndexFor(gates,label,phase){
+  const hit=gates.indexOf(label);
+  if(hit>=0)return hit;
+  if(phase==='scoping')return 0;
+  if(phase==='scheduled')return Math.min(1,gates.length-1);
+  if(phase==='delivery')return Math.min(Math.max(2,gates.length-3),gates.length-1);
+  if(phase==='review')return Math.max(0,gates.length-2);
+  return gates.length-1;
+}
+function buildMilestonePlan(project,label,iso,phase){
+  const gates=deliveryGatesFor(project);
+  const current=milestoneIndexFor(gates,label||project.ms.label,phase||project.ph);
+  const currentDate=isoToDate(iso||project.ms.iso);
+  return gates.map((gate,i)=>{
+    let state='todo',date='To be set',note=MILESTONE_NOTES[gate]||'';
+    if(i<current){
+      state='done';
+      date=currentDate?shortIsoDate(isoPlusDays(daysFromToday(iso||project.ms.iso)-(current-i)*14)):'Done';
+      if(gate==='Site survey report')note='Survey closed and issued';
+      else if(gate==='Design package')note='Issued for build';
+      else note='Complete';
+    }else if(i===current){
+      state='current';
+      date=shortIsoDate(iso||project.ms.iso);
+      note=dueLabel(iso||project.ms.iso);
+    }else{
+      state='todo';
+      date='To be set';
+      note=i===current+1?'Next after '+gates[current]:MILESTONE_NOTES[gate]||'Queued';
+    }
+    return {label:gate,date,note,state};
+  }).map(m=>({
+    label:m.label,date:m.date,note:m.note,
+    mark:m.state==='done'?'✓':m.state==='current'?'●':'',
+    dotBg:m.state==='done'?'#5367D4':'var(--surface)',
+    dotColor:m.state==='done'?'#fff':m.state==='current'?'var(--accent)':'var(--faint)',
+    dotBorder:m.state==='done'?'#5367D4':m.state==='current'?'var(--accent)':'var(--lineS)',
+    textColor:m.state==='todo'?'var(--muted)':'var(--ink)'
+  }));
+}
 const SERVICES=[
   {name:'Site assessment',desc:'Feasibility for commercial and medical sites — height, structure, access, servicing and programme risk before the client commits.',time:'1–3 weeks',deliverable:'Site survey report'},
   {name:'Cinema design & build',desc:'End-to-end cinema delivery: auditorium planning, acoustics and optics, circulation, process walls and finishes, through to on-site build.',time:'6–14 months',deliverable:'Design package'},
@@ -2015,19 +2093,9 @@ class Component extends DCLogic {
       return {label:step.label,barColor,textColor,when,nameWeight};
     });
 
-    const milestonePlan=detailProject?[
-      {label:'Brief agreed',date:'29 Aug',note:'Signed by the client',state:'done'},
-      {label:'Budget & contract confirmed',date:'30 Aug',note:(detailProject.budget||'')+' · '+detailProject.fee,state:'done'},
-      {label:st.milestoneLabel||detailProject.ms.label,date:shortIsoDate(st.milestoneIso||detailProject.ms.iso),note:dueLabel(st.milestoneIso||detailProject.ms.iso),state:'current'},
-      {label:'Handover pack',date:'To be set',note:'After client sign-off',state:'todo'}
-    ].map(m=>({
-      label:m.label,date:m.date,note:m.note,
-      mark:m.state==='done'?'✓':m.state==='current'?'●':'',
-      dotBg:m.state==='done'?'#5367D4':'var(--surface)',
-      dotColor:m.state==='done'?'#fff':m.state==='current'?'var(--accent)':'var(--faint)',
-      dotBorder:m.state==='done'?'#5367D4':m.state==='current'?'var(--accent)':'var(--lineS)',
-      textColor:m.state==='todo'?'var(--muted)':'var(--ink)'
-    })):[];
+    const milestonePlan=detailProject
+      ?buildMilestonePlan(detailProject,st.milestoneLabel||detailProject.ms.label,st.milestoneIso||detailProject.ms.iso,draftPhaseKey)
+      :[];
 
     const fieldSetters={};
     BRIEF_FIELDS.forEach(f=>{
