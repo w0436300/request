@@ -1173,7 +1173,12 @@ table tbody tr:last-child>td{border-bottom:none!important}
 </sc-if>
 
 <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.25);font-weight:500;z-index:80">{{ toastMsg }}</div>
+  <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:16px;background:var(--ink);color:#fff;padding:12px 16px 12px 20px;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.25);font-weight:500;font-size:13.5px;z-index:80">
+    <span>{{ toastMsg }}</span>
+    <sc-if value="{{ hasToastUndo }}" hint-placeholder-val="{{ false }}">
+      <button onclick="{{ undoToast }}" style="border:none;background:none;color:#B7C1F2;font:700 13px inherit;cursor:pointer;padding:0 4px" style-hover="color:#fff;text-decoration:underline">Undo</button>
+    </sc-if>
+  </div>
 </sc-if>
 
 </div>
@@ -1445,7 +1450,7 @@ class Component extends DCLogic {
     newReqCode:'',newReqName:'',
     reminderLead:'3',reviewWindow:'5',
     notifications:{milestone:true,phase:true,digest:false},
-    toastMsg:''
+    toastMsg:'',toastUndo:null
   };
 
   /* ---------- project lookup ---------- */
@@ -1461,7 +1466,23 @@ class Component extends DCLogic {
     return held?HOLD:PHASES[this.phaseOf(project)];
   }
 
-  showToast(msg){this.setState({toastMsg:msg});clearTimeout(this._t);this._t=setTimeout(()=>this.setState({toastMsg:''}),2600);}
+  /* Phase changes made from the preview panel apply immediately, so the
+     confirmation carries the undo rather than just announcing the change. */
+  showToast(msg,undo){
+    this.setState({toastMsg:msg,toastUndo:undo||null});
+    clearTimeout(this._t);
+    this._t=setTimeout(()=>this.setState({toastMsg:'',toastUndo:null}),undo?5200:2600);
+  }
+  undoToast(){
+    const u=this.state.toastUndo;
+    if(!u)return;
+    clearTimeout(this._t);
+    this.setState(s=>({
+      phaseOverrides:{...s.phaseOverrides,[u.id]:u.phase},
+      holdOverrides:{...s.holdOverrides,[u.id]:u.hold},
+      toastMsg:'',toastUndo:null
+    }));
+  }
 
   /* ---------- navigation ---------- */
   navigateTo(p){
@@ -1525,19 +1546,21 @@ class Component extends DCLogic {
     const project=this.projectById(id);
     if(!project)return;
     const from=this.chipFor(project).label;
+    const undo={id,phase:this.phaseOf(project),hold:this.holdOf(project)};
     this.setState(s=>({
       phaseOverrides:{...s.phaseOverrides,[id]:phase},
       holdOverrides:{...s.holdOverrides,[id]:false},
       showPeekPhaseMenu:false
     }));
-    this.showToast(project.code+' moved from '+from+' to '+PHASES[phase].label+'.');
+    this.showToast(project.code+' moved from '+from+' to '+PHASES[phase].label,undo);
   }
   toggleHoldDirect(id){
     const project=this.projectById(id);
     if(!project)return;
     const next=!this.holdOf(project);
+    const undo={id,phase:this.phaseOf(project),hold:this.holdOf(project)};
     this.setState(s=>({holdOverrides:{...s.holdOverrides,[id]:next},showPeekPhaseMenu:false}));
-    this.showToast(project.code+(next?' put on hold.':' resumed.'));
+    this.showToast(project.code+(next?' put on hold':' resumed'),undo);
   }
 
   /* ---------- dirty tracking ---------- */
@@ -2381,7 +2404,8 @@ class Component extends DCLogic {
       deleteConfirmAction:st.deleteConfirmAction||'Delete',
       closeDeleteConfirm:()=>this.closeDeleteConfirm(),
       confirmDelete:()=>this.confirmDelete(),
-      toastMsg:st.toastMsg,hasToast:!!st.toastMsg
+      toastMsg:st.toastMsg,hasToast:!!st.toastMsg,
+      hasToastUndo:!!st.toastUndo,undoToast:()=>this.undoToast()
     };
   }
 }
