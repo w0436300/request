@@ -1211,6 +1211,11 @@ const TODAY_LABEL='Monday, 1 September';
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function isoToDate(iso){const d=new Date(String(iso)+'T12:00:00');return isNaN(d.getTime())?null:d;}
+function isoPlusDays(days){
+  const d=isoToDate(TODAY_ISO);
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 function formatIsoDate(iso){const d=isoToDate(iso);return d?d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear():'—';}
 function shortIsoDate(iso){const d=isoToDate(iso);return d?d.getDate()+' '+MONTHS[d.getMonth()]:'Not set';}
 function daysFromToday(iso){
@@ -1282,7 +1287,7 @@ const SEED_PROJECTS=[
    tags:['Hospitality','Phase 1'],upd:'5 days ago'},
   {id:'030',code:'PR-030',name:'Soft furnishing specification',client:'Northline Hotels',service:'Soft furnishing delivery',
    ph:'delivery',lead:'Noah Li',mem:['Noah Li','Maya Lin'],
-   ms:{iso:'2026-09-04',label:'Furniture schedule',time:'11:00 AM'},
+   ms:{iso:'2026-09-18',label:'Furniture schedule',time:'11:00 AM'},
    site:'18 Market Street, Bristol',programme:'4 weeks',fee:'Fixed fee',kind:'Work package',parentId:'029',
    tags:['Soft furnishing','Phase 2'],upd:'Yesterday'},
   {id:'072',code:'PR-072',name:'City gallery lighting coordination',client:'Civic Trust',service:'Equipment integration',
@@ -1318,7 +1323,7 @@ const MOCK_PROJECTS=Array.from({length:46},(_,i)=>{
   return {
     id,code:'PR-'+id,name:MOCK_NAMES[i%MOCK_NAMES.length]+' '+(i+1),client:MOCK_CLIENTS[i%MOCK_CLIENTS.length],
     service,ph:phase,lead,mem:[lead],hold:i%17===0,
-    ms:{iso:'2026-'+String(9+Math.floor(i/12)).padStart(2,'0')+'-'+String((i%27)+1).padStart(2,'0'),label:DELIVERABLES[i%DELIVERABLES.length],time:'4:00 PM'},
+    ms:{iso:isoPlusDays(12+(i*7)%120),label:DELIVERABLES[i%DELIVERABLES.length],time:'4:00 PM'},
     site:'18 Market Street, Bristol',programme:['4 weeks','8 weeks','12 weeks'][i%3],fee:i%2?'Fixed fee':'Time charge',kind:'New project',
     tags:[['Hospitality','Residential','Workplace','Cultural'][i%4]],upd:(i%28+1)+' days ago'
   };
