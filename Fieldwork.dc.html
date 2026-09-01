@@ -1545,14 +1545,19 @@ class Component extends DCLogic {
   setPhaseDirect(id,phase){
     const project=this.projectById(id);
     if(!project)return;
-    const from=this.chipFor(project).label;
-    const undo={id,phase:this.phaseOf(project),hold:this.holdOf(project)};
+    const wasPhase=this.phaseOf(project);
+    const wasHold=this.holdOf(project);
+    /* Reselecting the phase a project is already in changes nothing. */
+    if(wasPhase===phase&&!wasHold){this.setState({showPeekPhaseMenu:false});return;}
     this.setState(s=>({
       phaseOverrides:{...s.phaseOverrides,[id]:phase},
       holdOverrides:{...s.holdOverrides,[id]:false},
       showPeekPhaseMenu:false
     }));
-    this.showToast(project.code+' moved from '+from+' to '+PHASES[phase].label,undo);
+    const msg=wasHold&&wasPhase===phase
+      ?project.code+' resumed in '+PHASES[phase].label
+      :project.code+' moved from '+(wasHold?HOLD.label:PHASES[wasPhase].label)+' to '+PHASES[phase].label;
+    this.showToast(msg,{id,phase:wasPhase,hold:wasHold});
   }
   toggleHoldDirect(id){
     const project=this.projectById(id);
