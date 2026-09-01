@@ -2118,7 +2118,6 @@ class Component extends DCLogic {
       &&matchesDue(p)
       &&(!st.holdOnly||p.held)
       &&(!q||p.name.toLowerCase().includes(q)||p.client.toLowerCase().includes(q)||p.code.toLowerCase().includes(q)||(p.sector||'').toLowerCase().includes(q)));
-    const filterOnClass=(v)=>'filter-select'+(v!=='all'?' is-on':'');
     const dueLabels={overdue:'Overdue',week:'Due this week',month:'Due in 30 days'};
     const filterChips=[
       st.clientFilter!=='all'?{label:st.clientFilter,clear:()=>this.setState({clientFilter:'all',listPage:1})}:null,
