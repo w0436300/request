@@ -9,8 +9,7 @@
   var APP_PATH = "app.html";
   var APP_ALIASES = {
     "app.html": true,
-    "intake tracker.dc.html": true,
-    "intake%20tracker.dc.html": true
+    "fieldwork.dc.html": true
   };
 
   function normalizePath(pathname) {

@@ -47,7 +47,7 @@ jobs:
           mkdir -p site
 
           cp index.html auth-gate.js support.js site/
-          cp "Intake Tracker.dc.html" site/app.html
+          cp Fieldwork.dc.html site/app.html
           mkdir -p site/knowledge-hub
           cp "knowledge-hub/Meridian-KB-prototype.html" site/knowledge-hub/index.html
 
