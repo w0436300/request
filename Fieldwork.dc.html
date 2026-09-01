@@ -70,7 +70,12 @@ table tbody tr:last-child>td{border-bottom:none!important}
 @media (max-width:520px){.phase-boxes{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .capacity-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
 @media (max-width:720px){.capacity-metrics{grid-template-columns:1fr}}
-.sortable-heading{display:inline-flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:inherit;font:inherit;font-weight:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+.filter-select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer}
+.filter-select.is-on{border-color:#C7D0F5;background:var(--accent-tint);color:var(--accent-ink)}
+.filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 20px;background:var(--paper2);border-bottom:1px solid var(--line)}
+.filter-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 12px;background:var(--paper2);border-bottom:1px solid var(--line)}
+.filter-chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink2)}
+.filter-chip button{border:none;background:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0}
 .sortable-heading:hover{color:#111827}
 .sort-indicator{position:relative;width:12px;height:12px;display:inline-block;flex:none;transform-origin:50% 50%}
 .sort-indicator::before{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;border-left:1.5px solid #667EEA;border-top:1.5px solid #667EEA;transform:translate(-50%,-50%) rotate(45deg)}
@@ -252,7 +257,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
           <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace">⌕</span>
           <input value="{{ search }}" onchange="{{ setSearch }}" placeholder="Search projects or clients" style="width:100%;height:36px;border:1px solid var(--line);border-radius:9px;padding:0 12px 0 30px;background:var(--surface);font-size:13px;color:var(--ink)">
         </div>
-        <button onclick="{{ toggleFilters }}" aria-expanded="{{ showFilters }}" style="border:none;background:none;color:{{ filtersColor }};font-weight:600;font-size:12.5px;cursor:pointer;padding:6px 0;white-space:nowrap" style-hover="color:#111827">Filters</button>
         <div role="group" aria-label="Group projects" style="display:inline-flex;align-items:center;padding:3px;background:var(--paper2);border-radius:9px;flex:none">
           <button onclick="{{ groupFlat }}" aria-pressed="{{ listGroupFlatPressed }}" style="height:30px;padding:0 11px;border:none;border-radius:7px;background:{{ listGroupFlatBg }};color:{{ listGroupFlatColor }};font-weight:600;font-size:12px;cursor:pointer">All jobs</button>
           <button onclick="{{ groupByClient }}" aria-pressed="{{ listGroupClientPressed }}" style="height:30px;padding:0 11px;border:none;border-radius:7px;background:{{ listGroupClientBg }};color:{{ listGroupClientColor }};font-weight:600;font-size:12px;cursor:pointer">By client</button>
@@ -277,26 +281,44 @@ table tbody tr:last-child>td{border-bottom:none!important}
       </div>
     </div>
 
-    <sc-if value="{{ showFilters }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 20px;background:var(--paper2);border-bottom:1px solid var(--line)">
-        <select value="{{ serviceFilter }}" onchange="{{ setServiceFilter }}" aria-label="Filter by service" style="height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2)">
-          <option value="all">Any service</option>
-          <sc-for list="{{ serviceOptions }}" as="so" hint-placeholder-count="6"><option value="{{ so }}">{{ so }}</option></sc-for>
-        </select>
-        <select value="{{ sectorFilter }}" onchange="{{ setSectorFilter }}" aria-label="Filter by sector" style="height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2)">
-          <option value="all">Any sector</option>
-          <sc-for list="{{ sectorOptions }}" as="sec" hint-placeholder-count="7"><option value="{{ sec }}">{{ sec }}</option></sc-for>
-        </select>
-        <select value="{{ leadFilter }}" onchange="{{ setLeadFilter }}" aria-label="Filter by project lead" style="height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2)">
-          <option value="all">Any lead</option>
-          <sc-for list="{{ leadOptions }}" as="lo" hint-placeholder-count="6"><option value="{{ lo }}">{{ lo }}</option></sc-for>
-        </select>
-        <select value="{{ clientFilter }}" onchange="{{ setClientFilter }}" aria-label="Filter by client" style="height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2)">
-          <option value="all">Any client</option>
-          <sc-for list="{{ clientOptions }}" as="co" hint-placeholder-count="6"><option value="{{ co }}">{{ co }}</option></sc-for>
-        </select>
-        <label style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer"><input type="checkbox" checked="{{ holdOnly }}" onchange="{{ setHoldOnly }}" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">On hold only</label>
-        <button onclick="{{ clearFilters }}" style="margin-left:auto;background:none;border:none;color:var(--muted);font-weight:700;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer" style-hover="color:#111827">Clear filters</button>
+    <div class="filter-bar" onclick="{{ stopBubble }}">
+      <select value="{{ clientFilter }}" onchange="{{ setClientFilter }}" aria-label="Filter by client" class="filter-select {{ clientFilterOnClass }}">
+        <option value="all">Any client</option>
+        <sc-for list="{{ clientOptions }}" as="co" hint-placeholder-count="6"><option value="{{ co }}">{{ co }}</option></sc-for>
+      </select>
+      <select value="{{ sectorFilter }}" onchange="{{ setSectorFilter }}" aria-label="Filter by sector" class="filter-select {{ sectorFilterOnClass }}">
+        <option value="all">Any sector</option>
+        <sc-for list="{{ sectorOptions }}" as="sec" hint-placeholder-count="7"><option value="{{ sec }}">{{ sec }}</option></sc-for>
+      </select>
+      <select value="{{ serviceFilter }}" onchange="{{ setServiceFilter }}" aria-label="Filter by service" class="filter-select {{ serviceFilterOnClass }}">
+        <option value="all">Any service</option>
+        <sc-for list="{{ serviceOptions }}" as="so" hint-placeholder-count="6"><option value="{{ so }}">{{ so }}</option></sc-for>
+      </select>
+      <select value="{{ leadFilter }}" onchange="{{ setLeadFilter }}" aria-label="Filter by project lead" class="filter-select {{ leadFilterOnClass }}">
+        <option value="all">Any lead</option>
+        <sc-for list="{{ leadOptions }}" as="lo" hint-placeholder-count="6"><option value="{{ lo }}">{{ lo }}</option></sc-for>
+      </select>
+      <select value="{{ dueFilter }}" onchange="{{ setDueFilter }}" aria-label="Filter by due date" class="filter-select {{ dueFilterOnClass }}">
+        <option value="all">Any due date</option>
+        <option value="overdue">Overdue</option>
+        <option value="week">Due this week</option>
+        <option value="month">Due in 30 days</option>
+      </select>
+      <select value="{{ kindFilter }}" onchange="{{ setKindFilter }}" aria-label="Filter by job type" class="filter-select {{ kindFilterOnClass }}">
+        <option value="all">Any type</option>
+        <option value="New project">New project</option>
+        <option value="Work package">Work package</option>
+      </select>
+      <label style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap"><input type="checkbox" checked="{{ holdOnly }}" onchange="{{ setHoldOnly }}" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">On hold only</label>
+      <sc-if value="{{ hasActiveFilters }}" hint-placeholder-val="{{ true }}">
+        <button onclick="{{ clearFilters }}" style="margin-left:auto;background:none;border:none;color:var(--muted);font-weight:700;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;white-space:nowrap" style-hover="color:#111827">Clear filters</button>
+      </sc-if>
+    </div>
+    <sc-if value="{{ hasFilterChips }}" hint-placeholder-val="{{ false }}">
+      <div class="filter-chips" onclick="{{ stopBubble }}">
+        <sc-for list="{{ filterChips }}" as="fc" hint-placeholder-count="3">
+          <span class="filter-chip">{{ fc.label }}<button onclick="{{ fc.clear }}" aria-label="Remove filter">×</button></span>
+        </sc-for>
       </div>
     </sc-if>
 
@@ -1733,7 +1755,7 @@ class Component extends DCLogic {
 
   state={
     page:'portfolio',navOpen:false,actingAs:DEFAULT_USER,
-    phaseTab:'all',search:'',serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,
+    phaseTab:'all',search:'',serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',dueFilter:'all',kindFilter:'all',holdOnly:false,
     showFilters:false,listGroup:'flat',sortKey:'milestone',sortDir:'asc',listPage:1,listPageSize:8,
     peekId:'029',peekTab:'brief',
     showAlerts:false,showAccountMenu:false,showPeekMenu:false,showPeekPhaseMenu:false,
@@ -2080,13 +2102,34 @@ class Component extends DCLogic {
 
     const q=st.search.trim().toLowerCase();
     const matchesTab=(p)=>st.phaseTab==='all'?true:p.phase===st.phaseTab;
+    const matchesDue=(p)=>{
+      const n=daysFromToday(p.ms.iso);
+      if(st.dueFilter==='overdue')return n<0;
+      if(st.dueFilter==='week')return n>=0&&n<=6;
+      if(st.dueFilter==='month')return n>=0&&n<=30;
+      return true;
+    };
     const filtered=projects.filter(p=>matchesTab(p)
       &&(st.serviceFilter==='all'||p.service===st.serviceFilter)
       &&(st.sectorFilter==='all'||(p.sector||'')===st.sectorFilter)
       &&(st.leadFilter==='all'||p.lead===st.leadFilter)
       &&(st.clientFilter==='all'||p.client===st.clientFilter)
+      &&(st.kindFilter==='all'||p.kind===st.kindFilter)
+      &&matchesDue(p)
       &&(!st.holdOnly||p.held)
       &&(!q||p.name.toLowerCase().includes(q)||p.client.toLowerCase().includes(q)||p.code.toLowerCase().includes(q)||(p.sector||'').toLowerCase().includes(q)));
+    const filterOnClass=(v)=>'filter-select'+(v!=='all'?' is-on':'');
+    const dueLabels={overdue:'Overdue',week:'Due this week',month:'Due in 30 days'};
+    const filterChips=[
+      st.clientFilter!=='all'?{label:st.clientFilter,clear:()=>this.setState({clientFilter:'all',listPage:1})}:null,
+      st.sectorFilter!=='all'?{label:st.sectorFilter,clear:()=>this.setState({sectorFilter:'all',listPage:1})}:null,
+      st.serviceFilter!=='all'?{label:st.serviceFilter,clear:()=>this.setState({serviceFilter:'all',listPage:1})}:null,
+      st.leadFilter!=='all'?{label:st.leadFilter,clear:()=>this.setState({leadFilter:'all',listPage:1})}:null,
+      st.dueFilter!=='all'?{label:dueLabels[st.dueFilter]||st.dueFilter,clear:()=>this.setState({dueFilter:'all',listPage:1})}:null,
+      st.kindFilter!=='all'?{label:st.kindFilter,clear:()=>this.setState({kindFilter:'all',listPage:1})}:null,
+      st.holdOnly?{label:'On hold',clear:()=>this.setState({holdOnly:false,listPage:1})}:null
+    ].filter(Boolean);
+    const hasActiveFilters=filterChips.length>0||!!q||st.phaseTab!=='all';
     const dir=st.sortDir==='desc'?-1:1;
     const sorted=[...filtered].sort((a,b)=>{
       const av=st.sortKey==='phase'?PHASE_ORDER[a.phase]:daysFromToday(a.ms.iso);
@@ -2515,16 +2558,23 @@ class Component extends DCLogic {
       groupFlat:()=>this.setState({listGroup:'flat'}),
       groupByClient:()=>this.setState({listGroup:'client',listPage:1}),
       search:st.search,setSearch:(e)=>this.setState({search:e.target.value,listPage:1}),
-      showFilters:st.showFilters,filtersColor:st.showFilters?'var(--accent-ink)':'var(--muted)',
-      toggleFilters:(e)=>{e.stopPropagation();this.setState(s=>({showFilters:!s.showFilters}));},
       serviceOptions:SERVICE_NAMES,sectorOptions:SECTORS,leadOptions:LEADS,clientOptions:CLIENTS,
       serviceFilter:st.serviceFilter,setServiceFilter:(e)=>this.setState({serviceFilter:e.target.value,listPage:1}),
       sectorFilter:st.sectorFilter,setSectorFilter:(e)=>this.setState({sectorFilter:e.target.value,listPage:1}),
       leadFilter:st.leadFilter,setLeadFilter:(e)=>this.setState({leadFilter:e.target.value,listPage:1}),
       clientFilter:st.clientFilter,setClientFilter:(e)=>this.setState({clientFilter:e.target.value,listPage:1}),
+      dueFilter:st.dueFilter,setDueFilter:(e)=>this.setState({dueFilter:e.target.value,listPage:1}),
+      kindFilter:st.kindFilter,setKindFilter:(e)=>this.setState({kindFilter:e.target.value,listPage:1}),
       holdOnly:st.holdOnly,setHoldOnly:(e)=>this.setState({holdOnly:!!(e.target&&e.target.checked),listPage:1}),
-      clearFilters:()=>this.setState({serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,listPage:1}),
-      clearAllFilters:()=>this.setState({serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',holdOnly:false,search:'',phaseTab:'all',listPage:1}),
+      clientFilterOnClass:st.clientFilter!=='all'?'is-on':'',
+      sectorFilterOnClass:st.sectorFilter!=='all'?'is-on':'',
+      serviceFilterOnClass:st.serviceFilter!=='all'?'is-on':'',
+      leadFilterOnClass:st.leadFilter!=='all'?'is-on':'',
+      dueFilterOnClass:st.dueFilter!=='all'?'is-on':'',
+      kindFilterOnClass:st.kindFilter!=='all'?'is-on':'',
+      hasActiveFilters,hasFilterChips:filterChips.length>0,filterChips,
+      clearFilters:()=>this.setState({serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',dueFilter:'all',kindFilter:'all',holdOnly:false,listPage:1}),
+      clearAllFilters:()=>this.setState({serviceFilter:'all',sectorFilter:'all',leadFilter:'all',clientFilter:'all',dueFilter:'all',kindFilter:'all',holdOnly:false,search:'',phaseTab:'all',listPage:1}),
       phaseSortRotation:st.sortKey==='phase'&&st.sortDir==='asc'?'0deg':'180deg',
       milestoneSortRotation:st.sortKey==='milestone'&&st.sortDir==='asc'?'0deg':'180deg',
       sortByPhase:()=>this.setState(s=>({sortKey:'phase',sortDir:s.sortKey==='phase'&&s.sortDir==='asc'?'desc':'asc',listPage:1})),
