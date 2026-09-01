@@ -841,7 +841,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               <div style="min-width:0;font-weight:600;line-height:28px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ mb.n }}</div>
             </div>
             <div style="color:var(--muted);font-size:12.5px;line-height:28px;text-align:center">{{ mb.role }}</div>
-            <button onclick="{{ mb.remove }}" title="Remove" aria-label="Remove collaborator" style="justify-self:end;border:none;background:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:var(--r-s);display:inline-flex" style-hover="background:#F8E8EA;color:#B42318">
+            <button onclick="{{ mb.remove }}" title="Remove" aria-label="Remove collaborator" style="justify-self:end;border:none;background:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:var(--r-s);display:{{ mb.removeDisplay }};opacity:{{ mb.removeOpacity }}" style-hover="background:#F8E8EA;color:#B42318">
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 4.5h9M6.25 4.5V3.4c0-.5.4-.9.9-.9h1.7c.5 0 .9.4.9.9v1.1M5.5 4.5l.55 8.1c.05.6.55 1.05 1.15 1.05h1.6c.6 0 1.1-.45 1.15-1.05L10.5 4.5M7 7v4.5M9 7v4.5" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
           </div>
@@ -2399,7 +2399,12 @@ class Component extends DCLogic {
       memberList:st.members.map((mb,i)=>({...mb,
         rowBorder:i===st.members.length-1?'none':'1px solid var(--line)',
         rowPaddingBottom:i===st.members.length-1?'0':'11px',
-        remove:()=>this.askDelete({title:'Remove this collaborator?',body:mb.n+' will be unassigned from this project.',action:'Remove',pending:{kind:'member',index:i,name:mb.n}})
+        removeDisplay:perms.canAssignTeam?'inline-flex':'none',
+        removeOpacity:perms.canAssignTeam?'1':'0',
+        remove:()=>{
+          if(!perms.canAssignTeam){this.showToast('Only Owner / Manager roles can change the team.');return;}
+          this.askDelete({title:'Remove this collaborator?',body:mb.n+' will be unassigned from this project.',action:'Remove',pending:{kind:'member',index:i,name:mb.n}});
+        }
       })),
       membersEmpty:st.members.length===0,
       showMemberInfo:st.showMemberInfo,
