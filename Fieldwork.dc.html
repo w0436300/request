@@ -423,7 +423,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
           <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 20px;border-bottom:1px solid var(--line)">Person</th>
           <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line)">Discipline</th>
           <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line)">Leading</th>
-          <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line)">Load</th>
+          <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line)">Next 3 weeks</th>
           <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 20px;border-bottom:1px solid var(--line)">Next milestone</th>
         </tr></thead>
         <tbody>
@@ -1845,15 +1845,17 @@ class Component extends DCLogic {
     }).filter(g=>!(g.isEmpty&&g.title==='Overdue'));
 
     /* ---------- team ---------- */
+    /* Load measures milestones landing in the next three weeks, not the total
+       number of projects — a long tail of later work is not pressure. */
     const teamRows=PEOPLE.filter(p=>p.n!==me).map(person=>{
       const leading=liveProjects.filter(p=>p.lead===person.n);
       const next=leading.slice().sort(MILESTONE_SORT)[0];
-      const load=Math.min(100,leading.length*22);
+      const imminent=leading.filter(p=>{const n=daysFromToday(p.ms.iso);return n>=0&&n<=21;}).length;
       return {
         name:person.n,initials:initialsOf(person.n),color:person.c,role:person.role,discipline:person.discipline,
-        leadingCount:leading.length,loadWidth:load+'%',
-        loadColor:load>=88?'#B04A4A':load>=55?'#8F6318':'#3B6B96',
-        loadLabel:load>=88?'At capacity':load>=55?'Busy':'Has room',
+        leadingCount:leading.length,loadWidth:Math.min(100,imminent*25)+'%',
+        loadColor:imminent>=4?'#B04A4A':imminent>=2?'#8F6318':'#3B6B96',
+        loadLabel:imminent===0?'Clear':imminent+' due',
         nextDate:next?shortIsoDate(next.ms.iso):'—',
         nextLabel:next?next.ms.label:'Nothing booked'
       };
