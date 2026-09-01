@@ -90,15 +90,15 @@
     if (!expected) {
       return {
         ok: false,
-        message: "站点密码尚未配置。请在仓库 Secrets 中设置 SITE_PASSWORD 后重新部署。"
+        message: "The site password has not been configured. Set SITE_PASSWORD in the repository secrets and redeploy."
       };
     }
     if (!password) {
-      return { ok: false, message: "请输入密码。" };
+      return { ok: false, message: "Enter the password." };
     }
     var actual = await sha256Hex(password);
     if (actual !== expected) {
-      return { ok: false, message: "密码不正确，请重试。" };
+      return { ok: false, message: "Incorrect password. Try again." };
     }
     setUnlocked();
     return { ok: true };
@@ -128,7 +128,7 @@
       if (error) error.textContent = "";
       if (submit) {
         submit.disabled = true;
-        submit.textContent = "验证中…";
+        submit.textContent = "Verifying…";
       }
       verifyPassword(input.value)
         .then(function (result) {
@@ -141,12 +141,12 @@
           input.select();
         })
         .catch(function () {
-          if (error) error.textContent = "验证失败，请稍后再试。";
+          if (error) error.textContent = "Verification failed. Try again later.";
         })
         .finally(function () {
           if (submit) {
             submit.disabled = false;
-            submit.textContent = "进入";
+            submit.textContent = "Enter";
           }
         });
     });

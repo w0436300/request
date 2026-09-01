@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Fieldstone Studio · 访问验证</title>
+  <title>Fieldstone Studio · Access Verification</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -129,14 +129,14 @@
   <main class="panel" aria-labelledby="gate-title">
     <div class="brand">Fieldstone Studio</div>
     <h1 id="gate-title">Intake Tracker</h1>
-    <p class="lede">此原型为受限访问。请输入访问密码后继续。</p>
+    <p class="lede">This prototype has restricted access. Enter the password to continue.</p>
     <form id="gate-form" autocomplete="current-password">
-      <label for="gate-password">访问密码</label>
-      <input id="gate-password" name="password" type="password" required autofocus placeholder="输入密码">
-      <button id="gate-submit" type="submit">进入</button>
+      <label for="gate-password">Access password</label>
+      <input id="gate-password" name="password" type="password" required autofocus placeholder="Enter password">
+      <button id="gate-submit" type="submit">Enter</button>
       <div id="gate-error" class="error" role="alert" aria-live="polite"></div>
     </form>
-    <p class="hint">密码由仓库维护者通过 GitHub Actions Secret（SITE_PASSWORD）在发布时注入，不会提交到代码库。</p>
+    <p class="hint">The repository maintainer injects the password at deployment through the GitHub Actions secret <code>SITE_PASSWORD</code>. It is never committed to the repository.</p>
   </main>
 </body>
 </html>
