@@ -57,6 +57,18 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 /* Selection reads as a filled row rather than an accent bar on one edge. */
 .project-row.is-selected>td{background:var(--accent-tint)}
 .project-row.is-selected>td:first-child{color:var(--accent-ink)}
+.projects-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.projects-table--flat{min-width:760px}
+.projects-table--by-client{min-width:560px}
+.projects-table th,.projects-table td{overflow:hidden}
+.projects-table .projects-cell-name{font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:0}
+.projects-table .projects-cell-muted{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+.projects-table .projects-cell-text{font-size:13px;color:var(--ink2);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:0}
+.projects-table .projects-cell-issues{font-size:12px;font-weight:600;white-space:nowrap}
+.projects-client-head>td{padding:14px 20px 10px;background:#FBFBFD;border-bottom:1px solid var(--line)!important}
+.projects-client-head__title{font-weight:700;font-size:14.5px;margin:0;letter-spacing:-.02em;color:var(--ink)}
+.projects-client-head__meta{color:var(--muted);font-size:12.5px;font-family:'IBM Plex Mono',monospace}
+.projects-client-head__due{margin-left:auto;font-size:12.5px;color:var(--muted);white-space:nowrap}
 table tbody tr:last-child>td{border-bottom:none!important}
 .phase-boxes-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:8px;margin-bottom:12px}
 .phase-boxes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
@@ -364,63 +376,79 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
     <sc-if value="{{ isListByClient }}" hint-placeholder-val="{{ false }}">
       <sc-if value="{{ hasClientGroups }}" hint-placeholder-val="{{ true }}">
-        <sc-for list="{{ clientGroups }}" as="cg" hint-placeholder-count="3">
-          <div style="border-bottom:1px solid var(--line)">
-            <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:14px 20px 10px;background:#FBFBFD">
-              <h3 style="font-weight:700;font-size:14.5px;margin:0;letter-spacing:-.02em">{{ cg.client }}</h3>
-              <span style="color:var(--muted);font-size:12.5px;font-family:'IBM Plex Mono',monospace">{{ cg.count }}</span>
-              <span style="margin-left:auto;font-size:12.5px;color:var(--muted)">Next due <span style="font-weight:600;color:{{ cg.nextColor }};font-family:'IBM Plex Mono',monospace">{{ cg.nextDue }}</span></span>
-            </div>
-            <div class="table-scroll">
-              <table style="width:100%;border-collapse:collapse;min-width:640px">
-                <thead><tr style="background:var(--surface)">
-                  <th style="width:76px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:9px 14px 9px 20px">ID</th>
-                  <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:9px 14px">Project</th>
-                  <th style="width:122px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:9px 14px">Phase</th>
-                  <th style="width:52px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:9px 20px 9px 14px">Lead</th>
-                </tr></thead>
-                <tbody>
+        <div class="table-scroll">
+          <table class="projects-table projects-table--by-client">
+            <colgroup>
+              <col style="width:76px">
+              <col style="width:46%">
+              <col style="width:112px">
+              <col style="width:52px">
+            </colgroup>
+            <thead><tr>
+              <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
+              <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Project</th>
+              <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Phase</th>
+              <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Lead</th>
+            </tr></thead>
+            <sc-for list="{{ clientGroups }}" as="cg" hint-placeholder-count="3">
+              <tbody>
+                <tr class="projects-client-head">
+                  <td colspan="4">
+                    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+                      <h3 class="projects-client-head__title">{{ cg.client }}</h3>
+                      <span class="projects-client-head__meta">{{ cg.count }}</span>
+                      <span class="projects-client-head__due">Next due <span style="font-weight:600;color:{{ cg.nextColor }};font-family:'IBM Plex Mono',monospace">{{ cg.nextDue }}</span></span>
+                    </div>
+                  </td>
+                </tr>
                 <sc-for list="{{ cg.projects }}" as="p" hint-placeholder-count="3">
                   <tr class="project-row {{ p.rowClass }}" onclick="{{ p.peek }}" style="cursor:pointer">
-                    <td style="padding:13px 14px 13px 20px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap">{{ p.code }}</td>
-                    <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ p.name }}</td>
-                    <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.phaseLabel }}</td>
+                    <td class="projects-cell-muted" style="padding:13px 14px 13px 20px;border-bottom:1px solid var(--line)">{{ p.code }}</td>
+                    <td class="projects-cell-name" style="padding:13px 14px;border-bottom:1px solid var(--line)">{{ p.name }}</td>
+                    <td class="projects-cell-text" style="padding:13px 14px;border-bottom:1px solid var(--line)">{{ p.phaseLabel }}</td>
                     <td style="padding:13px 20px 13px 14px;border-bottom:1px solid var(--line)">
                       <span style="width:26px;height:26px;border-radius:50%;background:{{ p.leadColor }};color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center" aria-label="Project lead">{{ p.leadInitials }}</span>
                     </td>
                   </tr>
                 </sc-for>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </sc-for>
+              </tbody>
+            </sc-for>
+          </table>
+        </div>
       </sc-if>
     </sc-if>
 
     <sc-if value="{{ isListFlat }}" hint-placeholder-val="{{ true }}">
     <sc-if value="{{ hasProjectRows }}" hint-placeholder-val="{{ true }}">
       <div class="table-scroll">
-        <table style="width:100%;border-collapse:collapse;min-width:720px">
+        <table class="projects-table projects-table--flat">
+          <colgroup>
+            <col style="width:76px">
+            <col style="width:30%">
+            <col style="width:16%">
+            <col style="width:112px">
+            <col style="width:52px">
+            <col style="width:96px">
+          </colgroup>
           <thead><tr>
-            <th style="width:76px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
+            <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
             <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Project</th>
-            <th style="width:144px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Client</th>
-            <th style="width:122px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Phase</th>
-            <th style="width:52px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Lead</th>
-            <th style="width:110px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Issues</th>
+            <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Client</th>
+            <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Phase</th>
+            <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Lead</th>
+            <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Issues</th>
           </tr></thead>
           <tbody>
           <sc-for list="{{ projectRows }}" as="p" hint-placeholder-count="5">
             <tr class="project-row {{ p.rowClass }}" onclick="{{ p.peek }}" style="cursor:pointer">
-              <td style="padding:14px 14px 14px 20px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap">{{ p.code }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ p.name }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.client }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.phaseLabel }}</td>
+              <td class="projects-cell-muted" style="padding:14px 14px 14px 20px;border-bottom:1px solid var(--line)">{{ p.code }}</td>
+              <td class="projects-cell-name" style="padding:14px;border-bottom:1px solid var(--line)">{{ p.name }}</td>
+              <td class="projects-cell-text" style="padding:14px;border-bottom:1px solid var(--line)">{{ p.client }}</td>
+              <td class="projects-cell-text" style="padding:14px;border-bottom:1px solid var(--line)">{{ p.phaseLabel }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line)">
                 <span style="width:26px;height:26px;border-radius:50%;background:{{ p.leadColor }};color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center" aria-label="Project lead">{{ p.leadInitials }}</span>
               </td>
-              <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:12px;font-weight:600;color:{{ p.riskColor }};white-space:nowrap">{{ p.riskLabel }}</td>
+              <td class="projects-cell-issues" style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);color:{{ p.riskColor }}">{{ p.riskLabel }}</td>
             </tr>
           </sc-for>
           </tbody>
