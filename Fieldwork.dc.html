@@ -246,21 +246,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
     </sc-for>
   </div>
 
-  <sc-if value="{{ hasAttentionItems }}" hint-placeholder-val="{{ false }}">
-    <div style="background:#FDF6F6;border:1px solid #EED5D5;border-radius:var(--r-l);padding:14px 18px;margin-bottom:14px">
-      <div style="font-weight:700;font-size:14px;color:var(--ink);margin-bottom:8px">Needs attention</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <sc-for list="{{ attentionItems }}" as="a" hint-placeholder-count="4">
-          <button onclick="{{ a.open }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r-s);background:var(--surface);cursor:pointer;text-align:left" style-hover="background:var(--paper2)">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);flex:none">{{ a.code }}</span>
-            <span style="flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span>
-            <span style="font-size:12px;font-weight:600;color:{{ a.riskColor }};flex:none;white-space:nowrap">{{ a.riskLabel }}</span>
-          </button>
-        </sc-for>
-      </div>
-    </div>
-  </sc-if>
-
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
     <div style="padding:16px 20px;border-bottom:1px solid var(--line)">
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
@@ -2334,15 +2319,6 @@ class Component extends DCLogic {
     });
     const isListByClient=st.listGroup==='client';
     const isListFlat=!isListByClient;
-    const attentionItems=sorted.filter(p=>isActiveProject(p)&&projectRisks(p,p.held).length).slice(0,5).map(p=>{
-      const risks=projectRisks(p,p.held);
-      return {
-        code:p.code,name:p.name,
-        riskLabel:risks.map(r=>r.label).join(' · '),
-        riskColor:risks.some(r=>r.key==='overdue')?'#B04A4A':'#8F6318',
-        open:()=>this.setState({peekId:p.id,peekTab:'brief'})
-      };
-    });
 
     /* ---------- this-week alerts (bell menu only) ---------- */
     const liveProjects=projects.filter(p=>isActiveProject(p));
@@ -2708,7 +2684,6 @@ class Component extends DCLogic {
       listTitle:st.phaseTab==='all'?(perms.isContributor?'My projects':'Projects'):PHASES[st.phaseTab].label,
       listCount:sorted.length,
       listEmptyHint:perms.isContributor?'No assigned projects in this phase.':'No projects in this phase',
-      hasAttentionItems:attentionItems.length>0,attentionItems,
       phaseBoxes,projectRows,hasProjectRows:sorted.length>0,projectsEmpty:sorted.length===0,
       isListFlat,isListByClient,clientGroups,hasClientGroups:clientGroups.length>0,
       listGroupFlatPressed:isListFlat?'true':'false',
