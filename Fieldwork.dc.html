@@ -79,6 +79,15 @@ table tbody tr:last-child>td{border-bottom:none!important}
 .methods-panel__head h2{font-weight:700;font-size:15px;margin:0;letter-spacing:-.02em}
 .methods-panel__head span{color:var(--muted);font-size:12.5px;line-height:1.5}
 .methods-panel__head .methods-panel__meta{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)}
+.team-week-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.team-week-btn{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink2);cursor:pointer;display:grid;place-items:center;font-size:16px;line-height:1}
+.team-week-btn:disabled{opacity:.4;cursor:not-allowed}
+.team-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:14px}
+.team-tab{background:none;border:none;padding:10px 16px;cursor:pointer;font-weight:600;font-size:13.5px;white-space:nowrap;margin-bottom:-1px}
+.team-report-block{padding:16px 20px;border-bottom:1px solid var(--line)}
+.team-report-block:last-child{border-bottom:none}
+.team-report-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.team-report-text{font-size:13.5px;color:var(--ink2);line-height:1.6;white-space:pre-wrap}
 .filter-select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer}
 .filter-select.is-on{border-color:#C7D0F5;background:var(--accent-tint);color:var(--accent-ink)}
 .filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:0;background:transparent;border:none}
@@ -513,46 +522,69 @@ table tbody tr:last-child>td{border-bottom:none!important}
   </sc-for>
 </sc-if>
 
-<!-- ========================= CAPACITY (TEAM) ========================= -->
+<!-- ========================= CAPACITY (WEEKLY REPORTS) ========================= -->
 <sc-if value="{{ isTeam }}" hint-placeholder-val="{{ false }}">
-  <sc-for list="{{ teamGroups }}" as="g" hint-placeholder-count="3">
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:12px">
-      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:15px 20px;border-bottom:1px solid var(--line)">
-        <h2 style="font-weight:700;font-size:15px;margin:0;letter-spacing:-.02em">{{ g.title }}</h2>
-        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted)">{{ g.count }}</span>
+  <div class="team-week-bar">
+    <button onclick="{{ weeklyPrev }}" aria-label="Previous week" class="team-week-btn" style-hover="background:var(--paper2);border-color:var(--lineS)">←</button>
+    <span style="font-weight:700;font-size:15px;letter-spacing:-.02em;color:var(--ink)">{{ weeklyWeekLabel }}</span>
+    <button onclick="{{ weeklyNext }}" aria-label="Next week" class="team-week-btn" disabled="{{ weeklyNextDisabled }}" style-hover="background:var(--paper2);border-color:var(--lineS)">→</button>
+    <sc-if value="{{ weeklyIsCurrent }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:var(--accent-ink);background:var(--accent-tint);padding:4px 10px;border-radius:999px">This week</span></sc-if>
+  </div>
+
+  <div class="team-tabs" role="tablist">
+    <button onclick="{{ teamTabMine }}" role="tab" aria-selected="{{ teamTabMineSelected }}" class="team-tab" style="color:{{ teamTabMineColor }};border-bottom:2px solid {{ teamTabMineBorder }}">My report</button>
+    <button onclick="{{ teamTabAll }}" role="tab" aria-selected="{{ teamTabAllSelected }}" class="team-tab" style="color:{{ teamTabAllColor }};border-bottom:2px solid {{ teamTabAllBorder }}">Everyone</button>
+  </div>
+
+  <sc-if value="{{ isTeamMine }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ weeklyMineReadonly }}" hint-placeholder-val="{{ true }}">
+      <sc-if value="{{ weeklyMineHasReport }}" hint-placeholder-val="{{ true }}">
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
+          <div style="display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--line)">
+            <span style="width:32px;height:32px;border-radius:50%;background:{{ weeklyMineColor }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ weeklyMineInitials }}</span>
+            <div style="min-width:0"><div style="font-weight:700;font-size:14px">{{ weeklyMineName }}</div><div style="font-size:12px;color:var(--muted);margin-top:1px">Submitted {{ weeklyMineSubmitted }}</div></div>
+          </div>
+          <div class="team-report-block"><div class="team-report-label">Sources</div><div class="team-report-text">{{ weeklyMineSources }}</div></div>
+          <div class="team-report-block"><div class="team-report-label">Done this week</div><div class="team-report-text">{{ weeklyMineDone }}</div></div>
+          <div class="team-report-block"><div class="team-report-label">Next week</div><div class="team-report-text">{{ weeklyMinePlan }}</div></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ weeklyMineMissing }}" hint-placeholder-val="{{ false }}"><div style="padding:28px 20px;text-align:center;color:var(--muted);font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl)">No report submitted for this week.</div></sc-if>
+    </sc-if>
+    <sc-if value="{{ weeklyMineEditable }}" hint-placeholder-val="{{ true }}">
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:20px">
+        <sc-if value="{{ weeklyMineHasReport }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Last submitted {{ weeklyMineSubmitted }} — update and submit again to save changes.</div></sc-if>
+        <div style="margin-bottom:16px"><label style="display:block;font-weight:600;font-size:13px;margin-bottom:6px">Sources</label><textarea value="{{ weeklySource }}" onchange="{{ setWeeklySource }}" placeholder="Projects, clients or workstreams you focused on this week" style="width:100%;min-height:72px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:12px 14px;font:inherit;resize:vertical;background:var(--surface)"></textarea></div>
+        <div style="margin-bottom:16px"><label style="display:block;font-weight:600;font-size:13px;margin-bottom:6px">Done this week</label><textarea value="{{ weeklyDone }}" onchange="{{ setWeeklyDone }}" placeholder="What you completed or progressed" style="width:100%;min-height:96px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:12px 14px;font:inherit;resize:vertical;background:var(--surface)"></textarea></div>
+        <div style="margin-bottom:18px"><label style="display:block;font-weight:600;font-size:13px;margin-bottom:6px">Next week</label><textarea value="{{ weeklyPlan }}" onchange="{{ setWeeklyPlan }}" placeholder="What you plan to work on next week" style="width:100%;min-height:72px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:12px 14px;font:inherit;resize:vertical;background:var(--surface)"></textarea></div>
+        <button onclick="{{ submitWeeklyReport }}" style="height:38px;padding:0 20px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:700;cursor:pointer" style-hover="background:var(--cta-hover)">{{ weeklySubmitLabel }}</button>
       </div>
-      <div class="table-scroll">
-        <table style="width:100%;border-collapse:collapse;min-width:720px">
-          <thead><tr>
-            <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">Person</th>
-            <th style="width:150px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Role</th>
-            <th style="width:170px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Trade</th>
-            <th style="width:72px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Jobs</th>
-            <th style="width:96px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Next due</th>
-          </tr></thead>
-          <tbody>
-          <sc-for list="{{ g.people }}" as="t" hint-placeholder-count="3">
-            <tr class="project-row">
-              <td style="padding:14px 14px 14px 20px;border-bottom:1px solid var(--line)">
-                <div style="display:flex;align-items:center;gap:11px;min-width:0">
-                  <span style="width:30px;height:30px;border-radius:50%;background:{{ t.color }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ t.initials }}</span>
-                  <div style="min-width:0">
-                    <div style="font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.name }}</div>
-                    <sc-if value="{{ t.isYou }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:var(--accent-ink);font-weight:600;margin-top:1px">You</div></sc-if>
-                  </div>
-                </div>
-              </td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ t.role }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ t.discipline }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)">{{ t.leadingCount }}</td>
-              <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">{{ t.nextDate }}</td>
-            </tr>
-          </sc-for>
-          </tbody>
-        </table>
-      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{ isTeamAll }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
+      <span style="font-weight:700;font-size:14px;color:var(--ink)">{{ weeklyAllCount }}</span>
+      <span style="color:var(--muted);font-size:12.5px">submitted</span>
     </div>
-  </sc-for>
+    <sc-if value="{{ weeklyAllHasRows }}" hint-placeholder-val="{{ true }}">
+      <sc-for list="{{ weeklyAllRows }}" as="wr" hint-placeholder-count="4">
+        <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--line)">
+            <span style="width:32px;height:32px;border-radius:50%;background:{{ wr.color }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ wr.initials }}</span>
+            <div style="min-width:0;flex:1">
+              <div style="font-weight:700;font-size:14px">{{ wr.name }}<sc-if value="{{ wr.isYou }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent-ink);font-weight:600;font-size:12px;margin-left:6px">You</span></sc-if></div>
+              <div style="font-size:12px;color:var(--muted);margin-top:1px">{{ wr.role }} · {{ wr.submitted }}</div>
+            </div>
+          </div>
+          <div class="team-report-block"><div class="team-report-label">Sources</div><div class="team-report-text">{{ wr.sources }}</div></div>
+          <div class="team-report-block"><div class="team-report-label">Done this week</div><div class="team-report-text">{{ wr.done }}</div></div>
+          <div class="team-report-block"><div class="team-report-label">Next week</div><div class="team-report-text">{{ wr.plan }}</div></div>
+        </div>
+      </sc-for>
+    </sc-if>
+    <sc-if value="{{ weeklyAllEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:28px 20px;text-align:center;color:var(--muted);font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl)">No reports for this week yet.</div></sc-if>
+  </sc-if>
 </sc-if>
 
 <!-- ========================= DELIVERY STANDARDS ========================= -->
@@ -1443,6 +1475,27 @@ function personOf(name){return PEOPLE.find(p=>p.n===name)||{n:name,role:'Contrib
 function initialsOf(name){return String(name||'').split(' ').map(w=>w[0]).filter(Boolean).join('').slice(0,2).toUpperCase();}
 function colorOf(name){return personOf(name).c;}
 function tierOf(name){return personOf(name).tier||'contributor';}
+const MONTH_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function mondayOfDate(d){
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const day=x.getDay();
+  x.setDate(x.getDate()-(day===0?6:day-1));
+  return x;
+}
+function weekKeyFromDate(d){return mondayOfDate(d).toISOString().slice(0,10);}
+function weekLabelFromKey(key){
+  const start=new Date(key+'T12:00:00');
+  const end=new Date(start);
+  end.setDate(end.getDate()+6);
+  const fmt=(dt)=>dt.getDate()+' '+MONTH_SHORT[dt.getMonth()];
+  if(start.getMonth()===end.getMonth())return fmt(start)+'–'+end.getDate()+' '+MONTH_SHORT[start.getMonth()]+' '+start.getFullYear();
+  return fmt(start)+' – '+fmt(end)+' '+end.getFullYear();
+}
+function addWeeksToKey(key,delta){
+  const d=new Date(key+'T12:00:00');
+  d.setDate(d.getDate()+delta*7);
+  return weekKeyFromDate(d);
+}
 function permsFor(name){
   const tier=tierOf(name);
   const owner=tier==='owner';
@@ -1617,10 +1670,67 @@ const SECTOR_PLAYBOOKS=[
     gates:MILESTONE_BY_SECTOR['Chain dining'].slice(0,5),
     risk:'Kitchen extract and grease management often clash with landlord MEP — coordinate early.'}
 ];
-const TEAM_GROUP_DEFS=[
-  {tier:'owner',title:'Delivery leads'},
-  {tier:'contributor',title:'Site & design trades'},
-  {tier:'viewer',title:'Oversight'}
+const SEED_WEEKLY_REPORTS=[
+  {id:'wr-01',person:'Maya Lin',weekKey:'2026-09-01',
+    sources:'PR-016 Yuanhong Cinema · PR-029 Modern Era auditorium',
+    done:'Acoustic layout review for L3 auditoriums.\nCoordinated projection-booth MEP with Daniel on PR-030.',
+    plan:'Client sign-off workshop for PR-029.\nSite visit Yuanhong L5 booth.',
+    submittedAt:'2026-09-01'},
+  {id:'wr-02',person:'Daniel Wu',weekKey:'2026-09-01',
+    sources:'PR-016 · PR-030 projection booth · PR-071 Northern Lights hotel',
+    done:'Booth cable tray install on PR-030.\nLobby ceiling grid set-out on PR-071.',
+    plan:'Equipment install PR-030.\nLobby MEP coordination with Ethan.',
+    submittedAt:'2026-09-02'},
+  {id:'wr-03',person:'Olivia Wang',weekKey:'2026-09-01',
+    sources:'PR-061 Paws & Care MRI · PR-068 Dalian cinema assessment',
+    done:'Permit package assembly for MRI suite.\nSite survey report draft for Dalian plot.',
+    plan:'Submit permit package.\nIssue Dalian assessment to client.',
+    submittedAt:'2026-09-01'},
+  {id:'wr-04',person:'Ethan Zhao',weekKey:'2026-09-01',
+    sources:'PR-071 Northern Lights hotel lobby & rooms',
+    done:'Lobby ceiling design coordination.\nGuest room mock-up material samples approved.',
+    plan:'Corridor lighting layout.\nFF&E procurement list for client review.',
+    submittedAt:'2026-09-02'},
+  {id:'wr-05',person:'Lucas Huang',weekKey:'2026-09-01',
+    sources:'PR-016 Yuanhong Cinema acoustics · PR-029 auditorium optics',
+    done:'Auditorium RT60 calc update for PR-016.\nScreen geometry check PR-029.',
+    plan:'Acoustic commissioning prep PR-016.\nClient optics review PR-029.',
+    submittedAt:'2026-09-01'},
+  {id:'wr-06',person:'Claire Wang',weekKey:'2026-08-25',
+    sources:'PR-072 VitalScan checkup centre',
+    done:'Equipment room layout sign-off.\nClient coordination on floor 7 exam rooms.',
+    plan:'DR room shielding review with Noah.\nKick-off equipment install sequence.',
+    submittedAt:'2026-08-29'},
+  {id:'wr-07',person:'Maya Lin',weekKey:'2026-08-25',
+    sources:'PR-016 · PR-029',
+    done:'Design development package issued.\nBooth MEP coordination meeting.',
+    plan:'Acoustic layout finalisation.\nClient presentation for sign-off gate.',
+    submittedAt:'2026-08-28'},
+  {id:'wr-08',person:'Daniel Wu',weekKey:'2026-08-25',
+    sources:'PR-030 · PR-071',
+    done:'Booth rough-in inspection.\nHotel lobby slab penetrations marked.',
+    plan:'Cable tray install.\nCeiling grid installation.',
+    submittedAt:'2026-08-29'},
+  {id:'wr-09',person:'Olivia Wang',weekKey:'2026-08-25',
+    sources:'PR-061 · PR-074 Lakeside CT upgrade',
+    done:'MRI shielding drawings to structural.\nCT room layout revision.',
+    plan:'Permit package compilation.\nAuthority pre-submission call.',
+    submittedAt:'2026-08-28'},
+  {id:'wr-10',person:'Noah Li',weekKey:'2026-08-25',
+    sources:'PR-061 MRI suite · PR-072 VitalScan',
+    done:'Shielding calc for Paws & Care MRI.\nStructural opening review PR-072.',
+    plan:'Shielding detail issue.\nSite visit Harbin.',
+    submittedAt:'2026-08-29'},
+  {id:'wr-11',person:'Claire Wang',weekKey:'2026-08-18',
+    sources:'PR-072 VitalScan · intake pipeline',
+    done:'VitalScan equipment schedule locked.\nReviewed two new cinema enquiries.',
+    plan:'Floor 6–8 fit-out coordination.\nConvert approved enquiry to project.',
+    submittedAt:'2026-08-22'},
+  {id:'wr-12',person:'Sophia Chen',weekKey:'2026-08-18',
+    sources:'Portfolio reviews · PR-071 commercial',
+    done:'Monthly cost report for active jobs.\nVariation log update PR-071.',
+    plan:'Q4 pipeline review.\nFee proposal for new intake.',
+    submittedAt:'2026-08-21'}
 ];
 
 /* Live commercial design+build jobs that sell the firm’s real sectors. */
@@ -1838,6 +1948,8 @@ class Component extends DCLogic {
     newReqCode:'',newReqName:'',
     reminderLead:'3',reviewWindow:'5',
     notifications:{milestone:true,phase:true,digest:false},
+    teamTab:'mine',weeklyWeekKey:weekKeyFromDate(new Date()),
+    weeklySource:'',weeklyDone:'',weeklyPlan:'',weeklyReports:[],
     toastMsg:'',toastUndo:null
   };
 
@@ -1865,6 +1977,50 @@ class Component extends DCLogic {
     const o=this.state.gateOverrides[project.id];
     if(o&&o.length)return o.slice();
     return deliveryGatesFor(project);
+  }
+  allWeeklyReports(){
+    const map=new Map();
+    SEED_WEEKLY_REPORTS.forEach(r=>{map.set(r.person+'\0'+r.weekKey,{...r});});
+    (this.state.weeklyReports||[]).forEach(r=>{map.set(r.person+'\0'+r.weekKey,{...r});});
+    return [...map.values()].sort((a,b)=>b.weekKey.localeCompare(a.weekKey)||a.person.localeCompare(b.person));
+  }
+  weeklyDraftFor(weekKey,person){
+    const me=person||(this.state.actingAs||DEFAULT_USER);
+    const report=this.allWeeklyReports().find(r=>r.person===me&&r.weekKey===weekKey);
+    return {
+      weeklySource:report?report.sources:'',
+      weeklyDone:report?report.done:'',
+      weeklyPlan:report?report.plan:''
+    };
+  }
+  submitWeeklyReport(){
+    const st=this.state;
+    const me=st.actingAs||DEFAULT_USER;
+    const weekKey=st.weeklyWeekKey||weekKeyFromDate(new Date());
+    const currentKey=weekKeyFromDate(new Date());
+    if(weekKey!==currentKey){this.showToast('You can only submit for the current week.');return;}
+    const sources=(st.weeklySource||'').trim();
+    const done=(st.weeklyDone||'').trim();
+    const plan=(st.weeklyPlan||'').trim();
+    if(!sources&&!done&&!plan){this.showToast('Fill in at least one field.');return;}
+    const existing=(st.weeklyReports||[]).find(r=>r.person===me&&r.weekKey===weekKey)
+      ||SEED_WEEKLY_REPORTS.find(r=>r.person===me&&r.weekKey===weekKey);
+    const reports=(st.weeklyReports||[]).filter(r=>!(r.person===me&&r.weekKey===weekKey));
+    reports.push({
+      id:existing?existing.id:'wr-'+Date.now(),
+      person:me,weekKey,sources,done,plan,
+      submittedAt:new Date().toISOString().slice(0,10)
+    });
+    this.setState({weeklyReports:reports});
+    this.showToast(existing?'Weekly report updated':'Weekly report submitted');
+  }
+  shiftWeeklyWeek(delta){
+    this.setState(s=>{
+      const key=addWeeksToKey(s.weeklyWeekKey||weekKeyFromDate(new Date()),delta);
+      const currentKey=weekKeyFromDate(new Date());
+      const draft=key===currentKey?this.weeklyDraftFor(key):{weeklySource:'',weeklyDone:'',weeklyPlan:''};
+      return {weeklyWeekKey:key,...draft};
+    });
   }
   addGateToProject(projectId,label){
     const clean=String(label||'').trim();
@@ -1916,7 +2072,12 @@ class Component extends DCLogic {
       this.showToast('Company settings are limited to Owner / Manager roles.');
       return;
     }
-    this.setState({page:p,navOpen:false,showUnsavedConfirm:false,pendingNavigation:'',showAccountMenu:false,showAlerts:false});
+    const next={page:p,navOpen:false,showUnsavedConfirm:false,pendingNavigation:'',showAccountMenu:false,showAlerts:false};
+    if(p==='team'){
+      const weekKey=this.state.weeklyWeekKey||weekKeyFromDate(new Date());
+      Object.assign(next,this.weeklyDraftFor(weekKey));
+    }
+    this.setState(next);
   }
   go(p){
     if(this.state.page==='detail'&&this.state.detailDirty){this.setState({showUnsavedConfirm:true,pendingNavigation:p});return;}
@@ -2426,21 +2587,29 @@ class Component extends DCLogic {
       return {title:def.title,range:def.range,items,hasItems:items.length>0,count:items.length+' milestone'+(items.length===1?'':'s'),isEmpty:items.length===0};
     }).filter(g=>!(g.isEmpty&&g.title==='Overdue'));
 
-    /* ---------- capacity (team) ---------- */
-    const capacityPeople=PEOPLE.map(person=>{
-      const assigned=liveProjects.filter(p=>p.lead===person.n||(p.mem||[]).includes(person.n));
-      const next=assigned.slice().sort(MILESTONE_SORT)[0];
-      return {
-        name:person.n,initials:initialsOf(person.n),color:person.c,role:person.role,
-        discipline:person.discipline,tier:person.tier,isYou:person.n===me,
-        leadingCount:String(assigned.length),
-        nextDate:next?shortIsoDate(next.ms.iso):'—'
-      };
-    });
-    const teamGroups=TEAM_GROUP_DEFS.map(def=>{
-      const people=capacityPeople.filter(p=>p.tier===def.tier);
-      return {title:def.title,count:people.length+' people',people};
-    }).filter(g=>g.people.length>0);
+    /* ---------- weekly reports (capacity) ---------- */
+    const currentWeekKey=weekKeyFromDate(new Date());
+    const selectedWeekKey=st.weeklyWeekKey||currentWeekKey;
+    const weeklyIsCurrent=selectedWeekKey===currentWeekKey;
+    const weeklyWeekLabel=weekLabelFromKey(selectedWeekKey);
+    const weeklyNextDisabled=weeklyIsCurrent?'true':'false';
+    const weekReports=this.allWeeklyReports().filter(r=>r.weekKey===selectedWeekKey);
+    const myReport=weekReports.find(r=>r.person===me)||null;
+    const isTeamMine=st.teamTab==='mine';
+    const isTeamAll=st.teamTab==='all';
+    const weeklyMineReadonly=!weeklyIsCurrent;
+    const weeklyMineEditable=weeklyIsCurrent;
+    const weeklyMineHasReport=!!myReport;
+    const weeklyMineMissing=!myReport;
+    const weeklyAllRows=weekReports.slice().sort((a,b)=>a.person.localeCompare(b.person)).map(r=>({
+      name:r.person,initials:initialsOf(r.person),color:colorOf(r.person),
+      role:personOf(r.person).role,isYou:r.person===me,
+      sources:r.sources||'—',done:r.done||'—',plan:r.plan||'—',
+      submitted:r.submittedAt?formatIsoDate(r.submittedAt):'—'
+    }));
+    const weeklyAllHasRows=weeklyAllRows.length>0;
+    const weeklyAllEmpty=weeklyAllRows.length===0;
+    const weeklyAllCount=weekReports.length+' / '+PEOPLE.length;
 
     /* ---------- detail page ---------- */
     const detailProject=this.projectById(st.detailId)||peekProject||projects[0];
@@ -2624,10 +2793,12 @@ class Component extends DCLogic {
               ?this.allProjects().filter(x=>x.lead===p.n||(x.mem||[]).includes(p.n))
               :this.allProjects();
             const peekOk=!st.peekId||nextProjects.some(x=>x.id===st.peekId)||!nextPerms.isContributor;
+            const weekKey=st.weeklyWeekKey||weekKeyFromDate(new Date());
             this.setState({
               actingAs:p.n,showAccountMenu:false,
               page:(st.page==='intake'&&!nextPerms.canManageIntake)||(st.page==='new'&&!nextPerms.canCreateProject)||(st.page==='settings'&&!nextPerms.canEditSettings)?'portfolio':st.page,
-              peekId:peekOk?st.peekId:''
+              peekId:peekOk?st.peekId:'',
+              ...this.weeklyDraftFor(weekKey,p.n)
             });
             this.showToast('Now viewing as '+p.n+' · '+p.role);
           }
@@ -2756,9 +2927,33 @@ class Component extends DCLogic {
       }),
       goIntake:()=>this.go('intake'),
 
-      /* schedule + capacity + delivery standards + support */
+      /* schedule + weekly reports + delivery standards + support */
       scheduleGroups,
-      teamGroups,
+      weeklyWeekLabel,weeklyIsCurrent,weeklyNextDisabled,
+      weeklyPrev:()=>this.shiftWeeklyWeek(-1),
+      weeklyNext:()=>{if(!weeklyIsCurrent)this.shiftWeeklyWeek(1);},
+      teamTabMine:()=>this.setState({teamTab:'mine'}),
+      teamTabAll:()=>this.setState({teamTab:'all'}),
+      teamTabMineSelected:isTeamMine?'true':'false',
+      teamTabAllSelected:isTeamAll?'true':'false',
+      teamTabMineColor:isTeamMine?'var(--accent-ink)':'var(--muted)',
+      teamTabMineBorder:isTeamMine?'var(--accent)':'transparent',
+      teamTabAllColor:isTeamAll?'var(--accent-ink)':'var(--muted)',
+      teamTabAllBorder:isTeamAll?'var(--accent)':'transparent',
+      isTeamMine,isTeamAll,
+      weeklyMineReadonly,weeklyMineEditable,weeklyMineHasReport,weeklyMineMissing,
+      weeklyMineName:me,weeklyMineInitials:initialsOf(me),weeklyMineColor:colorOf(me),
+      weeklyMineSources:myReport?myReport.sources:'',
+      weeklyMineDone:myReport?myReport.done:'',
+      weeklyMinePlan:myReport?myReport.plan:'',
+      weeklyMineSubmitted:myReport&&myReport.submittedAt?formatIsoDate(myReport.submittedAt):'',
+      weeklySource:st.weeklySource,weeklyDone:st.weeklyDone,weeklyPlan:st.weeklyPlan,
+      setWeeklySource:(e)=>this.setState({weeklySource:e.target.value}),
+      setWeeklyDone:(e)=>this.setState({weeklyDone:e.target.value}),
+      setWeeklyPlan:(e)=>this.setState({weeklyPlan:e.target.value}),
+      submitWeeklyReport:()=>this.submitWeeklyReport(),
+      weeklySubmitLabel:myReport?'Update report':'Submit report',
+      weeklyAllRows,weeklyAllHasRows,weeklyAllEmpty,weeklyAllCount,
       methodsStats:[
         {label:'Lifecycle phases',value:String(PHASE_KEYS.length)},
         {label:'Sector templates',value:String(SECTOR_PLAYBOOKS.length)},
