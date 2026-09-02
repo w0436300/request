@@ -58,13 +58,13 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 .project-row.is-selected>td{background:var(--accent-tint)}
 .project-row.is-selected>td:first-child{color:var(--accent-ink)}
 table tbody tr:last-child>td{border-bottom:none!important}
-.phase-boxes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:14px}
-.phase-box{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-l);background:var(--surface);cursor:pointer;text-align:left;box-shadow:var(--sh);transition:background .15s,border-color .15s,color .15s}
-.phase-box:hover{border-color:var(--lineS);background:var(--paper2)}
-.phase-box.is-on{border-color:#C7D0F5;background:var(--accent-tint)}
-.phase-box__label{font-size:12.5px;font-weight:700;letter-spacing:-.01em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.phase-boxes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:12px}
+.phase-box{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;padding:8px 10px;border:none;border-radius:0;background:transparent;cursor:pointer;text-align:left;box-shadow:none;transition:color .15s}
+.phase-box:hover{background:transparent;color:var(--ink)}
+.phase-box.is-on{background:transparent}
+.phase-box__label{font-size:12.5px;font-weight:700;letter-spacing:-.01em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .phase-box.is-on .phase-box__label{color:var(--accent-ink)}
-.phase-box__count{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;letter-spacing:-.04em;color:var(--ink);line-height:1}
+.phase-box__count{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;letter-spacing:-.04em;color:var(--ink2);line-height:1}
 .phase-box.is-on .phase-box__count{color:var(--accent-ink)}
 @media (max-width:900px){.phase-boxes{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:520px){.phase-boxes{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -72,8 +72,8 @@ table tbody tr:last-child>td{border-bottom:none!important}
 @media (max-width:720px){.capacity-metrics{grid-template-columns:1fr}}
 .filter-select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer}
 .filter-select.is-on{border-color:#C7D0F5;background:var(--accent-tint);color:var(--accent-ink)}
-.filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 20px;background:var(--paper2);border-bottom:1px solid var(--line)}
-.filter-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 12px;background:var(--paper2);border-bottom:1px solid var(--line)}
+.filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:0;background:transparent;border:none}
+.filter-chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 0}
 .filter-chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ink2)}
 .filter-chip button{border:none;background:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0}
 .sortable-heading:hover{color:#111827}
@@ -262,41 +262,41 @@ table tbody tr:last-child>td{border-bottom:none!important}
   </sc-if>
 
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line)">
-      <div style="display:flex;align-items:baseline;gap:8px;min-width:0">
-        <h2 style="font-weight:700;font-size:16px;margin:0;letter-spacing:-.02em">{{ listTitle }}</h2>
-        <span style="color:var(--muted);font-size:13px;font-family:'IBM Plex Mono',monospace">{{ listCount }}</span>
+    <div style="padding:16px 20px;border-bottom:1px solid var(--line)">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+        <div style="display:flex;align-items:baseline;gap:8px;min-width:0">
+          <h2 style="font-weight:700;font-size:16px;margin:0;letter-spacing:-.02em">{{ listTitle }}</h2>
+          <span style="color:var(--muted);font-size:13px;font-family:'IBM Plex Mono',monospace">{{ listCount }}</span>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:none">
+          <div role="group" aria-label="Group projects" style="display:inline-flex;align-items:center;padding:3px;background:var(--paper2);border-radius:9px">
+            <button onclick="{{ groupFlat }}" aria-pressed="{{ listGroupFlatPressed }}" style="height:30px;padding:0 11px;border:none;border-radius:7px;background:{{ listGroupFlatBg }};color:{{ listGroupFlatColor }};font-weight:600;font-size:12px;cursor:pointer">All jobs</button>
+            <button onclick="{{ groupByClient }}" aria-pressed="{{ listGroupClientPressed }}" style="height:30px;padding:0 11px;border:none;border-radius:7px;background:{{ listGroupClientBg }};color:{{ listGroupClientColor }};font-weight:600;font-size:12px;cursor:pointer">By client</button>
+          </div>
+          <span style="position:relative;display:inline-flex">
+            <button onclick="{{ toggleAlerts }}" aria-label="Notifications" title="Notifications" aria-expanded="{{ showAlerts }}" style="width:36px;height:36px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink2);cursor:pointer;display:grid;place-items:center;position:relative" style-hover="border-color:var(--lineS);background:var(--paper2)">
+              <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.2a3.4 3.4 0 0 0-3.4 3.4c0 2.5-.9 3.6-1.3 4.1-.2.2 0 .6.3.6h8.8c.3 0 .5-.4.3-.6-.4-.5-1.3-1.6-1.3-4.1A3.4 3.4 0 0 0 8 2.2ZM6.6 12.3a1.5 1.5 0 0 0 2.8 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <sc-if value="{{ hasAlerts }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--warn);border:1.5px solid var(--surface)"></span></sc-if>
+            </button>
+            <sc-if value="{{ showAlerts }}" hint-placeholder-val="{{ false }}">
+              <div onclick="{{ stopBubble }}" style="position:absolute;right:0;top:44px;z-index:24;width:min(320px,calc(100vw - 48px));padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12);text-align:left">
+                <div style="padding:10px 10px 8px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Needs your attention</div>
+                <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="3">
+                  <button onclick="{{ a.open }}" style="width:100%;display:block;padding:9px 10px;border:none;border-top:1px solid var(--line);border-radius:var(--r-s);background:transparent;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">
+                    <div style="font-weight:600;font-size:13px;color:var(--ink)">{{ a.title }}</div>
+                    <div style="color:var(--muted);font-size:12px;margin-top:2px">{{ a.meta }}</div>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </span>
+        </div>
       </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:1 1 280px;justify-content:flex-end;min-width:0">
-        <div style="position:relative;flex:1 1 200px;max-width:280px">
+      <div class="filter-bar" onclick="{{ stopBubble }}">
+        <div style="position:relative;flex:1 1 180px;min-width:160px;max-width:240px">
           <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace">⌕</span>
-          <input value="{{ search }}" onchange="{{ setSearch }}" placeholder="Search projects or clients" style="width:100%;height:36px;border:1px solid var(--line);border-radius:9px;padding:0 12px 0 30px;background:var(--surface);font-size:13px;color:var(--ink)">
+          <input value="{{ search }}" onchange="{{ setSearch }}" placeholder="Search projects or clients" style="width:100%;height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px 0 30px;background:var(--surface);font-size:13px;color:var(--ink)">
         </div>
-        <div role="group" aria-label="Group projects" style="display:inline-flex;align-items:center;padding:3px;background:var(--paper2);border-radius:9px;flex:none">
-          <button onclick="{{ groupFlat }}" aria-pressed="{{ listGroupFlatPressed }}" style="height:30px;padding:0 11px;border:none;border-radius:7px;background:{{ listGroupFlatBg }};color:{{ listGroupFlatColor }};font-weight:600;font-size:12px;cursor:pointer">All jobs</button>
-          <button onclick="{{ groupByClient }}" aria-pressed="{{ listGroupClientPressed }}" style="height:30px;padding:0 11px;border:none;border-radius:7px;background:{{ listGroupClientBg }};color:{{ listGroupClientColor }};font-weight:600;font-size:12px;cursor:pointer">By client</button>
-        </div>
-        <span style="position:relative;display:inline-flex;flex:none">
-          <button onclick="{{ toggleAlerts }}" aria-label="Notifications" title="Notifications" aria-expanded="{{ showAlerts }}" style="width:36px;height:36px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink2);cursor:pointer;display:grid;place-items:center;position:relative" style-hover="border-color:var(--lineS);background:var(--paper2)">
-            <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.2a3.4 3.4 0 0 0-3.4 3.4c0 2.5-.9 3.6-1.3 4.1-.2.2 0 .6.3.6h8.8c.3 0 .5-.4.3-.6-.4-.5-1.3-1.6-1.3-4.1A3.4 3.4 0 0 0 8 2.2ZM6.6 12.3a1.5 1.5 0 0 0 2.8 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-            <sc-if value="{{ hasAlerts }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--warn);border:1.5px solid var(--surface)"></span></sc-if>
-          </button>
-          <sc-if value="{{ showAlerts }}" hint-placeholder-val="{{ false }}">
-            <div onclick="{{ stopBubble }}" style="position:absolute;right:0;top:44px;z-index:24;width:min(320px,calc(100vw - 48px));padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:0 12px 30px rgba(17,24,39,.12);text-align:left">
-              <div style="padding:10px 10px 8px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Needs your attention</div>
-              <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="3">
-                <button onclick="{{ a.open }}" style="width:100%;display:block;padding:9px 10px;border:none;border-top:1px solid var(--line);border-radius:var(--r-s);background:transparent;cursor:pointer;text-align:left" style-hover="background:var(--paper2)">
-                  <div style="font-weight:600;font-size:13px;color:var(--ink)">{{ a.title }}</div>
-                  <div style="color:var(--muted);font-size:12px;margin-top:2px">{{ a.meta }}</div>
-                </button>
-              </sc-for>
-            </div>
-          </sc-if>
-        </span>
-      </div>
-    </div>
-
-    <div class="filter-bar" onclick="{{ stopBubble }}">
       <select value="{{ clientFilter }}" onchange="{{ setClientFilter }}" aria-label="Filter by client" class="filter-select {{ clientFilterOnClass }}">
         <option value="all">Any client</option>
         <sc-for list="{{ clientOptions }}" as="co" hint-placeholder-count="6"><option value="{{ co }}">{{ co }}</option></sc-for>
@@ -328,14 +328,15 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <sc-if value="{{ hasActiveFilters }}" hint-placeholder-val="{{ true }}">
         <button onclick="{{ clearFilters }}" style="margin-left:auto;background:none;border:none;color:var(--muted);font-weight:700;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;white-space:nowrap" style-hover="color:#111827">Clear filters</button>
       </sc-if>
-    </div>
-    <sc-if value="{{ hasFilterChips }}" hint-placeholder-val="{{ false }}">
-      <div class="filter-chips" onclick="{{ stopBubble }}">
-        <sc-for list="{{ filterChips }}" as="fc" hint-placeholder-count="3">
-          <span class="filter-chip">{{ fc.label }}<button onclick="{{ fc.clear }}" aria-label="Remove filter">×</button></span>
-        </sc-for>
       </div>
-    </sc-if>
+      <sc-if value="{{ hasFilterChips }}" hint-placeholder-val="{{ false }}">
+        <div class="filter-chips" onclick="{{ stopBubble }}">
+          <sc-for list="{{ filterChips }}" as="fc" hint-placeholder-count="3">
+            <span class="filter-chip">{{ fc.label }}<button onclick="{{ fc.clear }}" aria-label="Remove filter">×</button></span>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
 
     <sc-if value="{{ isListByClient }}" hint-placeholder-val="{{ false }}">
       <div style="padding:12px 20px;border-bottom:1px solid var(--line);color:var(--ink2);font-size:13px;line-height:1.55;background:#FBFBFD">
@@ -367,7 +368,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ p.name }}</td>
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.sector }}</td>
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line)">
-                      <span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 11px;border-radius:999px;font-size:12px;font-weight:600;background:{{ p.phaseTint }};color:{{ p.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.phaseColor }};flex:none"></span>{{ p.phaseLabel }}</span>
+                      <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:{{ p.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.phaseColor }};flex:none"></span>{{ p.phaseLabel }}</span>
                     </td>
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line)">
                       <div style="display:flex;align-items:center;gap:9px;min-width:0">
@@ -391,7 +392,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
     <sc-if value="{{ hasProjectRows }}" hint-placeholder-val="{{ true }}">
       <div class="table-scroll">
         <table style="width:100%;border-collapse:collapse;min-width:1000px">
-          <thead><tr style="background:#FBFBFD">
+          <thead><tr>
             <th style="width:76px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
             <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Project</th>
             <th style="width:144px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Client</th>
@@ -410,7 +411,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.client }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.sector }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line)">
-                <span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 11px;border-radius:999px;font-size:12px;font-weight:600;background:{{ p.phaseTint }};color:{{ p.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.phaseColor }};flex:none"></span>{{ p.phaseLabel }}</span>
+                <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:{{ p.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.phaseColor }};flex:none"></span>{{ p.phaseLabel }}</span>
               </td>
               <td style="padding:14px;border-bottom:1px solid var(--line)">
                 <div style="display:flex;align-items:center;gap:9px;min-width:0">
@@ -456,10 +457,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= PROJECT REQUESTS ========================= -->
 <sc-if value="{{ isIntake }}" hint-placeholder-val="{{ false }}">
-  <div style="display:flex;gap:20px;flex-wrap:wrap;background:var(--accent-tint);border:1px solid #DADFFA;border-radius:var(--r-l);padding:14px 18px;margin-bottom:14px">
-    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14.5px;color:var(--ink)">{{ intakeCount }} enquiries waiting to be scoped</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Maintained by Project Lead and Operations only. Confirm brief, budget and sector, then convert to a live job — Designers do not create enquiries unless invited for feasibility.</div></div>
-    <div class="metric-grid"><div><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.04em;color:var(--accent-ink);line-height:1">{{ intakeNewCount }}</div><div style="font-size:11.5px;color:var(--muted);margin-top:4px">Received today</div></div></div>
-  </div>
+  <div style="font-weight:700;font-size:14.5px;color:var(--ink);margin-bottom:10px">{{ intakeCount }} enquiries waiting to be scoped</div>
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
     <div class="table-scroll">
       <table style="width:100%;border-collapse:collapse;min-width:940px">
@@ -497,9 +495,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= SCHEDULE ========================= -->
 <sc-if value="{{ isSchedule }}" hint-placeholder-val="{{ false }}">
-  <div style="margin:0 0 12px;padding:12px 16px;background:var(--paper2);border:1px solid var(--line);border-radius:var(--r-l);color:var(--ink2);font-size:13px;line-height:1.55;max-width:920px">
-    Each row is the <b style="color:var(--ink);font-weight:700">next dated gate</b> on a live project. The full gate sequence comes from the sector template (see Playbook); Owner / Manager can add gates on the project Delivery tab.
-  </div>
   <sc-for list="{{ scheduleGroups }}" as="g" hint-placeholder-count="3">
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--line)">
