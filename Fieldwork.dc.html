@@ -141,7 +141,9 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 .filter-select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;width:100%;min-width:0}
 .filter-select.is-on{border-color:#C7D0F5;background:var(--accent-tint);color:var(--accent-ink)}
 .filter-bar{display:flex;flex-direction:column;gap:10px;padding:0;background:transparent;border:none;width:100%}
-.filter-bar__fields{display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) minmax(280px,2fr);gap:10px;width:100%}
+.filter-bar__fields{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;width:100%}
+.filter-bar__search{position:relative;width:100%}
+.filter-bar__search input{width:100%;height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px 0 30px;background:var(--surface);font-size:13px;color:var(--ink)}
 .filter-search{position:relative;min-width:0}
 .filter-search input{width:100%;height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px 0 30px;background:var(--surface);font-size:13px;color:var(--ink)}
 .filter-bar__actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
@@ -357,10 +359,10 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
         <option value="New project">New project</option>
         <option value="Work package">Work package</option>
       </select>
-        <div class="filter-search">
-          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace">⌕</span>
-          <input value="{{ search }}" onchange="{{ setSearch }}" placeholder="Search projects or clients">
-        </div>
+      </div>
+      <div class="filter-bar__search">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace">⌕</span>
+        <input value="{{ search }}" onchange="{{ setSearch }}" placeholder="Search projects or clients">
       </div>
       <div class="filter-bar__actions">
         <label style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap"><input type="checkbox" checked="{{ holdOnly }}" onchange="{{ setHoldOnly }}" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">On hold only</label>
