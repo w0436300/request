@@ -350,9 +350,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
                     <td style="padding:13px 14px 13px 20px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap">{{ p.code }}</td>
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ p.name }}</td>
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.sector }}</td>
-                    <td style="padding:13px 14px;border-bottom:1px solid var(--line)">
-                      <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:{{ p.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.phaseColor }};flex:none"></span>{{ p.phaseLabel }}</span>
-                    </td>
+                    <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.phaseLabel }}</td>
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line)">
                       <div style="display:flex;align-items:center;gap:9px;min-width:0">
                         <span style="width:26px;height:26px;border-radius:50%;background:{{ p.leadColor }};color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;flex:none">{{ p.leadInitials }}</span>
@@ -360,7 +358,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
                       </div>
                     </td>
                     <td style="padding:13px 14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);white-space:nowrap">{{ p.budget }}</td>
-                    <td style="padding:13px 20px 13px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:{{ p.milestoneColor }};white-space:nowrap">{{ p.milestoneDate }}</td>
+                    <td style="padding:13px 20px 13px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.milestoneDate }}</td>
                   </tr>
                 </sc-for>
                 </tbody>
@@ -380,11 +378,11 @@ table tbody tr:last-child>td{border-bottom:none!important}
             <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Project</th>
             <th style="width:144px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Client</th>
             <th style="width:120px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Sector</th>
-            <th style="width:122px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px"><button class="sortable-heading" onclick="{{ sortByPhase }}" aria-label="Sort by phase">Phase <span class="sort-indicator" style="transform:rotate({{ phaseSortRotation }})"></span></button></th>
+            <th style="width:122px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Phase</th>
             <th style="width:132px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Lead</th>
             <th style="width:88px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Budget</th>
             <th style="width:110px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Issues</th>
-            <th style="width:90px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px"><button class="sortable-heading" onclick="{{ sortByMilestone }}" aria-label="Sort by due date">Next gate <span class="sort-indicator" style="transform:rotate({{ milestoneSortRotation }})"></span></button></th>
+            <th style="width:90px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Next gate</th>
           </tr></thead>
           <tbody>
           <sc-for list="{{ projectRows }}" as="p" hint-placeholder-count="5">
@@ -393,9 +391,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               <td style="padding:14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ p.name }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.client }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.sector }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line)">
-                <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:{{ p.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.phaseColor }};flex:none"></span>{{ p.phaseLabel }}</span>
-              </td>
+              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.phaseLabel }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line)">
                 <div style="display:flex;align-items:center;gap:9px;min-width:0">
                   <span style="width:26px;height:26px;border-radius:50%;background:{{ p.leadColor }};color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;flex:none">{{ p.leadInitials }}</span>
@@ -404,7 +400,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               </td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);white-space:nowrap">{{ p.budget }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:12px;font-weight:600;color:{{ p.riskColor }};white-space:nowrap">{{ p.riskLabel }}</td>
-              <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:{{ p.milestoneColor }};white-space:nowrap">{{ p.milestoneDate }}</td>
+              <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ p.milestoneDate }}</td>
             </tr>
           </sc-for>
           </tbody>
