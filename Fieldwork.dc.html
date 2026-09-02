@@ -58,7 +58,8 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 .project-row.is-selected>td{background:var(--accent-tint)}
 .project-row.is-selected>td:first-child{color:var(--accent-ink)}
 table tbody tr:last-child>td{border-bottom:none!important}
-.phase-boxes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:12px}
+.phase-boxes-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:8px;margin-bottom:12px}
+.phase-boxes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .phase-box{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;padding:8px 10px;border:none;border-radius:0;background:transparent;cursor:pointer;text-align:left;box-shadow:none;transition:color .15s}
 .phase-box:hover{background:transparent;color:var(--ink)}
 .phase-box.is-on{background:transparent}
@@ -245,6 +246,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= PORTFOLIO ========================= -->
 <sc-if value="{{ isPortfolio }}" hint-placeholder-val="{{ true }}">
+  <div class="phase-boxes-wrap">
   <div class="phase-boxes" role="tablist" aria-label="Filter by phase">
     <sc-for list="{{ phaseBoxes }}" as="b" hint-placeholder-count="7">
       <button class="phase-box {{ b.onClass }}" onclick="{{ b.select }}" aria-pressed="{{ b.pressed }}" type="button">
@@ -252,6 +254,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
         <span class="phase-box__count">{{ b.count }}</span>
       </button>
     </sc-for>
+  </div>
   </div>
 
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
