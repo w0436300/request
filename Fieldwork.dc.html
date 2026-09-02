@@ -69,7 +69,7 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 .projects-client-head__title{font-weight:700;font-size:14.5px;margin:0;letter-spacing:-.02em;color:var(--ink)}
 .projects-client-head__meta{color:var(--muted);font-size:12.5px;font-family:'IBM Plex Mono',monospace}
 .projects-client-head__due{margin-left:auto;font-size:12.5px;color:var(--muted);white-space:nowrap}
-table tbody tr:last-child>td{border-bottom:none!important}
+.projects-table--flat tbody tr:last-child>td{border-bottom:none!important}
 .phase-boxes-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:8px;margin-bottom:12px}
 .phase-boxes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .phase-box{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;padding:8px 10px;border:none;border-radius:0;background:transparent;cursor:pointer;text-align:left;box-shadow:none;transition:color .15s}
@@ -100,19 +100,44 @@ table tbody tr:last-child>td{border-bottom:none!important}
 .team-report-block:last-child{border-bottom:none}
 .team-report-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .team-report-text{font-size:13.5px;color:var(--ink2);line-height:1.6;white-space:pre-wrap}
-.team-report-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);overflow:hidden}
-.team-report-table{width:100%;border-collapse:collapse;min-width:920px}
-.team-report-table th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px;background:#FBFBFD;white-space:nowrap}
-.team-report-table th:first-child{padding-left:20px;width:min(168px,16%)}
-.team-report-table th:last-child{padding-right:20px}
-.team-report-table td{padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55;vertical-align:top;white-space:pre-wrap}
-.team-report-table tbody tr:last-child td{border-bottom:none}
-.team-report-table tbody tr:hover td{background:#F8F9FC}
-.team-report-table tbody tr.is-missing td{color:var(--muted)}
-.team-report-table tbody tr.is-missing td:not(:first-child){font-style:italic}
+.weekly-all{margin-top:2px}
+.weekly-all__toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.weekly-all__stats{display:flex;align-items:baseline;gap:8px}
+.weekly-all__stats strong{font-size:14px;color:var(--ink)}
+.weekly-all__stats span{font-size:12.5px;color:var(--muted)}
+.weekly-all__legend{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--muted)}
+.weekly-all__legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.weekly-all-board{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);overflow:hidden}
+.weekly-all-board__head,.weekly-all-row{display:grid;grid-template-columns:minmax(168px,18%) repeat(3,minmax(0,1fr));gap:0;border-bottom:1px solid var(--line)}
+.weekly-all-board__head{background:#FBFBFD}
+.weekly-all-board__head>div{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 14px}
+.weekly-all-board__head>div:first-child{padding-left:20px}
+.weekly-all-board__head>div:last-child{padding-right:20px}
+.weekly-all-row:last-child{border-bottom:none}
+.weekly-all-row:hover{background:#FCFCFE}
+.weekly-all-row.is-missing{background:#FAFAFB}
+.weekly-all-person{padding:14px 14px 14px 20px;display:flex;align-items:flex-start;gap:10px;min-width:0;border-right:1px solid var(--line)}
+.weekly-all-person__name{font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.weekly-all-person__meta{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+.weekly-all-person__badge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:700;margin-top:8px}
+.weekly-all-person__badge.is-done{color:#2F6B4F;background:#E8F3ED}
+.weekly-all-person__badge.is-pending{color:#8F6318;background:#F8F1E6}
+.weekly-all-cell{padding:12px 14px;border-right:1px solid var(--line);min-width:0}
+.weekly-all-cell:last-child{border-right:none;padding-right:20px}
+.weekly-all-cell__body{display:block;width:100%;min-height:56px;max-height:320px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-s);background:#FBFBFD;font-size:13px;line-height:1.6;color:var(--ink2);white-space:pre-wrap;overflow:auto;resize:vertical;box-sizing:border-box}
+.weekly-all-row.is-missing .weekly-all-cell__body{color:var(--muted);font-style:italic;background:var(--surface);border-style:dashed}
+.weekly-all-empty{padding:28px 20px;text-align:center;color:var(--muted);font-size:13.5px}
+@media (max-width:900px){
+  .weekly-all-board__head,.weekly-all-row{grid-template-columns:1fr}
+  .weekly-all-board__head>div:not(:first-child){display:none}
+  .weekly-all-person{border-right:none;border-bottom:1px solid var(--line)}
+  .weekly-all-cell{border-right:none;border-bottom:1px solid var(--line)}
+  .weekly-all-cell:before{display:block;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .weekly-all-cell--sources:before{content:"Sources"}
+  .weekly-all-cell--done:before{content:"Done this week"}
+  .weekly-all-cell--plan:before{content:"Next week"}
+}
 .team-person{display:flex;align-items:center;gap:10px;min-width:0}
-.team-person__name{font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap}
-.team-person__meta{font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap}
 .filter-select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;width:100%;min-width:0}
 .filter-select.is-on{border-color:#C7D0F5;background:var(--accent-tint);color:var(--accent-ink)}
 .filter-bar{display:flex;flex-direction:column;gap:10px;padding:0;background:transparent;border:none;width:100%}
@@ -606,38 +631,39 @@ table tbody tr:last-child>td{border-bottom:none!important}
   </sc-if>
 
   <sc-if value="{{ isTeamAll }}" hint-placeholder-val="{{ false }}">
-    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
-      <span style="font-weight:700;font-size:14px;color:var(--ink)">{{ weeklyAllCount }}</span>
-      <span style="color:var(--muted);font-size:12.5px">submitted</span>
-    </div>
-    <div class="team-report-panel">
-      <div class="table-scroll">
-        <table class="team-report-table">
-          <thead><tr>
-            <th>Person</th>
-            <th>Sources</th>
-            <th>Done this week</th>
-            <th>Next week</th>
-          </tr></thead>
-          <tbody>
-          <sc-for list="{{ weeklyAllRows }}" as="wr" hint-placeholder-count="4">
-            <tr class="{{ wr.rowClass }}">
-              <td style="padding-left:20px">
-                <div class="team-person">
-                  <span style="width:30px;height:30px;border-radius:50%;background:{{ wr.color }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ wr.initials }}</span>
-                  <div style="min-width:0">
-                    <div class="team-person__name">{{ wr.name }}<sc-if value="{{ wr.isYou }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent-ink);font-weight:600;font-size:11.5px;margin-left:5px">You</span></sc-if></div>
-                    <div class="team-person__meta">{{ wr.role }}<sc-if value="{{ wr.hasReport }}" hint-placeholder-val="{{ false }}"> · {{ wr.submitted }}</sc-if></div>
-                  </div>
-                </div>
-              </td>
-              <td>{{ wr.sources }}</td>
-              <td>{{ wr.done }}</td>
-              <td style="padding-right:20px">{{ wr.plan }}</td>
-            </tr>
-          </sc-for>
-          </tbody>
-        </table>
+    <div class="weekly-all">
+      <div class="weekly-all__toolbar">
+        <div class="weekly-all__stats">
+          <strong>{{ weeklyAllCount }}</strong>
+          <span>submitted this week</span>
+        </div>
+        <div class="weekly-all__legend">
+          <span><i style="background:#2F6B4F"></i>Submitted</span>
+          <span><i style="background:#C9A227"></i>Pending</span>
+        </div>
+      </div>
+      <div class="weekly-all-board">
+        <div class="weekly-all-board__head">
+          <div>Person</div>
+          <div>Sources</div>
+          <div>Done this week</div>
+          <div>Next week</div>
+        </div>
+        <sc-for list="{{ weeklyAllRows }}" as="wr" hint-placeholder-count="4">
+          <div class="weekly-all-row {{ wr.rowClass }}">
+            <div class="weekly-all-person">
+              <span style="width:30px;height:30px;border-radius:50%;background:{{ wr.color }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ wr.initials }}</span>
+              <div style="min-width:0">
+                <div class="weekly-all-person__name">{{ wr.name }}<sc-if value="{{ wr.isYou }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent-ink);font-weight:600;font-size:11.5px;margin-left:5px">You</span></sc-if></div>
+                <div class="weekly-all-person__meta">{{ wr.role }}<sc-if value="{{ wr.hasReport }}" hint-placeholder-val="{{ false }}"><br>{{ wr.submitted }}</sc-if></div>
+                <span class="weekly-all-person__badge {{ wr.badgeClass }}">{{ wr.badgeLabel }}</span>
+              </div>
+            </div>
+            <div class="weekly-all-cell weekly-all-cell--sources"><div class="weekly-all-cell__body">{{ wr.sources }}</div></div>
+            <div class="weekly-all-cell weekly-all-cell--done"><div class="weekly-all-cell__body">{{ wr.done }}</div></div>
+            <div class="weekly-all-cell weekly-all-cell--plan"><div class="weekly-all-cell__body">{{ wr.plan }}</div></div>
+          </div>
+        </sc-for>
       </div>
     </div>
   </sc-if>
@@ -2645,13 +2671,16 @@ class Component extends DCLogic {
     const submittedByPerson=new Map(weekReports.map(r=>[r.person,r]));
     const weeklyAllRows=PEOPLE.slice().sort((a,b)=>a.n.localeCompare(b.n)).map(person=>{
       const r=submittedByPerson.get(person.n);
+      const hasReport=!!r;
       return {
         name:person.n,initials:initialsOf(person.n),color:person.c,
-        role:person.role,isYou:person.n===me,hasReport:!!r,
-        sources:r?r.sources:'Not submitted',
-        done:r?r.done:'—',plan:r?r.plan:'—',
-        submitted:r&&r.submittedAt?formatIsoDate(r.submittedAt):'',
-        rowClass:r?'':'is-missing'
+        role:person.role,isYou:person.n===me,hasReport,
+        sources:hasReport?r.sources:'No report submitted yet.',
+        done:hasReport?r.done:'—',plan:hasReport?r.plan:'—',
+        submitted:hasReport&&r.submittedAt?formatIsoDate(r.submittedAt):'',
+        badgeLabel:hasReport?'Submitted':'Pending',
+        badgeClass:hasReport?'is-done':'is-pending',
+        rowClass:hasReport?'':'is-missing'
       };
     });
     const weeklyAllCount=weekReports.length+' / '+PEOPLE.length;
