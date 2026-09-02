@@ -333,9 +333,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
     </div>
 
     <sc-if value="{{ isListByClient }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:12px 20px;border-bottom:1px solid var(--line);color:var(--ink2);font-size:13px;line-height:1.55;background:#FBFBFD">
-        One client account can hold many jobs. Delivery (phase, milestones, team) still runs on each project — this view only groups the list.
-      </div>
       <sc-if value="{{ hasClientGroups }}" hint-placeholder-val="{{ true }}">
         <sc-for list="{{ clientGroups }}" as="cg" hint-placeholder-count="3">
           <div style="border-bottom:1px solid var(--line)">
@@ -518,37 +515,19 @@ table tbody tr:last-child>td{border-bottom:none!important}
 
 <!-- ========================= CAPACITY (TEAM) ========================= -->
 <sc-if value="{{ isTeam }}" hint-placeholder-val="{{ false }}">
-  <div class="capacity-metrics">
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:14px 16px;box-shadow:var(--sh)">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Clear next 3 weeks</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.04em;color:var(--ink);margin-top:6px">{{ capacityClear }}</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:14px 16px;box-shadow:var(--sh)">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Loaded</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.04em;color:#8F6318;margin-top:6px">{{ capacityLoaded }}</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:14px 16px;box-shadow:var(--sh)">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">At capacity</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.04em;color:#B04A4A;margin-top:6px">{{ capacityFull }}</div>
-    </div>
-  </div>
-
   <sc-for list="{{ teamGroups }}" as="g" hint-placeholder-count="3">
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:12px">
       <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:15px 20px;border-bottom:1px solid var(--line)">
         <h2 style="font-weight:700;font-size:15px;margin:0;letter-spacing:-.02em">{{ g.title }}</h2>
-        <span style="color:var(--muted);font-size:12.5px">{{ g.hint }}</span>
         <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted)">{{ g.count }}</span>
       </div>
       <div class="table-scroll">
-        <table style="width:100%;border-collapse:collapse;min-width:920px">
+        <table style="width:100%;border-collapse:collapse;min-width:720px">
           <thead><tr>
             <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">Person</th>
             <th style="width:150px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Role</th>
             <th style="width:170px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Trade</th>
-            <th style="width:160px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Active sectors</th>
             <th style="width:72px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Jobs</th>
-            <th style="width:150px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Next 3 weeks</th>
             <th style="width:96px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Next due</th>
           </tr></thead>
           <tbody>
@@ -565,14 +544,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
               </td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ t.role }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ t.discipline }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink2);white-space:nowrap">{{ t.sectors }}</td>
               <td style="padding:14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)">{{ t.leadingCount }}</td>
-              <td style="padding:14px;border-bottom:1px solid var(--line)">
-                <div style="display:flex;align-items:center;gap:9px">
-                  <span style="width:64px;height:6px;border-radius:3px;background:var(--line);flex:none;overflow:hidden;display:inline-block"><span style="display:block;height:100%;width:{{ t.loadWidth }};background:{{ t.loadColor }};border-radius:3px"></span></span>
-                  <span style="font-size:12px;color:{{ t.loadColor }};font-weight:600;white-space:nowrap">{{ t.loadLabel }}</span>
-                </div>
-              </td>
               <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">{{ t.nextDate }}</td>
             </tr>
           </sc-for>
@@ -587,7 +559,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
 <sc-if value="{{ isStandards }}" hint-placeholder-val="{{ false }}">
   <div class="methods-intro">
     <h1>Delivery Standards</h1>
-    <p>Company-wide lifecycle rules, sector gate templates and role authority for commercial design &amp; build delivery. Applied when an enquiry converts to a live project.</p>
   </div>
 
   <div class="capacity-metrics" style="margin-bottom:16px">
@@ -602,7 +573,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
   <div class="methods-panel">
     <div class="methods-panel__head">
       <h2>Project lifecycle</h2>
-      <span>Phase progression and exit criteria before advancing</span>
       <span class="methods-panel__meta">{{ lifecycleCount }} phases</span>
     </div>
     <div class="table-scroll">
@@ -625,15 +595,11 @@ table tbody tr:last-child>td{border-bottom:none!important}
         </tbody>
       </table>
     </div>
-    <div style="padding:12px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink2);line-height:1.55;background:#FBFBFD">
-      <b style="color:var(--ink);font-weight:600">On hold</b> is an overlay — the project keeps its phase. Resume when the blocker is cleared and the gate date is reissued.
-    </div>
   </div>
 
   <div class="methods-panel">
     <div class="methods-panel__head">
       <h2>Sector gate templates</h2>
-      <span>Default delivery sequence applied at project conversion</span>
       <span class="methods-panel__meta">{{ sectorTemplateCount }} sectors</span>
     </div>
     <div class="table-scroll">
@@ -661,7 +627,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
   <div class="methods-panel">
     <div class="methods-panel__head">
       <h2>Roles &amp; authority</h2>
-      <span>Who can move lifecycle, commercial terms and delivery gates</span>
       <span class="methods-panel__meta">3 tiers</span>
     </div>
     <div class="table-scroll">
@@ -696,7 +661,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
     </sc-for>
   </div>
   <div style="background:var(--accent-tint);border:1px solid #DADFFA;border-radius:var(--r-xl);padding:18px 20px;max-width:780px;display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-    <div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:14px;color:var(--ink)">Still stuck?</div><div style="color:var(--ink2);font-size:13px;margin-top:3px">Delivery operations answer platform questions within one working day.</div></div>
+    <div style="font-weight:700;font-size:14px;color:var(--ink)">Contact</div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--accent-ink)">ops@banshan-design.example</div>
   </div>
 </sc-if>
@@ -728,7 +693,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
     <div style="padding:16px 20px;border-bottom:1px solid var(--line)"><h2 style="font-weight:700;font-size:14px;margin:0">Notifications</h2></div>
     <sc-for list="{{ notificationToggles }}" as="n" hint-placeholder-count="3">
       <div class="boxed-list-row" style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line)">
-        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13.5px">{{ n.label }}</div><div style="color:var(--muted);font-size:12.5px;margin-top:2px">{{ n.desc }}</div></div>
+        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13.5px">{{ n.label }}</div></div>
         <button onclick="{{ n.toggle }}" role="switch" aria-checked="{{ n.on }}" aria-label="{{ n.label }}" style="width:42px;height:24px;flex:none;border:none;border-radius:999px;background:{{ n.trackBg }};cursor:pointer;padding:0;position:relative">
           <span style="position:absolute;top:3px;left:{{ n.knobLeft }};width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(15,23,42,.25);transition:left .15s"></span>
         </button>
@@ -744,15 +709,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
     <div style="max-width:560px;margin:32px auto 0;text-align:center">
       <div style="width:52px;height:52px;border-radius:50%;background:var(--accent-tint);color:var(--accent-ink);display:grid;place-items:center;font-size:24px;font-weight:700;margin:0 auto 18px">✓</div>
       <h1 style="font-weight:700;font-size:23px;margin:0 0 8px;letter-spacing:-.02em">Request logged</h1>
-      <div style="color:var(--muted);margin-bottom:22px">{{ newReqCode }} · {{ newReqName }} is in the <b style="color:#8F6318">enquiry queue</b>. Convert to a project once scope is approved.</div>
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:22px 24px;text-align:left">
-        <div style="font-weight:700;font-size:13px;margin-bottom:14px">What happens next</div>
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">1</div><div style="font-size:13.5px;color:var(--ink2)">Operations reviews the brief, budget band and sector fit — enquiries stay as RQ codes until approved.</div></div>
-          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">2</div><div style="font-size:13.5px;color:var(--ink2)">After approval, Convert to project generates a PR code, assigns a lead and instantiates sector gates.</div></div>
-          <div style="display:flex;gap:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--paper2);color:var(--ink2);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">3</div><div style="font-size:13.5px;color:var(--ink2)">Only then does the job enter Scoping and appear on Milestones with formal gates.</div></div>
-        </div>
-      </div>
+      <div style="color:var(--muted);margin-bottom:22px">{{ newReqCode }} · {{ newReqName }}</div>
       <div style="display:flex;gap:10px;justify-content:center;margin-top:22px">
         <button onclick="{{ goIntake }}" style="height:40px;padding:0 18px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);font-weight:600;cursor:pointer">View enquiries</button>
         <button onclick="{{ goPortfolio }}" style="height:40px;padding:0 20px;border:none;border-radius:var(--r-s);background:var(--cta);color:#fff;font-weight:700;cursor:pointer">Back to projects</button>
@@ -833,9 +790,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
             <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Request owner <span style="color:var(--accent)">*</span></label><select value="{{ newRequestOwner }}" onchange="{{ setNewRequestOwner }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><option value="">Choose a person</option><sc-for list="{{ peopleOptions }}" as="person" hint-placeholder-count="6"><option value="{{ person }}">{{ person }}</option></sc-for></select></div>
             <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Proposed first gate date</label><input type="date" value="{{ newProposedGateDate }}" onchange="{{ setNewProposedGateDate }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font:inherit;font-family:'IBM Plex Mono',monospace;background:var(--surface)"></div>
-          </div>
-          <div style="margin-top:20px;background:var(--paper2);border:1px solid var(--line);border-radius:var(--r-m);padding:14px 16px;color:var(--ink2);font-size:13px;line-height:1.55">
-            <b style="color:var(--ink)">Enquiry only.</b> This logs an RQ code for qualification. Project lead, collaborators and formal gates are created when you convert to a PR project.
           </div>
         </sc-if>
         <div style="height:1px;background:var(--line);margin:22px 0"></div>
@@ -1664,9 +1618,9 @@ const SECTOR_PLAYBOOKS=[
     risk:'Kitchen extract and grease management often clash with landlord MEP — coordinate early.'}
 ];
 const TEAM_GROUP_DEFS=[
-  {tier:'owner',title:'Delivery leads',hint:'Own enquiries, assignment and phase moves'},
-  {tier:'contributor',title:'Site & design trades',hint:'Assigned jobs — milestones, uploads and notes'},
-  {tier:'viewer',title:'Oversight',hint:'Read-only programmes, budget and status'}
+  {tier:'owner',title:'Delivery leads'},
+  {tier:'contributor',title:'Site & design trades'},
+  {tier:'viewer',title:'Oversight'}
 ];
 
 /* Live commercial design+build jobs that sell the firm’s real sectors. */
@@ -2473,31 +2427,19 @@ class Component extends DCLogic {
     }).filter(g=>!(g.isEmpty&&g.title==='Overdue'));
 
     /* ---------- capacity (team) ---------- */
-    /* Load measures milestones landing in the next three weeks across jobs
-       the person leads or is assigned to — a long tail later is not pressure. */
     const capacityPeople=PEOPLE.map(person=>{
       const assigned=liveProjects.filter(p=>p.lead===person.n||(p.mem||[]).includes(person.n));
       const next=assigned.slice().sort(MILESTONE_SORT)[0];
-      const imminent=assigned.filter(p=>{const n=daysFromToday(p.ms.iso);return n>=0&&n<=21;}).length;
-      const sectors=[...new Set(assigned.map(p=>p.sector).filter(Boolean))];
-      const loadKey=imminent>=4?'full':imminent>=2?'loaded':'clear';
       return {
         name:person.n,initials:initialsOf(person.n),color:person.c,role:person.role,
         discipline:person.discipline,tier:person.tier,isYou:person.n===me,
-        sectors:sectors.length?sectors.slice(0,2).join(' · ')+(sectors.length>2?' +'+(sectors.length-2):''):'—',
         leadingCount:String(assigned.length),
-        loadWidth:Math.min(100,Math.max(imminent===0?6:imminent*25,6))+'%',
-        loadColor:loadKey==='full'?'#B04A4A':loadKey==='loaded'?'#8F6318':'#3B6B96',
-        loadLabel:loadKey==='full'?'At capacity':loadKey==='loaded'?'Loaded':'Clear',
-        loadKey,nextDate:next?shortIsoDate(next.ms.iso):'—'
+        nextDate:next?shortIsoDate(next.ms.iso):'—'
       };
     });
-    const capacityClear=capacityPeople.filter(p=>p.loadKey==='clear').length;
-    const capacityLoaded=capacityPeople.filter(p=>p.loadKey==='loaded').length;
-    const capacityFull=capacityPeople.filter(p=>p.loadKey==='full').length;
     const teamGroups=TEAM_GROUP_DEFS.map(def=>{
       const people=capacityPeople.filter(p=>p.tier===def.tier);
-      return {title:def.title,hint:def.hint,count:people.length+' people',people};
+      return {title:def.title,count:people.length+' people',people};
     }).filter(g=>g.people.length>0);
 
     /* ---------- detail page ---------- */
@@ -2816,7 +2758,7 @@ class Component extends DCLogic {
 
       /* schedule + capacity + delivery standards + support */
       scheduleGroups,
-      capacityClear,capacityLoaded,capacityFull,teamGroups,
+      teamGroups,
       methodsStats:[
         {label:'Lifecycle phases',value:String(PHASE_KEYS.length)},
         {label:'Sector templates',value:String(SECTOR_PLAYBOOKS.length)},
