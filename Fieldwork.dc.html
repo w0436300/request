@@ -461,7 +461,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
     <div class="table-scroll">
       <table style="width:100%;border-collapse:collapse;min-width:940px">
-        <thead><tr style="background:#FBFBFD">
+        <thead><tr>
           <th style="width:82px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
           <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Request</th>
           <th style="width:144px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Client</th>
@@ -505,7 +505,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <sc-if value="{{ g.hasItems }}" hint-placeholder-val="{{ true }}">
         <div class="table-scroll">
           <table style="width:100%;border-collapse:collapse;min-width:880px">
-            <thead><tr style="background:#FBFBFD">
+            <thead><tr>
               <th style="width:96px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:9px 14px 9px 20px">Due</th>
               <th style="width:82px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:9px 14px">ID</th>
               <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:9px 14px">Milestone</th>
@@ -520,7 +520,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
                 <td style="padding:14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap">{{ m.code }}</td>
                 <td style="padding:14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ m.label }}</td>
                 <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ m.project }}</td>
-                <td style="padding:14px;border-bottom:1px solid var(--line)"><span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 11px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.phaseTint }};color:{{ m.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ m.phaseColor }};flex:none"></span>{{ m.phaseLabel }}</span></td>
+                <td style="padding:14px;border-bottom:1px solid var(--line)"><span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:{{ m.phaseColor }};white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ m.phaseColor }};flex:none"></span>{{ m.phaseLabel }}</span></td>
                 <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line)">
                   <div style="display:flex;align-items:center;gap:9px;min-width:0">
                     <span style="width:24px;height:24px;border-radius:50%;background:{{ m.leadColor }};color:#fff;font-size:9.5px;font-weight:700;display:grid;place-items:center;flex:none">{{ m.leadInitials }}</span>
@@ -564,7 +564,7 @@ table tbody tr:last-child>td{border-bottom:none!important}
       </div>
       <div class="table-scroll">
         <table style="width:100%;border-collapse:collapse;min-width:920px">
-          <thead><tr style="background:#FBFBFD">
+          <thead><tr>
             <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">Person</th>
             <th style="width:150px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Role</th>
             <th style="width:170px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Trade</th>
