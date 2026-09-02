@@ -1482,7 +1482,10 @@ function mondayOfDate(d){
   x.setDate(x.getDate()-(day===0?6:day-1));
   return x;
 }
-function weekKeyFromDate(d){return mondayOfDate(d).toISOString().slice(0,10);}
+function dateKeyLocal(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function weekKeyFromDate(d){return dateKeyLocal(mondayOfDate(d));}
 function weekLabelFromKey(key){
   const start=new Date(key+'T12:00:00');
   const end=new Date(start);
@@ -1670,68 +1673,75 @@ const SECTOR_PLAYBOOKS=[
     gates:MILESTONE_BY_SECTOR['Chain dining'].slice(0,5),
     risk:'Kitchen extract and grease management often clash with landlord MEP — coordinate early.'}
 ];
-const SEED_WEEKLY_REPORTS=[
-  {id:'wr-01',person:'Maya Lin',weekKey:'2026-09-01',
-    sources:'PR-016 Yuanhong Cinema · PR-029 Modern Era auditorium',
-    done:'Acoustic layout review for L3 auditoriums.\nCoordinated projection-booth MEP with Daniel on PR-030.',
-    plan:'Client sign-off workshop for PR-029.\nSite visit Yuanhong L5 booth.',
-    submittedAt:'2026-09-01'},
-  {id:'wr-02',person:'Daniel Wu',weekKey:'2026-09-01',
-    sources:'PR-016 · PR-030 projection booth · PR-071 Northern Lights hotel',
-    done:'Booth cable tray install on PR-030.\nLobby ceiling grid set-out on PR-071.',
-    plan:'Equipment install PR-030.\nLobby MEP coordination with Ethan.',
-    submittedAt:'2026-09-02'},
-  {id:'wr-03',person:'Olivia Wang',weekKey:'2026-09-01',
-    sources:'PR-061 Paws & Care MRI · PR-068 Dalian cinema assessment',
-    done:'Permit package assembly for MRI suite.\nSite survey report draft for Dalian plot.',
-    plan:'Submit permit package.\nIssue Dalian assessment to client.',
-    submittedAt:'2026-09-01'},
-  {id:'wr-04',person:'Ethan Zhao',weekKey:'2026-09-01',
-    sources:'PR-071 Northern Lights hotel lobby & rooms',
-    done:'Lobby ceiling design coordination.\nGuest room mock-up material samples approved.',
-    plan:'Corridor lighting layout.\nFF&E procurement list for client review.',
-    submittedAt:'2026-09-02'},
-  {id:'wr-05',person:'Lucas Huang',weekKey:'2026-09-01',
-    sources:'PR-016 Yuanhong Cinema acoustics · PR-029 auditorium optics',
-    done:'Auditorium RT60 calc update for PR-016.\nScreen geometry check PR-029.',
-    plan:'Acoustic commissioning prep PR-016.\nClient optics review PR-029.',
-    submittedAt:'2026-09-01'},
-  {id:'wr-06',person:'Claire Wang',weekKey:'2026-08-25',
-    sources:'PR-072 VitalScan checkup centre',
-    done:'Equipment room layout sign-off.\nClient coordination on floor 7 exam rooms.',
-    plan:'DR room shielding review with Noah.\nKick-off equipment install sequence.',
-    submittedAt:'2026-08-29'},
-  {id:'wr-07',person:'Maya Lin',weekKey:'2026-08-25',
-    sources:'PR-016 · PR-029',
-    done:'Design development package issued.\nBooth MEP coordination meeting.',
-    plan:'Acoustic layout finalisation.\nClient presentation for sign-off gate.',
-    submittedAt:'2026-08-28'},
-  {id:'wr-08',person:'Daniel Wu',weekKey:'2026-08-25',
-    sources:'PR-030 · PR-071',
-    done:'Booth rough-in inspection.\nHotel lobby slab penetrations marked.',
-    plan:'Cable tray install.\nCeiling grid installation.',
-    submittedAt:'2026-08-29'},
-  {id:'wr-09',person:'Olivia Wang',weekKey:'2026-08-25',
-    sources:'PR-061 · PR-074 Lakeside CT upgrade',
-    done:'MRI shielding drawings to structural.\nCT room layout revision.',
-    plan:'Permit package compilation.\nAuthority pre-submission call.',
-    submittedAt:'2026-08-28'},
-  {id:'wr-10',person:'Noah Li',weekKey:'2026-08-25',
-    sources:'PR-061 MRI suite · PR-072 VitalScan',
-    done:'Shielding calc for Paws & Care MRI.\nStructural opening review PR-072.',
-    plan:'Shielding detail issue.\nSite visit Harbin.',
-    submittedAt:'2026-08-29'},
-  {id:'wr-11',person:'Claire Wang',weekKey:'2026-08-18',
-    sources:'PR-072 VitalScan · intake pipeline',
-    done:'VitalScan equipment schedule locked.\nReviewed two new cinema enquiries.',
-    plan:'Floor 6–8 fit-out coordination.\nConvert approved enquiry to project.',
-    submittedAt:'2026-08-22'},
-  {id:'wr-12',person:'Sophia Chen',weekKey:'2026-08-18',
-    sources:'Portfolio reviews · PR-071 commercial',
-    done:'Monthly cost report for active jobs.\nVariation log update PR-071.',
-    plan:'Q4 pipeline review.\nFee proposal for new intake.',
-    submittedAt:'2026-08-21'}
-];
+function buildSeedWeeklyReports(){
+  const w0=weekKeyFromDate(new Date());
+  const w1=addWeeksToKey(w0,-1);
+  const w2=addWeeksToKey(w0,-2);
+  const day=(key,offset)=>dateKeyLocal((()=>{const d=new Date(key+'T12:00:00');d.setDate(d.getDate()+offset);return d;})());
+  return [
+    {id:'wr-01',person:'Maya Lin',weekKey:w0,
+      sources:'PR-016 Yuanhong Cinema · PR-029 Modern Era auditorium',
+      done:'Acoustic layout review for L3 auditoriums.\nCoordinated projection-booth MEP with Daniel on PR-030.',
+      plan:'Client sign-off workshop for PR-029.\nSite visit Yuanhong L5 booth.',
+      submittedAt:day(w0,0)},
+    {id:'wr-02',person:'Daniel Wu',weekKey:w0,
+      sources:'PR-016 · PR-030 projection booth · PR-071 Northern Lights hotel',
+      done:'Booth cable tray install on PR-030.\nLobby ceiling grid set-out on PR-071.',
+      plan:'Equipment install PR-030.\nLobby MEP coordination with Ethan.',
+      submittedAt:day(w0,1)},
+    {id:'wr-03',person:'Olivia Wang',weekKey:w0,
+      sources:'PR-061 Paws & Care MRI · PR-068 Dalian cinema assessment',
+      done:'Permit package assembly for MRI suite.\nSite survey report draft for Dalian plot.',
+      plan:'Submit permit package.\nIssue Dalian assessment to client.',
+      submittedAt:day(w0,0)},
+    {id:'wr-04',person:'Ethan Zhao',weekKey:w0,
+      sources:'PR-071 Northern Lights hotel lobby & rooms',
+      done:'Lobby ceiling design coordination.\nGuest room mock-up material samples approved.',
+      plan:'Corridor lighting layout.\nFF&E procurement list for client review.',
+      submittedAt:day(w0,1)},
+    {id:'wr-05',person:'Lucas Huang',weekKey:w0,
+      sources:'PR-016 Yuanhong Cinema acoustics · PR-029 auditorium optics',
+      done:'Auditorium RT60 calc update for PR-016.\nScreen geometry check PR-029.',
+      plan:'Acoustic commissioning prep PR-016.\nClient optics review PR-029.',
+      submittedAt:day(w0,0)},
+    {id:'wr-06',person:'Claire Wang',weekKey:w1,
+      sources:'PR-072 VitalScan checkup centre',
+      done:'Equipment room layout sign-off.\nClient coordination on floor 7 exam rooms.',
+      plan:'DR room shielding review with Noah.\nKick-off equipment install sequence.',
+      submittedAt:day(w1,4)},
+    {id:'wr-07',person:'Maya Lin',weekKey:w1,
+      sources:'PR-016 · PR-029',
+      done:'Design development package issued.\nBooth MEP coordination meeting.',
+      plan:'Acoustic layout finalisation.\nClient presentation for sign-off gate.',
+      submittedAt:day(w1,3)},
+    {id:'wr-08',person:'Daniel Wu',weekKey:w1,
+      sources:'PR-030 · PR-071',
+      done:'Booth rough-in inspection.\nHotel lobby slab penetrations marked.',
+      plan:'Cable tray install.\nCeiling grid installation.',
+      submittedAt:day(w1,4)},
+    {id:'wr-09',person:'Olivia Wang',weekKey:w1,
+      sources:'PR-061 · PR-074 Lakeside CT upgrade',
+      done:'MRI shielding drawings to structural.\nCT room layout revision.',
+      plan:'Permit package compilation.\nAuthority pre-submission call.',
+      submittedAt:day(w1,3)},
+    {id:'wr-10',person:'Noah Li',weekKey:w1,
+      sources:'PR-061 MRI suite · PR-072 VitalScan',
+      done:'Shielding calc for Paws & Care MRI.\nStructural opening review PR-072.',
+      plan:'Shielding detail issue.\nSite visit Harbin.',
+      submittedAt:day(w1,4)},
+    {id:'wr-11',person:'Claire Wang',weekKey:w2,
+      sources:'PR-072 VitalScan · intake pipeline',
+      done:'VitalScan equipment schedule locked.\nReviewed two new cinema enquiries.',
+      plan:'Floor 6–8 fit-out coordination.\nConvert approved enquiry to project.',
+      submittedAt:day(w2,4)},
+    {id:'wr-12',person:'Sophia Chen',weekKey:w2,
+      sources:'Portfolio reviews · PR-071 commercial',
+      done:'Monthly cost report for active jobs.\nVariation log update PR-071.',
+      plan:'Q4 pipeline review.\nFee proposal for new intake.',
+      submittedAt:day(w2,3)}
+  ];
+}
+const SEED_WEEKLY_REPORTS=buildSeedWeeklyReports();
 
 /* Live commercial design+build jobs that sell the firm’s real sectors. */
 const SEED_PROJECTS=[
