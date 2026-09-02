@@ -70,6 +70,14 @@ table tbody tr:last-child>td{border-bottom:none!important}
 @media (max-width:520px){.phase-boxes{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .capacity-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
 @media (max-width:720px){.capacity-metrics{grid-template-columns:1fr}}
+.methods-intro{margin:0 0 16px;max-width:720px}
+.methods-intro h1{font-weight:800;font-size:22px;margin:0 0 6px;letter-spacing:-.03em;color:var(--ink)}
+.methods-intro p{margin:0;color:var(--ink2);font-size:13.5px;line-height:1.6}
+.methods-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:12px}
+.methods-panel__head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:15px 20px;border-bottom:1px solid var(--line)}
+.methods-panel__head h2{font-weight:700;font-size:15px;margin:0;letter-spacing:-.02em}
+.methods-panel__head span{color:var(--muted);font-size:12.5px;line-height:1.5}
+.methods-panel__head .methods-panel__meta{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)}
 .filter-select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer}
 .filter-select.is-on{border-color:#C7D0F5;background:var(--accent-tint);color:var(--accent-ink)}
 .filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:0;background:transparent;border:none}
@@ -253,10 +261,6 @@ table tbody tr:last-child>td{border-bottom:none!important}
         <span style="color:var(--muted);font-size:13px;font-family:'IBM Plex Mono',monospace">{{ listCount }}</span>
       </div>
       <div class="filter-bar" onclick="{{ stopBubble }}">
-        <div style="position:relative;flex:1 1 180px;min-width:160px;max-width:240px">
-          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace">⌕</span>
-          <input value="{{ search }}" onchange="{{ setSearch }}" placeholder="Search projects or clients" style="width:100%;height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px 0 30px;background:var(--surface);font-size:13px;color:var(--ink)">
-        </div>
       <select value="{{ clientFilter }}" onchange="{{ setClientFilter }}" aria-label="Filter by client" class="filter-select {{ clientFilterOnClass }}">
         <option value="all">Any client</option>
         <sc-for list="{{ clientOptions }}" as="co" hint-placeholder-count="6"><option value="{{ co }}">{{ co }}</option></sc-for>
@@ -284,6 +288,10 @@ table tbody tr:last-child>td{border-bottom:none!important}
         <option value="New project">New project</option>
         <option value="Work package">Work package</option>
       </select>
+        <div style="position:relative;flex:none;width:200px;min-width:160px;max-width:240px">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace">⌕</span>
+          <input value="{{ search }}" onchange="{{ setSearch }}" placeholder="Search projects or clients" style="width:100%;height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px 0 30px;background:var(--surface);font-size:13px;color:var(--ink)">
+        </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:none">
         <label style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap"><input type="checkbox" checked="{{ holdOnly }}" onchange="{{ setHoldOnly }}" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer">On hold only</label>
         <div role="group" aria-label="Group projects" style="display:inline-flex;align-items:center;padding:3px;background:var(--paper2);border-radius:9px">
@@ -584,52 +592,105 @@ table tbody tr:last-child>td{border-bottom:none!important}
   </sc-for>
 </sc-if>
 
-<!-- ========================= PLAYBOOK (STANDARDS) ========================= -->
+<!-- ========================= DELIVERY STANDARDS ========================= -->
 <sc-if value="{{ isStandards }}" hint-placeholder-val="{{ false }}">
-  <h2 style="font-weight:700;font-size:15px;margin:0 0 6px;letter-spacing:-.02em">How a job moves</h2>
-  <div style="color:var(--muted);font-size:13px;margin:0 0 12px;max-width:640px">Phases are the lifecycle owners move. Exit criteria must be true before the next phase.</div>
-  <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:22px">
-    <sc-for list="{{ phaseGuide }}" as="p" hint-placeholder-count="5">
-      <div class="boxed-list-row" style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line)">
-        <div style="width:28px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--faint);padding-top:4px">{{ p.step }}</div>
-        <span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ p.tint }};color:{{ p.color }};flex:none;white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.color }};flex:none"></span>{{ p.label }}</span>
-        <div style="flex:1;min-width:200px;color:var(--ink2);font-size:13.5px;line-height:1.6">{{ p.desc }}</div>
-        <div style="width:min(220px,100%);flex:none"><div style="font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">Exit when</div><div style="font-size:12.5px;color:var(--ink2);line-height:1.5">{{ p.exit }}</div></div>
+  <div class="methods-intro">
+    <h1>Delivery Standards</h1>
+    <p>Company-wide lifecycle rules, sector gate templates and role authority for commercial design &amp; build delivery. Applied when an enquiry converts to a live project.</p>
+  </div>
+
+  <div class="capacity-metrics" style="margin-bottom:16px">
+    <sc-for list="{{ methodsStats }}" as="ms" hint-placeholder-count="3">
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:14px 16px;box-shadow:var(--sh)">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">{{ ms.label }}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;letter-spacing:-.04em;color:var(--ink);margin-top:6px">{{ ms.value }}</div>
       </div>
     </sc-for>
   </div>
 
-  <h2 style="font-weight:700;font-size:15px;margin:0 0 6px;letter-spacing:-.02em">Sector methods</h2>
-  <div style="color:var(--muted);font-size:13px;margin:0 0 12px;max-width:640px">Typical delivery gates by sector. The Milestones page follows these templates.</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:22px">
-    <sc-for list="{{ sectorPlaybooks }}" as="sp" hint-placeholder-count="4">
-      <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);padding:18px 20px;display:flex;flex-direction:column;gap:12px">
-        <div>
-          <div style="font-weight:700;font-size:15px;letter-spacing:-.02em">{{ sp.sector }}</div>
-          <div style="color:var(--muted);font-size:13px;line-height:1.55;margin-top:5px">{{ sp.summary }}</div>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">
-          <sc-for list="{{ sp.gates }}" as="gate" hint-placeholder-count="5">
-            <span style="display:inline-flex;height:22px;padding:0 9px;border-radius:999px;background:var(--paper2);color:var(--ink2);font-size:11.5px;font-weight:600;align-items:center;white-space:nowrap">{{ gate }}</span>
-          </sc-for>
-        </div>
-        <div style="padding-top:10px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink2);line-height:1.5"><span style="font-weight:700;color:var(--ink)">Watch for · </span>{{ sp.risk }}</div>
-      </div>
-    </sc-for>
+  <div class="methods-panel">
+    <div class="methods-panel__head">
+      <h2>Project lifecycle</h2>
+      <span>Phase progression and exit criteria before advancing</span>
+      <span class="methods-panel__meta">{{ lifecycleCount }} phases</span>
+    </div>
+    <div class="table-scroll">
+      <table style="width:100%;border-collapse:collapse;min-width:880px">
+        <thead><tr>
+          <th style="width:52px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">#</th>
+          <th style="width:120px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Phase</th>
+          <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Purpose</th>
+          <th style="width:min(280px,34%);text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Exit criteria</th>
+        </tr></thead>
+        <tbody>
+        <sc-for list="{{ lifecycleRows }}" as="p" hint-placeholder-count="6">
+          <tr class="project-row">
+            <td style="padding:14px 14px 14px 20px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)">{{ p.step }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">{{ p.label }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55">{{ p.desc }}</td>
+            <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55">{{ p.exit }}</td>
+          </tr>
+        </sc-for>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:12px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink2);line-height:1.55;background:#FBFBFD">
+      <b style="color:var(--ink);font-weight:600">On hold</b> is an overlay — the project keeps its phase. Resume when the blocker is cleared and the gate date is reissued.
+    </div>
   </div>
 
-  <h2 style="font-weight:700;font-size:15px;margin:0 0 6px;letter-spacing:-.02em">Who can do what</h2>
-  <div style="color:var(--muted);font-size:13px;margin:0 0 12px;max-width:640px">Access tiers for Fieldwork. Enquiries stay with Project Lead and Operations.</div>
-  <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
-    <sc-for list="{{ accessGuide }}" as="ag" hint-placeholder-count="3">
-      <div class="boxed-list-row" style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line)">
-        <span style="display:inline-flex;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;align-items:center;background:{{ ag.tint }};color:{{ ag.color }};flex:none;white-space:nowrap">{{ ag.label }}</span>
-        <div style="flex:1;min-width:220px">
-          <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-bottom:4px">{{ ag.roles }}</div>
-          <div style="color:var(--ink2);font-size:13.5px;line-height:1.6">{{ ag.desc }}</div>
-        </div>
-      </div>
-    </sc-for>
+  <div class="methods-panel">
+    <div class="methods-panel__head">
+      <h2>Sector gate templates</h2>
+      <span>Default delivery sequence applied at project conversion</span>
+      <span class="methods-panel__meta">{{ sectorTemplateCount }} sectors</span>
+    </div>
+    <div class="table-scroll">
+      <table style="width:100%;border-collapse:collapse;min-width:960px">
+        <thead><tr>
+          <th style="width:140px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">Sector</th>
+          <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Scope</th>
+          <th style="width:min(340px,38%);text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Gate sequence</th>
+          <th style="width:min(240px,26%);text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Commercial risk</th>
+        </tr></thead>
+        <tbody>
+        <sc-for list="{{ sectorTemplates }}" as="sp" hint-placeholder-count="6">
+          <tr class="project-row">
+            <td style="padding:14px 14px 14px 20px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ sp.sector }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55">{{ sp.summary }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink2);line-height:1.65">{{ sp.gateSequence }}</td>
+            <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55">{{ sp.risk }}</td>
+          </tr>
+        </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="methods-panel">
+    <div class="methods-panel__head">
+      <h2>Roles &amp; authority</h2>
+      <span>Who can move lifecycle, commercial terms and delivery gates</span>
+      <span class="methods-panel__meta">3 tiers</span>
+    </div>
+    <div class="table-scroll">
+      <table style="width:100%;border-collapse:collapse;min-width:760px">
+        <thead><tr>
+          <th style="width:148px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">Tier</th>
+          <th style="width:min(260px,32%);text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Roles</th>
+          <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Authority</th>
+        </tr></thead>
+        <tbody>
+        <sc-for list="{{ authorityRows }}" as="ag" hint-placeholder-count="3">
+          <tr class="project-row">
+            <td style="padding:14px 14px 14px 20px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap">{{ ag.label }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55">{{ ag.roles }}</td>
+            <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55">{{ ag.desc }}</td>
+          </tr>
+        </sc-for>
+        </tbody>
+      </table>
+    </div>
   </div>
 </sc-if>
 
@@ -1590,7 +1651,7 @@ const SERVICES=[
 ];
 const SERVICE_NAMES=SERVICES.map(s=>s.name);
 
-/* Playbook copy for Capacity / Standards pages — gates mirror MILESTONE_BY_SECTOR. */
+/* Delivery Standards page — sector gate templates mirror MILESTONE_BY_SECTOR. */
 const SECTOR_PLAYBOOKS=[
   {sector:'Cinema',summary:'Auditoriums, lobbies, projection and acoustic coordination for cinema operators.',
     gates:MILESTONE_BY_SECTOR.Cinema.slice(0,5),
@@ -1722,7 +1783,7 @@ const FAQS=[
   {q:'What can Contributors change on a project?',a:'Contributors (Design Lead, Designer, Construction Lead, Specialist) can open assigned projects, update their milestones, upload deliverables, add notes or issues, and record discipline progress. They cannot change phase, commercial terms, team assignment or close the job.'},
   {q:'What do Viewers / Reviewers see?',a:'Directors, Finance and senior management get Projects, Milestones, budget and status for oversight and reporting. Access is read-only — they do not edit lifecycle or enquiries.'},
   {q:'What is the difference between a phase and a milestone?',a:'A phase says where the job sits in delivery — Scoping, Design, Construction, Acceptance, Handover, then Closed. A milestone is a dated gate inside that phase, such as a permit package or acoustic commissioning. Only Owner / Manager roles move the phase. The Milestones page lists each live project’s next dated gate.'},
-  {q:'Where do project milestones come from?',a:'Each project starts with a gate sequence from its sector / service template (Cinema, Pet hospital, Medical imaging, and so on — see Playbook). The current gate and due date are stored on the project. Owner / Manager can change the next gate, and can add extra gates to that project’s plan without changing the company template.'},
+  {q:'Where do project milestones come from?',a:'Each project starts with a gate sequence from its sector template (Cinema, Pet hospital, Medical imaging, and so on — see Delivery Standards). The current gate and due date are stored on the project. Owner / Manager can change the next gate, and can add extra gates to that project’s plan without changing the company template.'},
   {q:'Should work be organised by client?',a:'Use client as an account view, not as the unit of delivery. One client (for example Yuanhong Cinema) can hold many jobs and work packages. Projects → By client groups the list under each account; phase, milestones and team still sit on each project. Day-to-day delivery stays project-led; client grouping helps oversight and commercial context.'},
   {q:'What is a work package?',a:'A delivery slice under a parent job — for example projection-booth MEP under a cinema design & build. It carries its own phase, team and milestones but rolls up to the parent. Core packages stay in-house.'}
 ];
@@ -2588,7 +2649,7 @@ class Component extends DCLogic {
 
     const PAGE_LABELS={
       portfolio:'Projects',intake:'Enquiries',schedule:'Milestones',
-      team:'Capacity',standards:'Playbook',support:'Support',settings:'Settings',
+      team:'Capacity',standards:'Delivery Standards',support:'Support',settings:'Settings',
       new:'New enquiry',detail:detailProject?detailProject.code:'Project'
     };
 
@@ -2644,7 +2705,7 @@ class Component extends DCLogic {
         ...(perms.canManageIntake?[navItem('intake','Enquiries',String(([...st.createdEnquiries,...INTAKE]).length))]:[]),
         navItem('schedule','Milestones')
       ],
-      studioNav:[navItem('team','Capacity'),navItem('standards','Playbook')],
+      studioNav:[navItem('team','Capacity'),navItem('standards','Delivery Standards')],
       footerNav:[
         navItem('support','Support'),
         ...(perms.canEditSettings?[navItem('settings','Settings')]:[])
@@ -2762,28 +2823,36 @@ class Component extends DCLogic {
       }),
       goIntake:()=>this.go('intake'),
 
-      /* schedule + capacity + playbook + support */
+      /* schedule + capacity + delivery standards + support */
       scheduleGroups,
       capacityClear,capacityLoaded,capacityFull,teamGroups,
-      sectorPlaybooks:SECTOR_PLAYBOOKS.map(sp=>({
-        sector:sp.sector,summary:sp.summary,risk:sp.risk,gates:sp.gates.slice()
-      })),
-      accessGuide:[
-        {label:'Owner / Manager',roles:'Project Lead · Operations Manager',color:'var(--accent-ink)',tint:'var(--accent-tint)',
-          desc:'Create and convert enquiries, assign team, change phase, edit milestones, manage project health, close / handover. Primary users of Fieldwork.'},
-        {label:'Contributor',roles:'Design Lead · Designer · Construction Lead · Specialist',color:'#3B6B96',tint:'#EAF1F8',
-          desc:'Open assigned projects, update assigned milestones, upload deliverables, add notes or issues, and record discipline progress. Cannot change commercial terms or lifecycle.'},
-        {label:'Viewer / Reviewer',roles:'Director · Finance · Senior management',color:'#5F6772',tint:'#F5F6F4',
-          desc:'Projects, Milestones, budget and status for oversight and reporting. Read-only. Enquiries stay with Project Lead and Operations.'}
+      methodsStats:[
+        {label:'Lifecycle phases',value:String(PHASE_KEYS.length)},
+        {label:'Sector templates',value:String(SECTOR_PLAYBOOKS.length)},
+        {label:'Access tiers',value:'3'}
       ],
-      phaseGuide:PHASE_KEYS.map((k,i)=>({
+      lifecycleCount:PHASE_KEYS.length,
+      lifecycleRows:PHASE_KEYS.map((k,i)=>({
         step:String(i+1).padStart(2,'0'),
-        label:PHASES[k].label,color:PHASES[k].color,tint:PHASES[k].tint,
-        desc:PHASES[k].desc,exit:PHASES[k].exit
-      })).concat([{
-        step:'—',label:HOLD.label,color:HOLD.color,tint:HOLD.tint,
-        desc:HOLD.desc,exit:'Blocker cleared and the milestone date reissued.'
-      }]),
+        label:PHASES[k].label,
+        desc:PHASES[k].desc,
+        exit:PHASES[k].exit
+      })),
+      sectorTemplateCount:SECTOR_PLAYBOOKS.length,
+      sectorTemplates:SECTOR_PLAYBOOKS.map(sp=>({
+        sector:sp.sector,
+        summary:sp.summary,
+        risk:sp.risk,
+        gateSequence:sp.gates.map((g,i)=>String(i+1).padStart(2,'0')+' '+g).join(' → ')
+      })),
+      authorityRows:[
+        {label:'Owner / Manager',roles:'Project Lead · Operations Manager',
+          desc:'Create and convert enquiries, assign team, change phase, override gates, manage project health, approve baseline changes and close projects.'},
+        {label:'Contributor',roles:'Design Lead · Designer · Construction Lead · Specialist',
+          desc:'Open assigned projects, complete assigned gates, upload deliverables, record progress and add notes. Cannot change commercial terms or lifecycle.'},
+        {label:'Viewer / Reviewer',roles:'Director · Finance · Senior management',
+          desc:'Read-only access to projects, milestones, budget and status for oversight and reporting.'}
+      ],
       faqs:FAQS,
 
       /* settings */
