@@ -88,6 +88,19 @@ table tbody tr:last-child>td{border-bottom:none!important}
 .team-report-block:last-child{border-bottom:none}
 .team-report-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .team-report-text{font-size:13.5px;color:var(--ink2);line-height:1.6;white-space:pre-wrap}
+.team-report-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);overflow:hidden}
+.team-report-table{width:100%;border-collapse:collapse;min-width:920px}
+.team-report-table th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px;background:#FBFBFD;white-space:nowrap}
+.team-report-table th:first-child{padding-left:20px;width:min(168px,16%)}
+.team-report-table th:last-child{padding-right:20px}
+.team-report-table td{padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);line-height:1.55;vertical-align:top;white-space:pre-wrap}
+.team-report-table tbody tr:last-child td{border-bottom:none}
+.team-report-table tbody tr:hover td{background:#F8F9FC}
+.team-report-table tbody tr.is-missing td{color:var(--muted)}
+.team-report-table tbody tr.is-missing td:not(:first-child){font-style:italic}
+.team-person{display:flex;align-items:center;gap:10px;min-width:0}
+.team-person__name{font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap}
+.team-person__meta{font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap}
 .filter-select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;background:var(--surface);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;width:100%;min-width:0}
 .filter-select.is-on{border-color:#C7D0F5;background:var(--accent-tint);color:var(--accent-ink)}
 .filter-bar{display:flex;flex-direction:column;gap:10px;padding:0;background:transparent;border:none;width:100%}
@@ -575,23 +588,36 @@ table tbody tr:last-child>td{border-bottom:none!important}
       <span style="font-weight:700;font-size:14px;color:var(--ink)">{{ weeklyAllCount }}</span>
       <span style="color:var(--muted);font-size:12.5px">submitted</span>
     </div>
-    <sc-if value="{{ weeklyAllHasRows }}" hint-placeholder-val="{{ true }}">
-      <sc-for list="{{ weeklyAllRows }}" as="wr" hint-placeholder-count="4">
-        <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:10px">
-          <div style="display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--line)">
-            <span style="width:32px;height:32px;border-radius:50%;background:{{ wr.color }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ wr.initials }}</span>
-            <div style="min-width:0;flex:1">
-              <div style="font-weight:700;font-size:14px">{{ wr.name }}<sc-if value="{{ wr.isYou }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent-ink);font-weight:600;font-size:12px;margin-left:6px">You</span></sc-if></div>
-              <div style="font-size:12px;color:var(--muted);margin-top:1px">{{ wr.role }} · {{ wr.submitted }}</div>
-            </div>
-          </div>
-          <div class="team-report-block"><div class="team-report-label">Sources</div><div class="team-report-text">{{ wr.sources }}</div></div>
-          <div class="team-report-block"><div class="team-report-label">Done this week</div><div class="team-report-text">{{ wr.done }}</div></div>
-          <div class="team-report-block"><div class="team-report-label">Next week</div><div class="team-report-text">{{ wr.plan }}</div></div>
-        </div>
-      </sc-for>
-    </sc-if>
-    <sc-if value="{{ weeklyAllEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:28px 20px;text-align:center;color:var(--muted);font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl)">No reports for this week yet.</div></sc-if>
+    <div class="team-report-panel">
+      <div class="table-scroll">
+        <table class="team-report-table">
+          <thead><tr>
+            <th>Person</th>
+            <th>Sources</th>
+            <th>Done this week</th>
+            <th>Next week</th>
+          </tr></thead>
+          <tbody>
+          <sc-for list="{{ weeklyAllRows }}" as="wr" hint-placeholder-count="4">
+            <tr class="{{ wr.rowClass }}">
+              <td style="padding-left:20px">
+                <div class="team-person">
+                  <span style="width:30px;height:30px;border-radius:50%;background:{{ wr.color }};color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">{{ wr.initials }}</span>
+                  <div style="min-width:0">
+                    <div class="team-person__name">{{ wr.name }}<sc-if value="{{ wr.isYou }}" hint-placeholder-val="{{ false }}"><span style="color:var(--accent-ink);font-weight:600;font-size:11.5px;margin-left:5px">You</span></sc-if></div>
+                    <div class="team-person__meta">{{ wr.role }}<sc-if value="{{ wr.hasReport }}" hint-placeholder-val="{{ false }}"> · {{ wr.submitted }}</sc-if></div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ wr.sources }}</td>
+              <td>{{ wr.done }}</td>
+              <td style="padding-right:20px">{{ wr.plan }}</td>
+            </tr>
+          </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </sc-if>
 </sc-if>
 
@@ -2594,14 +2620,18 @@ class Component extends DCLogic {
     const weeklyMineEditable=weeklyIsCurrent;
     const weeklyMineHasReport=!!myReport;
     const weeklyMineMissing=!myReport;
-    const weeklyAllRows=weekReports.slice().sort((a,b)=>a.person.localeCompare(b.person)).map(r=>({
-      name:r.person,initials:initialsOf(r.person),color:colorOf(r.person),
-      role:personOf(r.person).role,isYou:r.person===me,
-      sources:r.sources||'—',done:r.done||'—',plan:r.plan||'—',
-      submitted:r.submittedAt?formatIsoDate(r.submittedAt):'—'
-    }));
-    const weeklyAllHasRows=weeklyAllRows.length>0;
-    const weeklyAllEmpty=weeklyAllRows.length===0;
+    const submittedByPerson=new Map(weekReports.map(r=>[r.person,r]));
+    const weeklyAllRows=PEOPLE.slice().sort((a,b)=>a.n.localeCompare(b.n)).map(person=>{
+      const r=submittedByPerson.get(person.n);
+      return {
+        name:person.n,initials:initialsOf(person.n),color:person.c,
+        role:person.role,isYou:person.n===me,hasReport:!!r,
+        sources:r?r.sources:'Not submitted',
+        done:r?r.done:'—',plan:r?r.plan:'—',
+        submitted:r&&r.submittedAt?formatIsoDate(r.submittedAt):'',
+        rowClass:r?'':'is-missing'
+      };
+    });
     const weeklyAllCount=weekReports.length+' / '+PEOPLE.length;
 
     /* ---------- detail page ---------- */
@@ -2744,7 +2774,7 @@ class Component extends DCLogic {
 
     const PAGE_LABELS={
       portfolio:'Projects',intake:'Enquiries',schedule:'Milestones',
-      team:'Capacity',standards:'Delivery Standards',support:'Support',settings:'Settings',
+      team:'Weekly reports',standards:'Delivery Standards',support:'Support',settings:'Settings',
       new:'New enquiry',detail:detailProject?detailProject.code:'Project'
     };
 
@@ -2802,7 +2832,7 @@ class Component extends DCLogic {
         ...(perms.canManageIntake?[navItem('intake','Enquiries',String(([...st.createdEnquiries,...INTAKE]).length))]:[]),
         navItem('schedule','Milestones')
       ],
-      studioNav:[navItem('team','Capacity'),navItem('standards','Delivery Standards')],
+      studioNav:[navItem('team','Weekly reports'),navItem('standards','Delivery Standards')],
       footerNav:[
         navItem('support','Support'),
         ...(perms.canEditSettings?[navItem('settings','Settings')]:[])
@@ -2946,7 +2976,7 @@ class Component extends DCLogic {
       setWeeklyPlan:(e)=>this.setState({weeklyPlan:e.target.value}),
       submitWeeklyReport:()=>this.submitWeeklyReport(),
       weeklySubmitLabel:myReport?'Update report':'Submit report',
-      weeklyAllRows,weeklyAllHasRows,weeklyAllEmpty,weeklyAllCount,
+      weeklyAllRows,weeklyAllCount,
       methodsStats:[
         {label:'Lifecycle phases',value:String(PHASE_KEYS.length)},
         {label:'Sector templates',value:String(SECTOR_PLAYBOOKS.length)},
