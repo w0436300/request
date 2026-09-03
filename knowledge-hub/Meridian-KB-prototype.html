@@ -795,26 +795,64 @@
   .res-item.selected{background:#EEF1FB;box-shadow:inset 3px 0 0 #6475C8}
   .chat-inputwrap,.searchbox{box-shadow:none;border-color:#DDE2EE}
   .slideover{box-shadow:-10px 0 30px rgba(31,43,75,.12)}
-  .home-ask{margin:18px 0 22px;padding:18px;background:#F6F7FC;border:0;border-radius:10px}
-  .home-ask h2{margin:0 0 5px;font-size:16px}.home-ask p{margin:0 0 14px;color:var(--ink-2);font-size:12.5px}
-  .home-ask-row{display:flex;gap:8px}.home-ask-row input{flex:1;min-width:0;height:42px;padding:0 13px;background:#fff;border:1px solid #DDE2EE;border-radius:7px;outline:none}
-  .home-ask-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(100,117,200,.12)}
-  .home-ask-row .btn{min-width:72px}
-  .home-continue{display:flex;align-items:center;gap:8px;margin-top:12px;padding:0;border:0;background:transparent;color:var(--ink-2);font:inherit;font-size:12.5px;cursor:pointer;text-align:left}
-  .home-continue strong{color:var(--ink);font-weight:600}
-  .home-continue .home-continue-meta{color:var(--ink-3)}
-  .home-continue .home-continue-action{color:var(--accent-deep);font-weight:600}
-  .home-continue:hover strong,.home-continue:hover .home-continue-action{text-decoration:underline}
-  .home-section .pins-hd{margin-top:0}
-  .home-section .pins-hd{display:flex;align-items:center;gap:16px}
-  .pins-view-all{display:none;margin-left:auto;padding:2px 0;border:0;background:transparent;color:var(--accent-deep);font-size:12.5px;font-weight:600;cursor:pointer}
-  .pins-view-all:hover{text-decoration:underline}
+  .home-ask{margin:20px 0 28px;padding:18px 18px 16px;background:#F4F5FB;border:0;border-radius:14px}
+  .home-ask-title{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:15px;font-weight:700;letter-spacing:-.015em;color:#17203A}
+  .home-ask-title .spark{display:inline-grid;place-items:center;width:18px;height:18px;color:#6475C8}
+  .home-ask-title .spark svg{width:16px;height:16px}
+  .home-ask-row{display:flex;gap:10px;align-items:center}
+  .home-ask-row input{flex:1;min-width:0;height:44px;padding:0 14px;background:#fff;border:1px solid #E0E4F0;border-radius:10px;outline:none;font-size:14px;color:#17203A}
+  .home-ask-row input::placeholder{color:#98A0B3}
+  .home-ask-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(100,117,200,.14)}
+  .home-ask-row .btn{min-width:72px;height:44px;border-radius:10px;padding:0 18px;font-size:14px}
+  .home-ask-suggestions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .home-ask-suggestions .try-label{font-size:12.5px;color:#7B8498;margin-right:2px}
+  .home-ask-chip{height:30px;padding:0 12px;border:1px solid #D8DEF0;border-radius:999px;background:#fff;color:#3F4A6B;font:600 12px inherit;cursor:pointer;transition:background .12s,border-color .12s,color .12s}
+  .home-ask-chip:hover{background:#EEF1FB;border-color:#B8C2E8;color:#34457F}
+  .home-section{display:flex;flex-direction:column;gap:28px}
+  .home-block-hd{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+  .home-block-hd h2{margin:0;font-size:15px;font-weight:700;letter-spacing:-.015em;color:#17203A;display:flex;align-items:center;gap:8px}
+  .home-block-hd h2 .hd-ic{display:inline-grid;place-items:center;width:16px;height:16px;color:#6475C8}
+  .home-block-hd h2 .hd-ic svg{width:15px;height:15px}
+  .home-view-all{margin-left:auto;padding:2px 0;border:0;background:transparent;color:#5265B4;font-size:12.5px;font-weight:600;cursor:pointer}
+  .home-view-all:hover{text-decoration:underline}
+  .home-table-wrap{background:#fff;border:1px solid #E6E9F2;border-radius:12px;overflow:hidden}
+  .home-table{width:100%;border-collapse:collapse;table-layout:fixed}
+  .home-table th{padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8B93A7;text-align:left;border-bottom:1px solid #ECEFF5;background:#FBFBFE}
+  .home-table td{padding:12px 14px;border-bottom:1px solid #F0F2F7;vertical-align:middle;font-size:13px;color:#5C6578}
+  .home-table tr:last-child td{border-bottom:0}
+  .home-table tbody tr{cursor:pointer;transition:background .12s}
+  .home-table tbody tr:hover{background:#F8F9FC}
+  .home-table .col-file{width:44%}
+  .home-table .col-scope{width:22%}
+  .home-table .col-version{width:12%}
+  .home-table .col-updated{width:14%}
+  .home-table .col-menu{width:40px;padding-right:10px;padding-left:0}
+  .home-file{display:flex;align-items:center;gap:10px;min-width:0}
+  .home-ftype{flex:none;min-width:38px;height:22px;padding:0 7px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;letter-spacing:.02em}
+  .home-ftype.pdf{background:#FDECEC;color:#C0392B}
+  .home-ftype.dwg{background:#EEF1FB;color:#4E5FAF}
+  .home-ftype.note{background:#F4F5F7;color:#667085}
+  .home-fname{display:flex;align-items:center;gap:6px;min-width:0;font-weight:600;color:#17203A}
+  .home-fname span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .home-lock{flex:none;width:12px;height:12px;color:#98A0B3}
+  .home-lock svg{display:block;width:12px;height:12px}
+  .home-kebab{width:28px;height:28px;border:0;border-radius:7px;background:transparent;color:#98A0B3;cursor:pointer;display:grid;place-items:center;font-size:16px;line-height:1}
+  .home-kebab:hover{background:#EEF1F8;color:#5265B4}
+  .home-table-empty{padding:18px 16px;color:#98A0B3;font-size:13.5px}
   .btn.primary,.send-btn,.search-submit{background:var(--primary-gradient);border-color:transparent;color:#fff}
   .btn.primary:hover,.send-btn:hover,.search-submit:hover{background:var(--primary-gradient-hover);border-color:transparent;color:#fff}
-  .home-conflict-alert{display:flex;align-items:flex-start;gap:10px;margin:20px 0 0;padding:13px 15px;background:#FFF8EA;border:0;border-radius:8px;color:#704B08}
+  .home-conflict-alert{display:flex;align-items:flex-start;gap:10px;margin:0;padding:13px 15px;background:#FFF8EA;border:0;border-radius:8px;color:#704B08}
   .home-conflict-alert[hidden]{display:none}.home-conflict-alert b{display:block;font-size:13px}.home-conflict-alert span{font-size:12px;color:#86651F}
-  @media(max-width:680px){.home-ask-row{flex-direction:column}.home-continue{align-items:flex-start;flex-wrap:wrap}.home-continue .home-continue-action{width:100%}}
-  @media(max-width:680px){.view-inner{padding:22px 18px 56px}}
+  @media(max-width:860px){
+    .home-table .col-version,.home-table .col-updated,.home-table th.col-version,.home-table th.col-updated{display:none}
+    .home-table .col-file{width:58%}.home-table .col-scope{width:34%}
+  }
+  @media(max-width:680px){
+    .home-ask-row{flex-direction:column;align-items:stretch}
+    .home-ask-row .btn{width:100%}
+    .home-ask-suggestions{align-items:flex-start}
+    .view-inner{padding:22px 18px 56px}
+  }
 </style>
 <style>
   .workspace-switcher{height:52px;padding:0 20px 0 22px;display:flex;flex:none;align-items:center;justify-content:space-between;gap:16px;background:#F7F8FC;color:#111827;font-family:'Plus Jakarta Sans',-apple-system,"Segoe UI",sans-serif;border-bottom:1px solid #DDE2EE;box-shadow:0 1px 2px rgba(15,23,42,.04);z-index:10001}
@@ -830,9 +868,9 @@
   :root{--kh-control-radius:8px;--kh-surface-radius:10px;--kh-control-height:40px;--kh-content-pad:28px}
   body{font-size:14px;line-height:1.5;color:#17203A}
   h1.pg{margin-bottom:6px;font-size:28px;line-height:1.2;font-weight:700;letter-spacing:-.035em}
-  h1#greeting{font-size:24px;letter-spacing:-.025em}
-  h2.sec,.resume-hd h2,.pins-hd h2{font-size:15px;line-height:1.35;font-weight:700;letter-spacing:-.015em}
-  .pg-sub{margin-bottom:22px;font-size:13px;line-height:1.55;color:var(--ink-2)}
+  h1#greeting{font-size:28px;letter-spacing:-.03em;margin-bottom:8px}
+  h2.sec,.resume-hd h2,.pins-hd h2,.home-block-hd h2{font-size:15px;line-height:1.35;font-weight:700;letter-spacing:-.015em}
+  .pg-sub{margin:0 0 22px;font-size:14px;line-height:1.55;color:#6B7385;max-width:52ch}
   .view-inner,.library-main{padding:24px var(--kh-content-pad) 64px}
   .library-main-inner{max-width:1180px}
 
@@ -965,32 +1003,55 @@
     <section class="view active" id="view-home">
       <div class="view-inner">
         <h1 class="pg" id="greeting">Good afternoon, Claire</h1>
+        <p class="pg-sub" id="home-lede">Find answers from verified standards, project decisions and trusted sources.</p>
+
         <div class="home-ask">
-          <h2>Ask the knowledge hub</h2>
-          <p>Get an answer grounded in verified firm standards and project sources.</p>
+          <h2 class="home-ask-title">
+            <span class="spark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 13.2 8.3 18 9.5 13.2 10.7 12 15.5 10.8 10.7 6 9.5 10.8 8.3Z"/><path d="M18.5 14.5 19.1 16.7 21.3 17.3 19.1 17.9 18.5 20.1 17.9 17.9 15.7 17.3 17.9 16.7Z"/></svg>
+            </span>
+            Ask the Knowledge Hub
+          </h2>
           <div class="home-ask-row">
             <input id="home-ask-input" type="text" placeholder="Ask about a standard, project decision or detail…" onkeydown="if(event.key==='Enter') askFromHome()">
             <button class="btn primary" onclick="askFromHome()">Ask</button>
           </div>
-          <button class="home-continue" onclick="openChatScript('cover')" aria-label="Continue Guest circulation clearances">
-            <strong>Continue: Guest circulation clearances</strong>
-            <span class="home-continue-meta">· 2 sources</span>
-            <span class="home-continue-action">Resume →</span>
-          </button>
+          <div class="home-ask-suggestions" aria-label="Suggested questions">
+            <span class="try-label">Try asking about:</span>
+            <button type="button" class="home-ask-chip" onclick="askHomeSuggestion('cover')">Guest circulation clearances</button>
+            <button type="button" class="home-ask-chip" onclick="askHomeSuggestion('tray')">Equipment clearances</button>
+            <button type="button" class="home-ask-chip" onclick="askHomeSuggestion('cws')">Soft furnishing delivery spec</button>
+            <button type="button" class="home-ask-chip" onclick="askHomeSuggestion('fire')">Fire separation requirements</button>
+          </div>
         </div>
 
         <div class="home-section">
-        <div class="home-conflict-alert" id="home-conflict-alert" hidden>
-          <strong aria-hidden="true">!</strong>
-          <div><b><span id="home-conflict-count">0</span> source conflicts need review</b><span>Conflicting guidance is isolated until a project lead confirms the governing source.</span></div>
-        </div>
+          <div class="home-conflict-alert" id="home-conflict-alert" hidden>
+            <strong aria-hidden="true">!</strong>
+            <div><b><span id="home-conflict-count">0</span> source conflicts need review</b><span>Conflicting guidance is isolated until a project lead confirms the governing source.</span></div>
+          </div>
 
-        <div class="pins-hd">
-          <h2>My pins</h2>
-          <button class="pins-view-all" id="pins-view-all" onclick="showView('search')">View all</button>
-        </div>
-        <div class="pins" id="pins-list"></div>
+          <section class="home-block" aria-labelledby="home-pinned-title">
+            <div class="home-block-hd">
+              <h2 id="home-pinned-title">
+                <span class="hd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4.5 19 8.5"/><path d="m9.5 10 4.5 4.5"/><path d="M14 5.5 8.8 10.7a2 2 0 0 0 0 2.8l1.7 1.7a2 2 0 0 0 2.8 0L18.5 10"/><path d="m12 15-7 7"/></svg></span>
+                Pinned
+              </h2>
+              <button class="home-view-all" id="pins-view-all" onclick="showView('search')">View all pinned →</button>
+            </div>
+            <div id="pins-list"></div>
+          </section>
 
+          <section class="home-block" aria-labelledby="home-recent-title">
+            <div class="home-block-hd">
+              <h2 id="home-recent-title">
+                <span class="hd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4.5l3 1.5"/></svg></span>
+                Recently viewed
+              </h2>
+              <button class="home-view-all" onclick="showView('search')">View all recently viewed →</button>
+            </div>
+            <div id="recent-docs-list"></div>
+          </section>
         </div>
       </div>
     </section>
@@ -1366,25 +1427,69 @@ let PINS=[
   {type:'doc',id:'sdm'},
   {type:'doc',id:'cad'},
   {type:'doc',id:'e301'},
+  {type:'doc',id:'cws'},
+  {type:'doc',id:'nbod'},
+];
+let HOME_RECENT_DOCS=[
+  {id:'cws', viewed:'18 min ago'},
+  {id:'sdm', viewed:'Yesterday'},
+  {id:'e301', viewed:'Yesterday'},
+  {id:'nbod', viewed:'Aug 30, 2026'},
+  {id:'cad', viewed:'Aug 28, 2026'},
 ];
 function isPinned(id){ return PINS.some(p=>p.type==='doc'&&p.id===id); }
 function docIcon(d){ return d.type==='Drawing'?'DWG':(d.type==='Annotation'?'📌':'PDF'); }
+function homeFileType(d){
+  if(d.type==='Drawing') return {label:'DWG', cls:'dwg'};
+  if(d.type==='Annotation') return {label:'NOTE', cls:'note'};
+  return {label:'PDF', cls:'pdf'};
+}
+function homeDocLocked(d){
+  return d.project==='Firm-wide' && (d.status==='verified' || d.type==='Manual' || d.type==='Specification');
+}
+function homeLockIcon(){
+  return `<span class="home-lock" title="Controlled source" aria-label="Controlled source"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>`;
+}
+function homeFileCell(d){
+  const ft=homeFileType(d);
+  const lock=homeDocLocked(d)?homeLockIcon():'';
+  return `<div class="home-file"><span class="home-ftype ${ft.cls}">${ft.label}</span><div class="home-fname">${lock}<span>${escapeHtml(d.title)}</span></div></div>`;
+}
 function renderPins(){
   const el=document.getElementById('pins-list'); if(!el) return;
   const viewAll=document.getElementById('pins-view-all');
   if(viewAll){
-    viewAll.style.display=PINS.length>3?'inline-flex':'none';
-    viewAll.textContent=`View all ${PINS.length} →`;
+    viewAll.style.display='inline-flex';
+    viewAll.textContent=PINS.length>5?`View all ${PINS.length} pinned →`:'View all pinned →';
   }
-  if(!PINS.length){ el.className='pins-empty'; el.innerHTML=`No pins yet. Open any source and choose <b>Pin to home</b> to keep it here.`; return; }
-  el.className='pins';
-  el.innerHTML=PINS.slice(0,3).map((p,i)=>{
+  if(!PINS.length){
+    el.className='home-table-empty';
+    el.innerHTML=`No pins yet. Open any source and choose <b>Pin to home</b> to keep it here.`;
+    return;
+  }
+  el.className='home-table-wrap';
+  const rows=PINS.slice(0,5).map((p,i)=>{
     if(p.type==='chat'){
-      return `<div class="pin"><button class="pin-hit" onclick="openChatScript('${p.script}')"><div class="fic">💬</div><div class="pin-body"><b>${p.title}</b><span class="pin-meta">${p.sub}</span></div></button><button class="unpin" title="Unpin" onclick="unpinAt(${i})">✕</button></div>`;
+      return `<tr onclick="openChatScript('${p.script}')"><td class="col-file"><div class="home-file"><span class="home-ftype note">CHAT</span><div class="home-fname"><span>${escapeHtml(p.title)}</span></div></div></td><td class="col-scope">${escapeHtml(p.sub||'—')}</td><td class="col-version">—</td><td class="col-updated">—</td><td class="col-menu"><button class="home-kebab" title="Unpin" aria-label="Unpin" onclick="event.stopPropagation();unpinAt(${i})">⋮</button></td></tr>`;
     }
-    const d=DOCS[p.id];
-    return `<div class="pin"><button class="pin-hit" onclick="openFullViewer('${p.id}')"><div class="fic">${docIcon(d)}</div><div class="pin-body"><b>${d.title}</b><span class="pin-meta">${d.project==='Firm-wide'?'Firm-wide':d.project} · ${d.version} · ${d.updated}</span></div></button><button class="unpin" title="Unpin" onclick="unpinAt(${i})">✕</button></div>`;
+    const d=DOCS[p.id]; if(!d) return '';
+    return `<tr onclick="openFullViewer('${p.id}')"><td class="col-file">${homeFileCell(d)}</td><td class="col-scope">${escapeHtml(d.project||'—')}</td><td class="col-version">${escapeHtml(d.version||'—')}</td><td class="col-updated">${escapeHtml(d.updated||'—')}</td><td class="col-menu"><button class="home-kebab" title="More actions" aria-label="More actions for ${escapeHtml(d.title)}" onclick="event.stopPropagation();unpinAt(${i})">⋮</button></td></tr>`;
   }).join('');
+  el.innerHTML=`<table class="home-table"><thead><tr><th class="col-file">File</th><th class="col-scope">Scope / Project</th><th class="col-version">Version</th><th class="col-updated">Updated</th><th class="col-menu"></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function renderRecentDocs(){
+  const el=document.getElementById('recent-docs-list'); if(!el) return;
+  if(!HOME_RECENT_DOCS.length){
+    el.className='home-table-empty';
+    el.innerHTML=`No recently viewed sources yet.`;
+    return;
+  }
+  el.className='home-table-wrap';
+  const rows=HOME_RECENT_DOCS.map(item=>{
+    const d=DOCS[item.id]; if(!d) return '';
+    return `<tr onclick="openFullViewer('${item.id}')"><td class="col-file">${homeFileCell(d)}</td><td class="col-scope">${escapeHtml(d.project||'—')}</td><td class="col-updated">${escapeHtml(item.viewed)}</td><td class="col-menu"><button class="home-kebab" title="More actions" aria-label="More actions for ${escapeHtml(d.title)}" onclick="event.stopPropagation();toast('Source actions (demo)')">⋮</button></td></tr>`;
+  }).join('');
+  el.innerHTML=`<table class="home-table"><thead><tr><th class="col-file">File</th><th class="col-scope">Scope / Project</th><th class="col-updated">Last viewed</th><th class="col-menu"></th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 function unpinAt(i){ PINS.splice(i,1); renderPins(); if(openDocId) refreshDocFooter(); toast('Unpinned from home'); }
 function togglePin(id){
@@ -1568,6 +1673,18 @@ function askFromHome(){
   if(!question){ input?.focus(); return; }
   newChat();
   ask(question);
+}
+function askHomeSuggestion(key){
+  if(key==='cover'){ openChatScript('cover'); return; }
+  if(key==='tray'){ openChatScript('tray'); return; }
+  const prompts={
+    cws:'What does the Soft Furnishing Delivery Specification require at installation?',
+    fire:'What fire separation requirements apply to guest circulation corridors?'
+  };
+  const q=prompts[key];
+  if(!q) return;
+  newChat();
+  ask(q);
 }
 function openChatScript(key){
   const lock={wind:'Harbour Club',tray:'Harbour Club'}[key];
@@ -2348,7 +2465,7 @@ document.addEventListener('keydown',e=>{
 });
 
 /* init */
-restoreSidebarState(); restoreLibraryPreviewWidth(); initFilters(); renderSearch(); renderProjects(); renderRecents(); renderPins(); renderScopeHub(); renderChatEmpty(); renderWorkingSet();
+restoreSidebarState(); restoreLibraryPreviewWidth(); initFilters(); renderSearch(); renderProjects(); renderRecents(); renderPins(); renderRecentDocs(); renderScopeHub(); renderChatEmpty(); renderWorkingSet();
 if(!document.body.classList.contains('locked')){
   setTimeout(()=>toast('Interactive prototype — click any citation, drawing, or Projects row to explore. All data is sample.'), 700);
 }
