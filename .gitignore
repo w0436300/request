@@ -11,3 +11,5 @@ Thumbs.db
 auth-config.js
 app.html
 site/
+node_modules/
+test-results/

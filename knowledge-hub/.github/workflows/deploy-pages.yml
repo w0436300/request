@@ -25,6 +25,7 @@ jobs:
         run: |
           mkdir -p _site
           cp Meridian-KB-prototype.html _site/index.html
+          cp fieldwork-context.js _site/
           # Keep the original filename available as a deep link too.
           cp Meridian-KB-prototype.html _site/Meridian-KB-prototype.html
 

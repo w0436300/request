@@ -1,0 +1,16 @@
+{
+  "name": "fieldwork-prototype",
+  "private": true,
+  "version": "3.0.0",
+  "scripts": {
+    "test": "node --test tests/domain.test.cjs tests/controller.test.cjs",
+    "dev": "node scripts/serve.cjs",
+    "test:browser": "node tests/browser.cjs",
+    "test:ui": "node tests/ui-refinement.cjs",
+    "format": "prettier --write fieldwork-domain.js fieldwork-ui.js fieldwork-seed.js knowledge-hub/fieldwork-context.js scripts/serve.cjs tests/*.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0",
+    "prettier": "^3.9.8"
+  }
+}
