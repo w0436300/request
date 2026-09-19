@@ -138,6 +138,7 @@
     newBuilding: "Cinema",
     newProgramme: "",
     newBudget: "",
+    newArea: "",
     newOpening: "",
     newRequestOwner: "sophia",
     newTags: [],
@@ -1217,6 +1218,7 @@
           programme: s.newProgramme,
           targetOpening: s.newOpening,
           budgetBand: s.newBudget,
+          area: s.newArea,
           ownerId: D.person(s.newRequestOwner)?.id || s.newRequestOwner,
           attachments: s.newFiles,
           tags: s.newTags,
@@ -2672,6 +2674,15 @@
                     },
                   ]
                 : []),
+              { label: "Site area", value: p.area ? p.area + " m²" : "Not set" },
+              ...(seeCommercial
+                ? [
+                    {
+                      label: "Target budget",
+                      value: p.budgetBand || "Not set",
+                    },
+                  ]
+                : []),
               {
                 label: "Planned completion",
                 value: dateLabel(p.schedule.plannedCompletion),
@@ -3140,9 +3151,12 @@
               }
             }
             const primary = converted ? openProject : openEnquiry;
+            const seeBudget = D.canViewEnquiryCommercial(q, actor, s.db);
             return {
               ...q,
               city: q.location.city,
+              area: q.area ? q.area + " m²" : "—",
+              budgetLabel: seeBudget ? q.budgetBand || "—" : "—",
               received: shortDate(D.today(q.createdAt)),
               triageLabel: q.status,
               waitMeta: q.externalDependency ? "Waiting on client" : "",

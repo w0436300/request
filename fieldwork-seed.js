@@ -213,6 +213,8 @@
       today: true,
       owner: "Claire Wang",
       waitDays: 0,
+      area: "4,200",
+      budget: "¥28.0M",
     },
     {
       code: "RQ-117",
@@ -225,6 +227,8 @@
       today: true,
       owner: "Sophia Chen",
       waitDays: 0,
+      area: "260",
+      budget: "¥3.5M",
     },
     {
       code: "RQ-116",
@@ -236,6 +240,8 @@
       state: "Reading brief",
       owner: "Sophia Chen",
       waitDays: 1,
+      area: "140",
+      budget: "¥2.2M",
     },
     {
       code: "RQ-115",
@@ -247,6 +253,8 @@
       state: "Reading brief",
       owner: "Claire Wang",
       waitDays: 1,
+      area: "1,850",
+      budget: "¥9.6M",
     },
     {
       code: "RQ-114",

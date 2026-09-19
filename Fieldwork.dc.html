@@ -585,37 +585,39 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 <!-- ========================= PROJECT REQUESTS ========================= -->
 <sc-if value="{{ isIntake }}" hint-placeholder-val="{{ false }}">
   <div class="page-heading"><h1>Enquiries <span>{{ intakeCount }}</span></h1></div>
-  <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh);margin-bottom:14px;padding:14px 16px">
-    <div class="query-bar intake-query">
-      <input class="query-search" value="{{ intakeSearch }}" onchange="{{ setIntakeSearch }}" aria-label="Search enquiries" placeholder="Search name, code or client">
-      <select value="{{ intakeStatusFilter }}" onchange="{{ setIntakeStatusFilter }}" aria-label="Filter by status" class="filter-select {{ intakeStatusFilterOnClass }}">
-        <option value="active">Active intake</option>
-        <sc-for list="{{ intakeStatusOptions }}" as="st"><option value="{{ st }}">{{ st }}</option></sc-for>
-        <option value="all">All statuses</option>
-      </select>
-    </div>
-    <sc-if value="{{ hasIntakeFilters }}" hint-placeholder-val="{{ false }}">
-      <div class="filter-chips">
-        <sc-for list="{{ intakeFilterChips }}" as="fc"><span class="filter-chip">{{ fc.label }}<button onclick="{{ fc.clear }}" aria-label="Remove {{ fc.label }}">×</button></span></sc-for>
-        <button class="fw-link" onclick="{{ clearIntakeFilters }}">Clear filters</button>
-      </div>
-    </sc-if>
-  </div>
-  <sc-if value="{{ intakeEmpty }}" hint-placeholder-val="{{ false }}">
-    <div class="fw-empty">No enquiries yet. Log one with + New enquiry.</div>
-  </sc-if>
-  <sc-if value="{{ intakeNoMatches }}" hint-placeholder-val="{{ false }}">
-    <div class="fw-empty">No enquiries match these filters.</div>
-  </sc-if>
-  <sc-if value="{{ intakeHasRows }}" hint-placeholder-val="{{ true }}">
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--line)">
+      <div class="query-bar intake-query">
+        <input class="query-search" value="{{ intakeSearch }}" onchange="{{ setIntakeSearch }}" aria-label="Search enquiries" placeholder="Search name, code or client">
+        <select value="{{ intakeStatusFilter }}" onchange="{{ setIntakeStatusFilter }}" aria-label="Filter by status" class="filter-select {{ intakeStatusFilterOnClass }}">
+          <option value="active">Active intake</option>
+          <sc-for list="{{ intakeStatusOptions }}" as="st"><option value="{{ st }}">{{ st }}</option></sc-for>
+          <option value="all">All statuses</option>
+        </select>
+      </div>
+      <sc-if value="{{ hasIntakeFilters }}" hint-placeholder-val="{{ false }}">
+        <div class="filter-chips">
+          <sc-for list="{{ intakeFilterChips }}" as="fc"><span class="filter-chip">{{ fc.label }}<button onclick="{{ fc.clear }}" aria-label="Remove {{ fc.label }}">×</button></span></sc-for>
+          <button class="fw-link" onclick="{{ clearIntakeFilters }}">Clear filters</button>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ intakeEmpty }}" hint-placeholder-val="{{ false }}">
+      <div class="fw-empty">No enquiries yet. Log one with + New enquiry.</div>
+    </sc-if>
+    <sc-if value="{{ intakeNoMatches }}" hint-placeholder-val="{{ false }}">
+      <div class="fw-empty">No enquiries match these filters.</div>
+    </sc-if>
+    <sc-if value="{{ intakeHasRows }}" hint-placeholder-val="{{ true }}">
     <div class="table-scroll">
-      <table style="width:100%;border-collapse:collapse;min-width:940px">
+      <table style="width:100%;border-collapse:collapse;min-width:1120px">
         <thead><tr>
           <th style="width:82px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
           <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Request</th>
           <th style="width:144px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Client</th>
-          <th style="width:186px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Service</th>
+          <th style="width:150px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Service</th>
+          <th style="width:90px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Area</th>
+          <th style="width:100px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Budget</th>
           <th style="width:130px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Received</th>
           <th style="width:140px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 14px">Triage</th>
           <th style="width:72px;text-align:right;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Action</th>
@@ -627,6 +629,8 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
             <td style="padding:14px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap">{{ q.name }}<div class="fw-muted">{{ q.city }}</div></td>
             <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ q.client }}</td>
             <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ q.service }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted);white-space:nowrap;font-family:'IBM Plex Mono',monospace">{{ q.area }}</td>
+            <td style="padding:14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted);white-space:nowrap;font-family:'IBM Plex Mono',monospace">{{ q.budgetLabel }}</td>
             <td style="padding:14px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12.5px;white-space:nowrap">{{ q.received }}</td>
             <td style="padding:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2);white-space:nowrap">{{ q.triageLabel }}<sc-if value="{{ q.waitMeta }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted)"> · {{ q.waitMeta }}</span></sc-if></td>
             <td style="padding:14px 20px 14px 14px;border-bottom:1px solid var(--line);text-align:right;overflow:visible">
@@ -649,8 +653,8 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
         </tbody>
       </table>
     </div>
+    </sc-if>
   </div>
-  </sc-if>
 </sc-if>
 
 <!-- ========================= SCHEDULE / MY WORK / CITY OPERATIONS ========================= -->
@@ -922,7 +926,8 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:18px">
             <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Sector</label><select value="{{ newBuilding }}" onchange="{{ setNewBuilding }}" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;background:var(--surface)"><sc-for list="{{ sectorOptions }}" as="sec" hint-placeholder-count="7"><option value="{{ sec }}">{{ sec }}</option></sc-for></select></div>
             <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Programme</label><input value="{{ newProgramme }}" onchange="{{ setNewProgramme }}" placeholder="Target programme, e.g. 6 months" style="width:100%;height:40px;border:1px solid var(--lineS);padding:0 12px"></div>
-            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Target budget</label><input value="{{ newBudget }}" onchange="{{ setNewBudget }}" placeholder="¥12.0M" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font-family:'IBM Plex Mono',monospace"></div>
+            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Target budget</label><input value="{{ newBudget }}" onchange="{{ setNewBudget }}" placeholder="Est. ¥12.0M" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font-family:'IBM Plex Mono',monospace"></div>
+            <div><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Site area (m²)</label><input value="{{ newArea }}" onchange="{{ setNewArea }}" placeholder="Est. 320" style="width:100%;height:40px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:0 12px;font-family:'IBM Plex Mono',monospace"></div>
           </div>
           <sc-if value="{{ hasSectorFields }}"><h3 class="section-label">Sector requirements <span class="fw-muted">optional</span></h3><div class="fw-form"><sc-for list="{{ newSectorFields }}" as="f"><label class="fw-field">{{ f.label }}<input aria-label="{{ f.label }}" value="{{ f.value }}" onchange="{{ f.set }}" placeholder="Optional"></label></sc-for></div></sc-if>
           <div style="margin-top:18px"><label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px">Tags</label>

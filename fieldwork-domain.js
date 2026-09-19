@@ -468,6 +468,7 @@
               ". Coordinate site constraints, specialist requirements and internal delivery.",
           programme: old.programme || "",
           budgetBand: old.budget || "",
+          area: "",
           contractBasis: old.fee || "",
           targetOpening: "",
           contact: {
@@ -629,6 +630,7 @@
         : location({ city: cities[i % 8] }),
       brief: q.brief || q.need || "",
       budgetBand: q.budget || "",
+      area: q.area || "",
       programme: q.programme || "",
       targetOpening: "",
       ownerId: person(q.owner)?.id || "sophia",
@@ -666,6 +668,7 @@
       activity: [],
       brief: "",
       budgetBand: "",
+      area: "",
       contractBasis: "To be agreed",
       programme: "",
       targetOpening: "",
@@ -1231,6 +1234,7 @@
         email: "clinic@pawscare.example",
       },
       budgetBand: "¥1–3M",
+      area: "180",
       programme: "6 months",
       targetOpening: addDays(base, 180),
       attachments: [],
@@ -1247,6 +1251,7 @@
         "Re-commission optics and acoustic tuning for the Modern Era auditorium package.";
       ready.programme = "4 months";
       ready.budgetBand = "¥2.4M";
+      ready.area = "860";
       ready.targetOpening = addDays(base, 120);
       ready.contact = {
         name: "Facilities lead",
@@ -1539,6 +1544,7 @@
           brief: q.brief,
           programme: q.programme,
           budgetBand: q.budgetBand,
+          area: q.area,
           targetOpening: q.targetOpening,
           attachments: clone(q.attachments || []),
           requirements: clone(q.requirements || {}),
@@ -1606,6 +1612,7 @@
         "contact",
         "programme",
         "budgetBand",
+        "area",
         "contractBasis",
         "targetOpening",
         "attachments",
