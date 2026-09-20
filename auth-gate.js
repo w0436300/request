@@ -71,6 +71,15 @@
     return hash;
   }
 
+  function isDevHost() {
+    var host = (location.hostname || "").toLowerCase();
+    return host === "localhost" || host === "127.0.0.1" || host === "[::1]";
+  }
+
+  function gateActive() {
+    return !!expectedHash() && !isDevHost();
+  }
+
   function redirectToGate() {
     var target = "index.html";
     if (location.pathname.indexOf("/") >= 0) {
@@ -105,13 +114,18 @@
 
   function guardApp() {
     if (!isAppPage()) return;
+    if (!gateActive()) return;
     if (isUnlocked()) return;
     redirectToGate();
   }
 
   function bootGateForm() {
     if (!isGatePage()) return;
-    if (isUnlocked() && expectedHash()) {
+    if (!gateActive()) {
+      redirectToApp();
+      return;
+    }
+    if (isUnlocked()) {
       redirectToApp();
       return;
     }
