@@ -81,15 +81,18 @@ let activeBrowser, activePage;
     fullPage: true,
   });
   await nav("Locations");
-  const harbin = page.locator("tr").filter({ has: button("Harbin") });
-  assert.match(await harbin.innerText(), /Harbin\s+4\s+3\s+1/);
-  await click("Harbin");
+  const harbin = page.locator(".location-card").filter({ hasText: "Harbin" });
+  assert.match(await harbin.innerText(), /2 active · 3 pipeline/);
+  assert.match(await harbin.innerText(), /Pet hospital|Medical imaging/);
+  await harbin.getByRole("button", { name: /Paws & Care Veterinary Hospital/ }).click();
   await page
-    .getByRole("heading", { name: "Harbin · City detail", exact: true })
+    .getByRole("heading", {
+      name: "Paws & Care Veterinary Hospital",
+      exact: true,
+    })
     .waitFor();
-  assert.match(await page.locator("main").innerText(), /MRI \/ CT Suite/);
   pass(
-    "Locations: Harbin 4 projects / 3 enquiries / 1 at risk; city detail and coverage",
+    "Locations: Harbin city card with active/pipeline and project open",
   );
   await openPaws();
   await page

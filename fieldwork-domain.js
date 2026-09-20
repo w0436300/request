@@ -5,7 +5,7 @@
   else root.FieldworkDomain = domain;
 })(typeof globalThis === "object" ? globalThis : this, function () {
   "use strict";
-  const VERSION = 3;
+  const VERSION = 4;
   const PHASES = {
     scoping: {
       label: "Scoping",
@@ -73,6 +73,14 @@
     "Vendor",
     "Landlord",
     "Equipment supplier",
+  ];
+  const DECLINE_REASONS = [
+    "Budget",
+    "Timing",
+    "Went with another firm",
+    "Scope no longer fits",
+    "No response from client",
+    "Other",
   ];
   const SECTORS = [
     "Cinema",
@@ -377,18 +385,52 @@
     ],
     "Other commercial": general,
   };
+  function standardOwnerRole(phase) {
+    if (phase === "design") return "Design lead";
+    if (["pre-construction", "construction", "commissioning"].includes(phase))
+      return "Construction lead";
+    if (phase === "handover") return "Delivery lead";
+    return "Project lead";
+  }
+  function standardAcceptance(phase) {
+    return (
+      {
+        scoping:
+          "Confirm scope, constraints and site conditions; record the agreed brief.",
+        design:
+          "Confirm the design meets brief requirements and is ready to issue for pricing or construction.",
+        "pre-construction":
+          "Confirm authority, procurement and site conditions are cleared before mobilisation.",
+        construction:
+          "Confirm the work is complete to specification and ready for the next stage.",
+        commissioning:
+          "Confirm systems perform to the agreed requirements and client sign-off.",
+        handover:
+          "Confirm outstanding items are resolved and documentation is issued to the client.",
+      }[phase] || "Confirm this outcome is complete and documented."
+    );
+  }
+  function standardRow(row) {
+    return {
+      ...row,
+      ownerRole: standardOwnerRole(row.phase),
+      acceptanceCriteria: standardAcceptance(row.phase),
+    };
+  }
   function templateFor(sector, service) {
-    const base = clone(TEMPLATES[sectorOf(sector)] || general);
+    const base = clone(TEMPLATES[sectorOf(sector)] || general).map(
+      standardRow,
+    );
     if (service === "Site assessment")
       return base.filter((m) => m.phase === "scoping");
     if (service === "Design only")
       return [
         ...base.filter((m) => ["scoping", "design"].includes(m.phase)),
-        {
+        standardRow({
           title: "Design documentation handed over",
           phase: "handover",
           required: true,
-        },
+        }),
       ];
     if (service === "Construction only")
       return base.filter((m) => m.phase !== "design");
@@ -450,7 +492,7 @@
           sector: sectorOf(old.sector),
           service: serviceOf(old.service),
           phase: phaseOf(old.ph),
-          state: old.ph === "closed" ? "Closed" : "Active",
+          state: old.ph === "closed" ? "Completed" : "Active",
           leadId,
           location: migrateLocation(old),
           team: (old.mem || [old.lead])
@@ -525,6 +567,18 @@
           }
           m.dueDate = validDate(old.ms.iso) ? old.ms.iso : "";
           m.status = "In progress";
+        }
+        if (p.state === "Completed") {
+          const finishDate = validDate(old.ms?.iso) ? old.ms.iso : today(now);
+          const total = p.milestones.length;
+          p.milestones.forEach((m, i) => {
+            const due = addDays(finishDate, -10 * (total - 1 - i));
+            m.dueDate = due;
+            m.actualCompletionDate = due;
+            m.status = "Complete";
+          });
+          p.schedule.plannedCompletion = finishDate;
+          p.schedule.forecastCompletion = finishDate;
         }
         p.activity.push({
           id: uid("activity"),
@@ -1172,27 +1226,6 @@
         "Harbin",
         "Lakeside Medical",
       ],
-      [
-        "082",
-        "Harbin Riverside Hotel",
-        "Hotel",
-        "Harbin",
-        "Northern Lights Hotel",
-      ],
-      [
-        "083",
-        "Harbin Ember Grill opening",
-        "Chain restaurant",
-        "Harbin",
-        "Ember Grill Group",
-      ],
-      [
-        "084",
-        "Qingdao commercial concept study",
-        "Other commercial",
-        "Qingdao",
-        "East Coast Commercial",
-      ],
     ];
     additions.forEach(([id, title, sector, city, client]) => {
       const p = makeProject(
@@ -1204,7 +1237,7 @@
           client,
           location: location({ city, siteName: title }),
           leadId: "sophia",
-          service: id === "084" ? "Design only" : "Design & build",
+          service: "Design & build",
           setupConfirmed: true,
         },
         now,
@@ -1358,9 +1391,9 @@
       report(
         "daniel",
         lastWeek,
-        "PR-016 Yuanhong Cinema full design & build\nPR-071 Northern Lights hotel lobby & rooms",
-        "Cinema L3 slab penetrations closed.\nHotel lobby ceiling grid set out.",
-        "Start acoustic baffle install at Yuanhong.\nConfirm hotel FF&E delivery dates.",
+        "PR-016 Yuanhong Cinema full design & build\nPR-073 Modern Era Phase 1 cinema",
+        "Cinema L3 slab penetrations closed.\nModern Era handover walkthrough completed.",
+        "Start acoustic baffle install at Yuanhong.\nConfirm Modern Era handover pack sign-off.",
         "",
         addDays(lastWeek, 5),
       ),
@@ -1376,9 +1409,9 @@
       report(
         "claire",
         priorWeek,
-        "PR-061 Paws & Care Veterinary Hospital\nPR-029 Modern Era auditorium package",
-        "Kick-off MRI suite design with Amy and Mei.\nClient sign-off chase on Modern Era auditorium.",
-        "Lock Paws & Care work-package owners.\nClose Modern Era comments.",
+        "PR-061 Paws & Care Veterinary Hospital\nPR-066 Ember Grill flagship dining",
+        "Kick-off MRI suite design with Amy and Mei.\nCleared final punch list on Ember Grill flagship dining.",
+        "Lock Paws & Care work-package owners.\nFile Ember Grill closeout documentation.",
         "",
         addDays(priorWeek, 4),
       ),
@@ -1504,6 +1537,11 @@
           ENQUIRY_STATES.includes(a.status) && a.status !== "Converted",
           "Choose a qualification status.",
         );
+        if (a.status === "Declined")
+          assert(
+            DECLINE_REASONS.includes(a.declinedReason),
+            "Choose a reason the client did not continue.",
+          );
         q.status = a.status;
         q.externalDependency = a.waiting
           ? {
@@ -1512,6 +1550,10 @@
               note: a.note || "Waiting on client",
             }
           : null;
+        q.declinedReason = a.status === "Declined" ? a.declinedReason : "";
+        q.declinedNote =
+          a.status === "Declined" ? a.declinedNote?.trim() || "" : "";
+        q.declinedAt = a.status === "Declined" ? now : null;
         q.updatedAt = now;
         return next;
       }
@@ -1801,12 +1843,12 @@
             .every((m) => m.status === "Complete"),
         "Complete all required milestones in Handover and resume the project before closing.",
       );
-      p.state = a.archive ? "Archived" : "Closed";
+      p.state = a.archive ? "Archived" : "Completed";
       record(
         p,
         actor,
         "project.closed",
-        "Project " + p.state.toLowerCase() + " after handover.",
+        "Project marked " + p.state.toLowerCase() + " after handover.",
         now,
       );
       return next;
@@ -2215,6 +2257,7 @@
     STATUSES,
     ENQUIRY_STATES,
     EXTERNAL_ACTORS,
+    DECLINE_REASONS,
     SECTORS,
     SERVICES,
     PEOPLE,

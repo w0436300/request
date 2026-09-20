@@ -196,6 +196,7 @@
     standardsTab: "templates",
     standardsSector: "Pet hospital",
     standardsService: "Design & build",
+    standardsExpandedItem: "",
     weeklySuggestionsOpen: false,
     weeklyPerson: "",
     weeklyDirty: false,
@@ -725,6 +726,8 @@
             status: q.status,
             waiting: !!q.externalDependency,
             externalNote: q.externalDependency?.note || "",
+            declinedReason: q.declinedReason || "",
+            declinedNote: q.declinedNote || "",
             leadId:
               D.person(this.actor()).role === "Project lead"
                 ? this.actor()
@@ -854,6 +857,8 @@
             status: e.status,
             waiting: e.waiting,
             note: e.externalNote,
+            declinedReason: e.declinedReason,
+            declinedNote: e.declinedNote,
           };
         if (!action) return true;
         const db = this.act(action, { editorDirty: false });
@@ -863,7 +868,9 @@
           this.showToast(
             e.status === "Ready to scope"
               ? "Ready to scope · Assign a Project Lead and convert."
-              : "Qualification saved.",
+              : e.status === "Declined"
+                ? "Enquiry declined."
+                : "Qualification saved.",
           );
           return true;
         }
@@ -1490,6 +1497,10 @@
           dotBorder: complete ? "#5367D4" : "var(--lineS)",
           textColor: "var(--ink)",
           open: () => this.openDialog("milestone", p.id, m.id),
+          openProject: (ev) => {
+            ev?.stopPropagation();
+            this.setState({ peekId: p.id, peekTab: "brief" });
+          },
         };
       }
       renderDialog() {
@@ -1504,9 +1515,14 @@
           w = p?.workPackages.find((x) => x.id === d.id);
         let title = "",
           subtitle = p ? p.code + " · " + p.name + " · " + p.location.city : "",
+          badge = "",
+          badgeColor = "",
           fields = [],
+          fieldsLabel = "",
+          descriptionLabel = "",
           actions = [],
           rows = [],
+          detailRows = [],
           description = "",
           history = [],
           attachments = [],
@@ -1753,6 +1769,7 @@
                 !m,
               ),
             );
+          actions.unshift(button("Open project", () => this.openProject(p.id)));
           standards = this.knowledgeLinks(p, m);
           return {
             showOpsDialog: true,
@@ -1924,36 +1941,61 @@
             q.sector +
             " · " +
             q.service;
-          description =
-            q.brief +
-            "\nSite: " +
-            q.location.siteName +
-            " · " +
-            q.location.siteAddress +
-            (D.canViewEnquiryCommercial(q, actor, s.db)
-              ? "\nBudget: " + (q.budgetBand || "Not set")
-              : "") +
-            "\nProgramme: " +
-            (q.programme || "Not set") +
-            " · Target opening: " +
-            dateLabel(q.targetOpening) +
-            "\nContact: " +
-            [q.contact.name, q.contact.phone, q.contact.email]
-              .filter(Boolean)
-              .join(" · ") +
-            "\nRequest owner: " +
-            D.name(q.ownerId) +
-            "\n" +
-            Object.entries(q.requirements || {})
-              .map(([k, v]) => k + ": " + v)
-              .join(" · ");
+          badge = q.status;
+          badgeColor =
+            {
+              New: "var(--muted)",
+              "Under review": "#B08A3E",
+              "Needs information": "#B08A3E",
+              "Ready to scope": "var(--accent-ink)",
+              Converted: "var(--accent-ink)",
+              Declined: "var(--warn)",
+            }[q.status] || "var(--muted)";
+          descriptionLabel = "Brief";
+          description = q.brief;
+          const contactLine = [q.contact.name, q.contact.phone, q.contact.email]
+            .filter(Boolean)
+            .join(" · ");
+          detailRows = [
+            {
+              label: "Site",
+              value:
+                q.location.siteName +
+                (q.location.siteAddress ? " · " + q.location.siteAddress : ""),
+            },
+            ...(D.canViewEnquiryCommercial(q, actor, s.db)
+              ? [{ label: "Budget", value: q.budgetBand || "Not set", mono: true }]
+              : []),
+            {
+              label: "Area",
+              value: q.area ? q.area + " m²" : "Not set",
+              mono: true,
+            },
+            { label: "Programme", value: q.programme || "Not set" },
+            { label: "Target opening", value: dateLabel(q.targetOpening) },
+            { label: "Contact", value: contactLine || "Not provided" },
+            { label: "Request owner", value: D.name(q.ownerId) },
+            ...(Object.keys(q.requirements || {}).length
+              ? [
+                  {
+                    label: "Sector requirements",
+                    value: Object.entries(q.requirements)
+                      .map(([k, v]) => k + ": " + v)
+                      .join(" · "),
+                  },
+                ]
+              : []),
+          ].map((r) => ({
+            mono: false,
+            ...r,
+            monoClass: r.mono ? "mono" : "",
+          }));
           attachments = (q.attachments || []).map((f) => ({
             ...f,
             download: () => this.download(f),
           }));
           if (q.status === "Converted") {
-            description +=
-              "\nConverted to " + this.projectById(q.projectId)?.code;
+            dependency = "Converted to " + this.projectById(q.projectId)?.code;
             actions.push(
               button(
                 "Open project",
@@ -1965,9 +2007,16 @@
               ),
             );
           } else {
-            if (D.canIntake(actor))
-              description +=
-                "\nQualify to Ready to scope, then convert to create a project in Scoping.";
+            if (q.status === "Declined")
+              dependency =
+                "Declined · " +
+                q.declinedReason +
+                (q.declinedNote ? " · " + q.declinedNote : "");
+            else if (D.canIntake(actor))
+              dependency =
+                "Qualify to Ready to scope, then convert to create a project in Scoping.";
+            const declined = (e.status || q.status) === "Declined";
+            fieldsLabel = "Qualification";
             fields = [
               field(
                 "status",
@@ -1978,6 +2027,19 @@
               field("waiting", "Waiting on client externally", "checkbox"),
               field("externalNote", "External dependency note", "text"),
             ];
+            if (declined)
+              fields.push(
+                field(
+                  "declinedReason",
+                  "Reason the client did not continue",
+                  "select",
+                  [
+                    { value: "", label: "Choose a reason" },
+                    ...textOptions(D.DECLINE_REASONS),
+                  ],
+                ),
+                field("declinedNote", "Note (optional)", "text"),
+              );
             actions.push(button("Save qualification", () => this.saveEditor()));
             if (ready) {
               fields.push(
@@ -2006,9 +2068,17 @@
           showOpsDialog: true,
           opsTitle: title,
           opsSubtitle: subtitle,
+          opsBadge: badge,
+          opsHasBadge: !!badge,
+          opsBadgeColor: badgeColor,
           opsDescription: description,
+          opsDescriptionLabel: descriptionLabel,
           opsFields: fields,
+          opsFieldsLabel: fieldsLabel,
           opsActions: actions,
+          opsDetailRows: detailRows,
+          opsHasDetailRows: !!detailRows.length,
+          opsHasInfoCard: !!description || !!detailRows.length,
           opsRows: rows,
           opsRowsEmpty: d.kind === "milestones" && !rows.length,
           opsHistory: history,
@@ -2052,18 +2122,6 @@
           ].sort(),
           leads = [...new Set(projects.map((p) => D.name(p.leadId)))].sort(),
           tags = [...new Set(projects.flatMap((p) => p.tags))].sort();
-        const meetsMetric = (p) =>
-          s.metric === "risk"
-            ? D.scheduleHealth(p) !== "On track" ||
-              (D.canViewCommercial(p, actor) &&
-                D.commercialHealth(p) !== "On budget")
-            : s.metric === "overdue"
-              ? D.incomplete(p).some((m) => m.dueDate && D.days(m.dueDate) < 0)
-              : s.metric === "review"
-                ? D.incomplete(p).some((m) => m.status === "Ready for review")
-                : s.metric === "hold"
-                  ? !!p.hold
-                  : true;
         const matchesDue = (p) =>
           D.incomplete(p).some(
             (m) =>
@@ -2079,10 +2137,14 @@
         const filtered = projects.filter(
           (p) =>
             (s.phaseTab === "closed"
-              ? !D.isActive(p)
+              ? !D.isActive(p) &&
+                (s.metric !== "completed" || p.state === "Completed")
               : D.isActive(p) &&
                 (s.phaseTab === "all" || p.phase === s.phaseTab)) &&
-            meetsMetric(p) &&
+            (s.metric !== "risk" ||
+              D.scheduleHealth(p) !== "On track" ||
+              (D.canViewCommercial(p, actor) &&
+                D.commercialHealth(p) !== "On budget")) &&
             (s.serviceFilter === "all" || p.service === s.serviceFilter) &&
             (s.sectorFilter === "all" || p.sector === s.sectorFilter) &&
             (s.leadFilter === "all" || D.name(p.leadId) === s.leadFilter) &&
@@ -2207,7 +2269,7 @@
               }[k] +
               ": " +
               (k === "phaseTab"
-                ? D.PHASES[s[k]]?.label || "Closed / Archived"
+                ? D.PHASES[s[k]]?.label || "Completed / Archived"
                 : k === "dueFilter"
                   ? {
                       overdue: "Overdue",
@@ -2243,29 +2305,119 @@
                   D.commercialHealth(p) !== "On budget"),
             ).length,
           ],
-          [
-            "overdue",
-            "Overdue milestones",
-            openms.filter(
-              (r) => r.milestone.dueDate && D.days(r.milestone.dueDate) < 0,
-            ).length,
-          ],
-          [
-            "review",
-            "Waiting review",
-            openms.filter((r) => r.milestone.status === "Ready for review")
-              .length,
-          ],
           ["hold", "On hold", live.filter((p) => p.hold).length],
+          [
+            "completed",
+            "Completed",
+            projects.filter((p) => p.state === "Completed").length,
+          ],
         ];
         const phaseBoxes = stats.map(([key, label, count]) => ({
           label,
           count,
-          onClass: s.metric === key ? "is-on" : "",
-          pressed: s.metric === key,
+          onClass:
+            key === "hold" ? (s.holdOnly ? "is-on" : "") : s.metric === key ? "is-on" : "",
+          pressed: key === "hold" ? s.holdOnly : s.metric === key,
           select: () =>
-            this.setState({ metric: key, phaseTab: "all", listPage: 1 }),
+            this.setState({
+              metric: key === "hold" ? "all" : key,
+              phaseTab: key === "completed" ? "closed" : "all",
+              holdOnly: key === "hold" ? !s.holdOnly : false,
+              listPage: 1,
+            }),
         }));
+        const attentionRows = [];
+        openms.forEach(({ project: p, milestone: m }) => {
+          if (m.dueDate && D.days(m.dueDate) < 0) {
+            attentionRows.push({
+              code: p.code,
+              project: p.name,
+              issue: m.title,
+              type: "Overdue",
+              typeColor: "var(--warn)",
+              owner: D.name(m.ownerId),
+              due: shortDate(m.dueDate),
+              dueColor: "var(--warn)",
+              sortDate: m.dueDate,
+              open: () => this.openDialog("milestone", p.id, m.id),
+            });
+          } else if (m.status === "Blocked") {
+            attentionRows.push({
+              code: p.code,
+              project: p.name,
+              issue: m.blockedReason || m.title,
+              type: "Blocked",
+              typeColor: "#B08A3E",
+              owner: D.name(m.ownerId),
+              due: m.dueDate ? shortDate(m.dueDate) : "—",
+              dueColor: "var(--ink2)",
+              sortDate: m.dueDate || "9999-99-99",
+              open: () => this.openDialog("milestone", p.id, m.id),
+            });
+          } else if (m.externalDependency) {
+            attentionRows.push({
+              code: p.code,
+              project: p.name,
+              issue:
+                "Waiting on " +
+                m.externalDependency.actor +
+                (m.externalDependency.note
+                  ? " · " + m.externalDependency.note
+                  : ""),
+              type: "Dependency",
+              typeColor: "var(--accent-ink)",
+              owner: D.name(m.ownerId),
+              due: m.dueDate ? shortDate(m.dueDate) : "—",
+              dueColor: "var(--ink2)",
+              sortDate: m.dueDate || "9999-99-99",
+              open: () => this.openDialog("milestone", p.id, m.id),
+            });
+          } else if (m.status === "Ready for review") {
+            attentionRows.push({
+              code: p.code,
+              project: p.name,
+              issue: m.title,
+              type: "Review",
+              typeColor: "var(--cobalt)",
+              owner: m.reviewerId ? D.name(m.reviewerId) : D.name(m.ownerId),
+              due: m.dueDate ? shortDate(m.dueDate) : "—",
+              dueColor: "var(--ink2)",
+              sortDate: m.dueDate || "9999-99-99",
+              open: () => this.openDialog("milestone", p.id, m.id),
+            });
+          }
+        });
+        live.forEach((p) => {
+          if (p.hold) {
+            attentionRows.push({
+              code: p.code,
+              project: p.name,
+              issue: p.hold.reason,
+              type: "On hold",
+              typeColor: "var(--muted)",
+              owner: D.name(p.hold.ownerId),
+              due: p.hold.expectedResume ? shortDate(p.hold.expectedResume) : "—",
+              dueColor: "var(--ink2)",
+              sortDate: p.hold.expectedResume || "9999-99-99",
+              open: () => this.openProject(p.id),
+            });
+          }
+          if (D.canViewCommercial(p, actor) && D.commercialHealth(p) !== "On budget") {
+            attentionRows.push({
+              code: p.code,
+              project: p.name,
+              issue: D.commercialHealth(p) + " — review budget",
+              type: "Budget",
+              typeColor: "var(--warn)",
+              owner: D.name(p.leadId),
+              due: "—",
+              dueColor: "var(--ink2)",
+              sortDate: "9999-99-99",
+              open: () => this.openProject(p.id),
+            });
+          }
+        });
+        attentionRows.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
         const peekP = projects.find((p) => p.id === s.peekId),
           peekChip = peekP ? chip(peekP) : D.PHASES.scoping;
         const visibleActivity = (p) => D.visibleActivity(p, actor);
@@ -2358,14 +2510,6 @@
                 }),
             }
           : null;
-        const alertRows = openms
-          .filter(
-            (r) => r.milestone.dueDate && D.days(r.milestone.dueDate) <= 7,
-          )
-          .sort((a, b) =>
-            a.milestone.dueDate.localeCompare(b.milestone.dueDate),
-          )
-          .slice(0, 8);
         const schedule = D.scheduleRows(s.db, actor, s.scheduleFilters);
         const intakeQuery = s.intakeSearch.trim().toLowerCase();
         const intakeFiltered = s.db.enquiries.filter((q) => {
@@ -2430,21 +2574,54 @@
             empty: !my[key].length,
             count: my[key].length,
           }));
-        const locationRows = D.cities(s.db, D.today(), actor).map((c) => ({
-          ...c,
-          activeCount: c.projects.length,
-          enquiryCount: c.enquiries.length,
-          riskCount: c.atRisk.length,
-          upcomingCount: c.upcoming.filter(
-            (r) =>
-              r.milestone.dueDate >= D.today() &&
-              r.milestone.dueDate <= D.addDays(D.today(), 30),
-          ).length,
-          leadCount: c.leads.length,
-          coverage: c.leads.map(D.name).join(", ") || "No project leads",
-          open: () => this.setState({ selectedCity: c.city }),
-        }));
-        const city = locationRows.find((c) => c.city === s.selectedCity);
+        const dominantSector = (projects, enquiries) => {
+          const pick = (list) => {
+            const counts = new Map();
+            list.forEach((x) => {
+              if (!x.sector) return;
+              counts.set(x.sector, (counts.get(x.sector) || 0) + 1);
+            });
+            let best = "",
+              n = -1;
+            for (const [sector, count] of counts) {
+              if (count > n) {
+                best = sector;
+                n = count;
+              }
+            }
+            return best;
+          };
+          return (
+            pick(projects) || pick(enquiries) || "Other commercial"
+          );
+        };
+        const locationRows = D.cities(s.db, D.today(), actor).map((c) => {
+          const items = [
+            ...c.projects.map((p) => ({
+              name: p.name,
+              kind: "Active",
+              kindClass: "is-active",
+              open: () => this.setState({ peekId: p.id, peekTab: "brief" }),
+            })),
+            ...c.enquiries.map((q) => ({
+              name: q.name,
+              kind: "Pipeline",
+              kindClass: "is-pipeline",
+              open: () => this.openDialog("enquiry", null, q.id),
+            })),
+          ];
+          return {
+            city: c.city,
+            sectorTag: dominantSector(c.projects, c.enquiries),
+            summary:
+              c.projects.length +
+              " active · " +
+              c.enquiries.length +
+              " pipeline",
+            items,
+            noItems: !items.length,
+          };
+        });
         const nav = (key, label, badge) => ({
           label,
           current: s.page === key ? "page" : "false",
@@ -2760,10 +2937,18 @@
           opsClose: () => this.closeDialog(),
           opsTitle: "",
           opsSubtitle: "",
+          opsBadge: "",
+          opsHasBadge: false,
+          opsBadgeColor: "",
           opsDescription: "",
+          opsDescriptionLabel: "",
           opsDependency: "",
           opsError: "",
           opsFields: [],
+          opsFieldsLabel: "",
+          opsDetailRows: [],
+          opsHasDetailRows: false,
+          opsHasInfoCard: false,
           opsHasContributors: false,
           opsContributors: [],
           opsCanUpload: false,
@@ -2906,12 +3091,12 @@
               });
           },
           showAlerts: s.showAlerts,
-          hasAlerts: !!alertRows.length,
-          alerts: alertRows.map((r) => ({
-            title: r.milestone.title + " · " + r.project.code,
-            meta: due(r.milestone.dueDate) + " · " + r.project.location.city,
-            open: () =>
-              this.openDialog("milestone", r.project.id, r.milestone.id),
+          hasAlerts: !!attentionRows.length,
+          alerts: attentionRows.slice(0, 8).map((r) => ({
+            title: r.project + " · " + r.code,
+            meta: r.type + " · " + r.issue,
+            metaColor: r.typeColor,
+            open: r.open,
           })),
           toggleAlerts: (ev) => {
             ev.stopPropagation();
@@ -3014,7 +3199,9 @@
             this.setState({ listPage: Math.min(pages, page + 1) }),
           previousOpacity: page === 1 ? ".4" : "1",
           nextOpacity: page === pages ? ".4" : "1",
-          showPeek: s.page === "portfolio" && !!peek,
+          showPeek:
+            ["portfolio", "locations", "schedule"].includes(s.page) &&
+            !!peek,
           peek,
           peekRail: peekP ? rail(peekP.phase, peekP.hold) : [],
           peekPhaseMenu: peekP
@@ -3159,7 +3346,11 @@
               budgetLabel: seeBudget ? q.budgetBand || "—" : "—",
               received: shortDate(D.today(q.createdAt)),
               triageLabel: q.status,
-              waitMeta: q.externalDependency ? "Waiting on client" : "",
+              waitMeta: q.externalDependency
+                ? "Waiting on client"
+                : q.status === "Declined"
+                  ? q.declinedReason
+                  : "",
               canAct: canOpen && !!menuActions.length,
               cannotAct: !canOpen || !menuActions.length,
               cta: menuActions[0]?.label || "",
@@ -3245,33 +3436,6 @@
           myWorkGroups: myWorkGroups.filter((g) => !g.empty),
           locationRows,
           locationsEmpty: !locationRows.length,
-          hasCityDetail: !!city,
-          cityTitle: city?.city || "",
-          cityProjects: city ? city.projects.map(row) : [],
-          cityEnquiries: city
-            ? city.enquiries.map((q) => ({
-                name: q.name,
-                status: q.status,
-                code: q.code,
-                open: () => this.openDialog("enquiry", null, q.id),
-              }))
-            : [],
-          cityMilestones: city
-            ? city.upcoming.map((r) =>
-                this.milestoneRow(r.project, r.milestone),
-              )
-            : [],
-          cityRiskProjects: city ? city.atRisk.map(row) : [],
-          cityTeam: city
-            ? city.team.map((u) => ({
-                name: u.n,
-                role: u.role,
-                base: u.baseCity,
-                supports: u.supportedCities.join(", "),
-              }))
-            : [],
-          citySectors: city?.sectors || [],
-          closeCity: () => this.setState({ selectedCity: "" }),
           peopleRows: D.PEOPLE.map((u) => ({
             name: u.n,
             role: u.role,
@@ -3374,7 +3538,7 @@
           closeProject: () =>
             this.guard(() => {
               if (this.act({ type: "project.close", projectId: p.id }))
-                this.showToast("Project closed after handover.");
+                this.showToast("Project marked complete.");
             }),
           milestonePlan,
           milestonePlanHint: p
@@ -3834,23 +3998,40 @@
           standardsIsRoles: s.standardsTab === "roles",
           standardsSector: s.standardsSector,
           standardsService: s.standardsService,
-          setStandardsSector: (ev) =>
-            this.setState({ standardsSector: ev.target.value }),
           setStandardsService: (ev) =>
             this.setState({ standardsService: ev.target.value }),
+          sectorNavItems: D.SECTORS.map((sector) => ({
+            name: sector,
+            active: sector === s.standardsSector,
+            activeClass: sector === s.standardsSector ? "is-active" : "",
+            meta:
+              D.templateFor(sector, s.standardsService).length +
+              " milestones",
+            select: () => this.setState({ standardsSector: sector }),
+          })),
           standardMilestoneCount: D.templateFor(
             s.standardsSector,
             s.standardsService,
           ).length,
-          standardPhases: D.PHASE_KEYS.map((key) => ({
-            label: D.PHASES[key].label,
-            items: D.templateFor(s.standardsSector, s.standardsService)
+          standardPhases: D.PHASE_KEYS.map((key) => {
+            const items = D.templateFor(s.standardsSector, s.standardsService)
               .filter((m) => m.phase === key)
-              .map((m) => ({
-                title: m.title,
-                review: m.reviewRequired ? "Review" : "",
-              })),
-          })).filter((g) => g.items.length),
+              .map((m) => {
+                const itemKey = key + "|" + m.title;
+                const expanded = s.standardsExpandedItem === itemKey;
+                return {
+                  title: m.title,
+                  ownerRole: m.ownerRole,
+                  acceptanceCriteria: m.acceptanceCriteria,
+                  expanded,
+                  toggle: () =>
+                    this.setState({
+                      standardsExpandedItem: expanded ? "" : itemKey,
+                    }),
+                };
+              });
+            return { label: D.PHASES[key].label, count: items.length, items };
+          }).filter((g) => g.items.length),
           lifecycleRows: D.PHASE_KEYS.map((key, i) => ({
             ...D.PHASES[key],
             step: i + 1,

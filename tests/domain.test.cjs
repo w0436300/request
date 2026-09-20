@@ -15,7 +15,7 @@ const apply = (db, actor, a) => D.apply(db, actor, a, now);
 test("migration imports known dates only, removes PR work packages and keeps explicit phases", () => {
   const projects = D.migrateProjects(global.FieldworkSeed.projects, now),
     p = projects.find((p) => p.id === "016");
-  assert.equal(projects.length, 9);
+  assert.equal(projects.length, 6);
   assert(!projects.some((p) => p.id === "030"));
   assert.equal(p.workPackages[0].code, "PR-016 / WP-01");
   assert(
@@ -29,11 +29,19 @@ test("migration imports known dates only, removes PR work packages and keeps exp
   );
   assert(
     projects
+      .filter((p) => p.state !== "Completed")
       .flatMap((p) => p.milestones)
       .every((m) => D.PHASE_KEYS.includes(m.phase) && !m.actualCompletionDate),
   );
   assert(!D.PHASE_KEYS.includes("closed"));
   assert(D.PHASE_KEYS.includes("pre-construction"));
+  const closed = projects.find((p) => p.state === "Completed");
+  assert(closed);
+  assert(
+    closed.milestones.every(
+      (m) => m.status === "Complete" && !!m.actualCompletionDate,
+    ),
+  );
 });
 test("sector template precedes service modifier and starts without synthetic dates", () => {
   const p = D.makeProject(
@@ -121,7 +129,7 @@ test("Flows A/B: enquiry conversion preserves the intake and cannot duplicate a 
       progress: null,
     },
   });
-  assert.equal(db.projects.length, 14);
+  assert.equal(db.projects.length, 8);
   assert.equal(db.projects[0].workPackages[0].projectId, p.id);
   assert(!("location" in db.projects[0].workPackages[0]));
 });
@@ -277,12 +285,12 @@ test("Flow F: Schedule uses all dates, handles same-day milestones, filters and 
 test("Flows G/H: location counts, package inheritance and optional packages", () => {
   const db = fresh(),
     harbin = D.cities(db, "2026-09-17").find((c) => c.city === "Harbin");
-  assert.equal(harbin.projects.length, 4);
+  assert.equal(harbin.projects.length, 2);
   assert.equal(harbin.enquiries.length, 3);
   assert.equal(harbin.atRisk.length, 1);
   assert(harbin.team.some((p) => p.id === "daniel"));
   assert.equal(paws(db).workPackages.length, 4);
-  assert.equal(db.projects.length, 13);
+  assert.equal(db.projects.length, 7);
   assert(db.projects.some((p) => !p.workPackages.length));
   const rows = D.scheduleRows(db, "sophia", { city: "Harbin" }, "2026-09-17");
   assert(rows.some((r) => r.workPackage?.name === "MRI / CT Suite"));
