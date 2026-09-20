@@ -69,20 +69,40 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 .segmented button{border:0;background:none;padding:7px 11px;border-radius:6px;font:600 12px inherit;color:var(--muted);cursor:pointer;white-space:nowrap}
 .segmented button[aria-pressed="true"]{background:var(--accent-tint);color:var(--accent-ink)}
 .query-sort{max-width:100%;height:32px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:12px;cursor:pointer}
-.location-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.location-card{display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--line);border-radius:var(--r-xl);background:var(--surface);box-shadow:var(--sh);min-width:0}
-.location-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.location-card-head h2{margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em}
+.project-list-controls{padding:12px 16px!important}
+.project-list-topbar{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px}
+.project-list-topbar h1{margin:0;font-size:18px;font-weight:750;letter-spacing:-.035em;line-height:1.3;white-space:nowrap}
+.project-list-topbar h1 span{margin-left:7px;color:var(--muted);font-size:13px;font-weight:500;letter-spacing:0}
+.project-list-topbar .query-bar{flex-wrap:nowrap}
+.project-list-topbar .query-search{max-width:none!important}
+.project-list-topbar .project-alerts{justify-self:end}
+.project-list-controls .query-views{margin-top:10px}
+.project-id{white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:12px}
+.location-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.location-card{display:flex;flex-direction:column;padding:0;border:1px solid var(--line);border-radius:var(--r-xl);background:var(--surface);box-shadow:var(--sh);min-width:0;overflow:hidden}
+.location-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px 12px}
+.location-card-head h2{margin:0;color:var(--ink2);font-size:17px;font-weight:750;letter-spacing:-.025em}
+.location-card-total{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;padding:0 8px;border-radius:999px;background:var(--paper2);color:var(--ink2);font:700 11.5px 'IBM Plex Mono',monospace}
+.location-card-overview{display:flex;align-items:center;gap:16px;padding:0 18px 14px;border-bottom:1px solid var(--line)}
+.location-stat{display:flex;align-items:baseline;gap:5px;color:var(--muted);font-size:11.5px;font-weight:600}
+.location-stat strong{color:var(--ink2);font:700 15px 'IBM Plex Mono',monospace}
+.location-card-sectors{display:flex;align-items:center;gap:5px;min-width:0;flex-wrap:wrap;margin-left:auto}
+.location-sector-label{margin-right:2px;color:var(--faint);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
 .location-card-sector{flex:none;padding:3px 8px;border-radius:999px;background:var(--paper2);color:var(--muted);font:600 11px inherit}
-.location-card-summary{margin:0;color:var(--muted);font-size:12.5px;font-weight:600}
-.location-card-items{display:flex;flex-direction:column;gap:2px;margin:2px -8px 0}
-.location-item{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:8px;border:0;border-radius:var(--r-m);background:transparent;cursor:pointer;text-align:left}
+.location-card-sector-more{background:var(--accent-tint);color:var(--accent-ink)}
+.location-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));flex:1}
+.location-section{min-width:0;padding:14px 18px 16px}
+.location-section+.location-section{border-left:1px solid var(--line)}
+.location-section-title{margin:0 0 8px;color:var(--faint);font-size:10.5px;font-weight:700;letter-spacing:.055em;text-transform:uppercase}
+.location-items{display:flex;flex-direction:column;gap:2px}
+.location-item{display:block;width:100%;padding:8px;border:0;border-radius:var(--r-m);background:transparent;cursor:pointer;text-align:left}
 .location-item:hover{background:#F8F9FC}
-.location-item strong{font-size:13px;font-weight:600;color:var(--ink);line-height:1.35;min-width:0}
-.location-item .loc-kind{flex:none;font:600 11.5px inherit}
-.location-item .loc-kind.is-active{color:var(--accent-ink)}
-.location-item .loc-kind.is-pipeline{color:var(--muted)}
-.location-card-empty{padding:4px 0 0;color:var(--muted);font-size:12.5px}
+.location-item strong{display:block;overflow:hidden;color:var(--ink2);font-size:12.5px;font-weight:650;line-height:1.35;text-overflow:ellipsis;white-space:nowrap}
+.location-item small{display:block;overflow:hidden;margin-top:3px;color:var(--muted);font:500 10.5px 'IBM Plex Mono',monospace;text-overflow:ellipsis;white-space:nowrap}
+.location-section-empty{padding:8px;color:var(--faint);font-size:11.5px}
+.location-card-empty{padding:18px;color:var(--muted);font-size:12.5px}
+@media(max-width:900px){.location-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.location-card-overview{align-items:flex-start;flex-wrap:wrap}.location-card-sectors{width:100%;margin-left:0}.location-columns{grid-template-columns:1fr}.location-section+.location-section{border-left:0;border-top:1px solid var(--line)}}
 .clean-tabs{display:flex;gap:24px;max-width:100%;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
 .clean-tabs button{padding:0 0 12px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);font:600 13px inherit;cursor:pointer;white-space:nowrap}
 .clean-tabs button[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent)}
@@ -333,6 +353,25 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 .fw-table .fw-name{font-weight:700;min-width:190px}
 .fw-table small{display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin-top:3px}
 .fw-table tbody tr:hover{background:var(--paper2)}
+.schedule-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.schedule-summary button{display:flex;flex-direction:column;gap:5px;min-width:0;padding:13px 14px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface);color:var(--ink2);cursor:pointer;text-align:left}
+.schedule-summary button:hover{border-color:var(--lineS);background:var(--paper2)}
+.schedule-summary button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-tint);box-shadow:0 0 0 1px var(--accent)}
+.schedule-summary-main{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;font-size:12.5px;font-weight:700}
+.schedule-summary-count{font:700 18px/1 'IBM Plex Mono',monospace;color:var(--ink)}
+.schedule-summary button[aria-pressed="true"] .schedule-summary-count{color:var(--accent-ink)}
+.schedule-summary-hint{overflow:hidden;width:100%;color:var(--muted);font-size:10.5px;white-space:nowrap;text-overflow:ellipsis}
+.schedule-list-panel{padding:0;overflow:hidden}
+.schedule-list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.schedule-list-toolbar strong{font-size:13.5px}
+.schedule-due{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.schedule-due::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.schedule-due-overdue::before{background:#B04A4A}.schedule-due-week::before{background:#C47A2C}.schedule-due-next::before{background:#5367D4}.schedule-due-later::before{background:#7B8497}
+.schedule-pager{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line)}
+.schedule-pager button{width:30px;height:30px;border:1px solid var(--lineS);border-radius:var(--r-s);background:var(--surface);color:var(--ink2);font-size:16px;cursor:pointer}
+.schedule-pager button:disabled{opacity:.35;cursor:default}
+@media(max-width:760px){.schedule-summary{display:flex;overflow-x:auto;padding-bottom:4px}.schedule-summary button{flex:0 0 142px}.schedule-list-toolbar{align-items:flex-start;flex-direction:column}}
+@media(max-width:760px){.project-list-topbar{grid-template-columns:minmax(0,1fr) auto}.project-list-topbar .query-bar{grid-column:1/-1;grid-row:2}.project-list-topbar .project-alerts{grid-column:2;grid-row:1}.project-list-controls .query-views{margin-top:10px}}
 .fw-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .fw-field{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:12.5px;font-weight:600}
 .fw-field input:not([type=checkbox]),.fw-field select,.fw-field textarea{width:100%;min-height:38px;border:1px solid var(--lineS);border-radius:var(--r-s);padding:8px 10px;background:var(--surface);font:400 13px inherit;color:var(--ink)}
@@ -464,8 +503,14 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 
 
   <div style="background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh)">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--line)">
-      <div class="list-heading"><h1>{{ listTitle }} <span>{{ listCount }}</span></h1>        <span style="position:relative;display:inline-flex">
+    <div class="project-list-controls" style="padding:16px 20px;border-bottom:1px solid var(--line)">
+      <div class="project-list-topbar">
+        <h1>{{ listTitle }} <span>{{ listCount }}</span></h1>
+        <div class="query-bar">
+          <input class="query-search" value="{{ search }}" onchange="{{ setSearch }}" aria-label="Search projects" placeholder="Search projects or clients">
+          <button class="fw-button" onclick="{{ toggleProjectFilters }}" aria-expanded="{{ showProjectFilters }}">{{ moreFiltersLabel }}</button>
+        </div>
+        <span class="project-alerts" style="position:relative;display:inline-flex">
           <button onclick="{{ toggleAlerts }}" aria-label="Notifications" title="Notifications" aria-expanded="{{ showAlerts }}" style="width:36px;height:36px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink2);cursor:pointer;display:grid;place-items:center;position:relative" style-hover="border-color:var(--lineS);background:var(--paper2)">
             <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.2a3.4 3.4 0 0 0-3.4 3.4c0 2.5-.9 3.6-1.3 4.1-.2.2 0 .6.3.6h8.8c.3 0 .5-.4.3-.6-.4-.5-1.3-1.6-1.3-4.1A3.4 3.4 0 0 0 8 2.2ZM6.6 12.3a1.5 1.5 0 0 0 2.8 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
             <sc-if value="{{ hasAlerts }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--warn);border:1.5px solid var(--surface)"></span></sc-if>
@@ -482,10 +527,6 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
             </div>
           </sc-if>
         </span>
-</div>
-      <div class="query-bar">
-        <input class="query-search" value="{{ search }}" onchange="{{ setSearch }}" aria-label="Search projects" placeholder="Search projects or clients">
-        <button class="fw-button" onclick="{{ toggleProjectFilters }}" aria-expanded="{{ showProjectFilters }}">{{ moreFiltersLabel }}</button>
       </div>
       <sc-if value="{{ showProjectFilters }}"><div class="query-advanced">
 <label class="fw-field">City<select value="{{ cityFilter }}" onchange="{{ setCityFilter }}" aria-label="Filter by city" class="filter-select">
@@ -546,20 +587,22 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
           <table class="projects-table projects-table--by-client">
             <colgroup>
               <col style="width:76px">
-              <col style="width:46%">
+              <col style="width:38%">
+              <col style="width:112px">
               <col style="width:112px">
               <col style="width:52px">
             </colgroup>
             <thead><tr>
               <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);border-bottom:1px solid var(--line);padding:10px 14px 10px 20px">ID</th>
               <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);border-bottom:1px solid var(--line);padding:10px 14px">Project</th>
+              <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);border-bottom:1px solid var(--line);padding:10px 14px">City</th>
               <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);border-bottom:1px solid var(--line);padding:10px 14px">Phase</th>
               <th style="text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);border-bottom:1px solid var(--line);padding:10px 20px 10px 14px">Lead</th>
             </tr></thead>
             <sc-for list="{{ clientGroups }}" as="cg" hint-placeholder-count="3">
               <tbody>
                 <tr class="projects-client-head">
-                  <td colspan="4">
+                  <td colspan="5">
                     <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
                       <h3 class="projects-client-head__title">{{ cg.client }}</h3>
                       <span class="projects-client-head__meta">{{ cg.count }}</span>
@@ -569,8 +612,9 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
                 </tr>
                 <sc-for list="{{ cg.projects }}" as="p" hint-placeholder-count="3">
                   <tr class="project-row {{ p.rowClass }}" onclick="{{ p.peek }}" style="cursor:pointer">
-                    <td class="projects-cell-muted" style="padding:13px 14px 13px 20px;border-bottom:1px solid var(--line)">{{ p.code }}</td>
-                    <td class="projects-cell-name" style="padding:13px 14px;border-bottom:1px solid var(--line)">{{ p.name }}<div class="fw-muted">{{ p.city }}</div></td>
+                    <td class="projects-cell-muted project-id" style="padding:13px 14px 13px 20px;border-bottom:1px solid var(--line)">{{ p.code }}</td>
+                    <td class="projects-cell-name" style="padding:13px 14px;border-bottom:1px solid var(--line)">{{ p.name }}</td>
+                    <td class="projects-cell-text" style="padding:13px 14px;border-bottom:1px solid var(--line)">{{ p.city }}</td>
                     <td class="projects-cell-text" style="padding:13px 14px;border-bottom:1px solid var(--line)">{{ p.phaseLabel }}</td>
                     <td style="padding:13px 20px 13px 14px;border-bottom:1px solid var(--line)">
                       <span style="width:26px;height:26px;border-radius:50%;background:{{ p.leadColor }};color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center" aria-label="Project lead">{{ p.leadInitials }}</span>
@@ -587,10 +631,10 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
     <sc-if value="{{ isListFlat }}" hint-placeholder-val="{{ true }}">
     <sc-if value="{{ hasProjectRows }}" hint-placeholder-val="{{ true }}">
       <div class="table-scroll">
-        <table class="fw-table" style="min-width:1040px" aria-label="Projects">
-          <thead><tr><th>Project / City</th><th>Client</th><th>Sector / Service</th><th>Phase</th><th>Project Lead</th><th>Health</th><th>Next milestone</th></tr></thead>
+        <table class="fw-table" style="min-width:1160px" aria-label="Projects">
+          <thead><tr><th>Project</th><th>ID</th><th>City</th><th>Client</th><th>Sector / Service</th><th>Phase</th><th>Project Lead</th><th>Health</th><th>Next milestone</th></tr></thead>
           <tbody><sc-for list="{{ projectRows }}" as="p"><tr class="project-row {{ p.rowClass }}" onclick="{{ p.peek }}" style="cursor:pointer">
-            <td class="fw-name"><button class="fw-link" onclick="{{ p.peek }}">{{ p.name }}</button><small>{{ p.code }} · {{ p.city }}</small></td><td>{{ p.client }}</td><td>{{ p.sector }}<small>{{ p.service }}</small></td><td>{{ p.phaseLabel }}</td><td><span title="{{ p.lead }}" style="width:26px;height:26px;border-radius:50%;background:{{ p.leadColor }};color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center" aria-label="{{ p.lead }}">{{ p.leadInitials }}</span></td><td><div style="color:{{ p.scheduleColor }}">{{ p.scheduleHealth }}</div><sc-if value="{{ showCommercialColumn }}"><div style="color:{{ p.commercialColor }};font-size:12px;margin-top:1px">{{ p.commercialHealth }}</div></sc-if></td><td>{{ p.milestoneLabel }}<small>{{ p.milestoneDate }}</small></td>
+            <td class="fw-name"><button class="fw-link" onclick="{{ p.peek }}">{{ p.name }}</button></td><td class="project-id">{{ p.code }}</td><td>{{ p.city }}</td><td>{{ p.client }}</td><td>{{ p.sector }}<small>{{ p.service }}</small></td><td>{{ p.phaseLabel }}</td><td><span title="{{ p.lead }}" style="width:26px;height:26px;border-radius:50%;background:{{ p.leadColor }};color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center" aria-label="{{ p.lead }}">{{ p.leadInitials }}</span></td><td><div style="color:{{ p.scheduleColor }}">{{ p.scheduleHealth }}</div><sc-if value="{{ showCommercialColumn }}"><div style="color:{{ p.commercialColor }};font-size:12px;margin-top:1px">{{ p.commercialHealth }}</div></sc-if></td><td>{{ p.milestoneLabel }}<small>{{ p.milestoneDate }}</small></td>
           </tr></sc-for></tbody>
         </table>
       </div>
@@ -700,8 +744,12 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
 <!-- ========================= SCHEDULE / MY WORK / CITY OPERATIONS ========================= -->
 <sc-if value="{{ isSchedule }}">
   <div class="page-heading"><h1>Schedule <span>{{ scheduleCount }}</span></h1></div>
+  <div class="schedule-summary" role="group" aria-label="Schedule timeframe">
+    <sc-for list="{{ scheduleTabs }}" as="t"><button onclick="{{ t.select }}" aria-pressed="{{ t.pressed }}" title="{{ t.hint }}"><span class="schedule-summary-main"><span>{{ t.label }}</span><span class="schedule-summary-count">{{ t.count }}</span></span><span class="schedule-summary-hint">{{ t.hint }}</span></button></sc-for>
+  </div>
   <div class="fw-panel">
     <div class="query-bar schedule-query">
+      <input class="query-search" type="search" aria-label="Search schedule" placeholder="Search milestone, project, owner…" value="{{ scheduleSearch }}" oninput="{{ setScheduleSearch }}">
       <sc-for list="{{ scheduleFilters }}" as="f"><sc-if value="{{ f.primary }}"><select class="filter-select" aria-label="{{ f.label }}" value="{{ f.value }}" onchange="{{ f.set }}"><option value="all">All {{ f.label }}</option><sc-for list="{{ f.options }}" as="o"><option value="{{ o.value }}">{{ o.label }}</option></sc-for></select></sc-if></sc-for>
       <button class="fw-button" onclick="{{ toggleScheduleFilters }}" aria-expanded="{{ showScheduleFilters }}">Filters</button>
     </div>
@@ -709,10 +757,11 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
     <sc-if value="{{ scheduleFilterCount }}"><div class="filter-chips"><sc-for list="{{ scheduleFilterChips }}" as="fc"><span class="filter-chip">{{ fc.label }}<button onclick="{{ fc.clear }}" aria-label="Remove {{ fc.label }}">×</button></span></sc-for><button class="fw-link" onclick="{{ resetSchedule }}">Clear filters</button></div></sc-if>
   </div>
   <sc-if value="{{ scheduleEmpty }}"><div class="fw-empty">No milestones match these filters.</div></sc-if>
-  <sc-for list="{{ scheduleGroups }}" as="g"><sc-if value="{{ g.hasItems }}"><section class="fw-panel">
-    <div class="fw-toolbar"><h2>{{ g.title }}</h2><span class="fw-muted">{{ g.range }} · {{ g.count }}</span></div>
-    <div class="table-scroll"><table class="fw-table"><thead><tr><th>Due</th><th>Milestone</th><th>Project</th><th>City</th><th>Work package</th><th>Phase</th><th>Owner</th><th>Status</th></tr></thead><tbody><sc-for list="{{ g.items }}" as="r"><tr class="project-row" onclick="{{ r.open }}" style="cursor:pointer"><td>{{ r.due }}</td><td><button class="fw-link" onclick="{{ r.open }}">{{ r.title }}</button></td><td><button class="fw-link" onclick="{{ r.openProject }}">{{ r.code }}</button><small>{{ r.project }}</small></td><td>{{ r.city }}</td><td>{{ r.workPackage }}</td><td>{{ r.phaseLabel }}</td><td>{{ r.owner }}</td><td><span class="fw-badge" style="color:{{ r.statusColor }}">{{ r.status }}</span></td></tr></sc-for></tbody></table></div>
-  </section></sc-if></sc-for>
+  <sc-if value="{{ scheduleShowPagination }}"><section class="fw-panel schedule-list-panel">
+    <div class="schedule-list-toolbar"><strong>{{ scheduleVisibleCount }} milestones</strong><span class="fw-muted">Sorted by due date · earliest first</span></div>
+    <div class="table-scroll"><table class="fw-table" aria-label="Schedule milestones"><thead><tr><th>Due</th><th>Milestone</th><th>Project</th><th>City</th><th>Work package</th><th>Phase</th><th>Owner</th><th>Status</th></tr></thead><tbody><sc-for list="{{ scheduleRows }}" as="r"><tr class="project-row" onclick="{{ r.open }}" style="cursor:pointer"><td><span class="schedule-due {{ r.bucketClass }}">{{ r.due }}</span><small>{{ r.bucketLabel }}</small></td><td><button class="fw-link" onclick="{{ r.open }}">{{ r.title }}</button></td><td><button class="fw-link" onclick="{{ r.openProject }}">{{ r.code }}</button><small>{{ r.project }}</small></td><td>{{ r.city }}</td><td>{{ r.workPackage }}</td><td>{{ r.phaseLabel }}</td><td>{{ r.owner }}</td><td><span class="fw-badge" style="color:{{ r.statusColor }}">{{ r.status }}</span></td></tr></sc-for></tbody></table></div>
+    <div class="schedule-pager"><span class="fw-muted">Showing {{ schedulePageStart }}–{{ schedulePageEnd }} of {{ scheduleVisibleCount }}</span><label class="fw-muted" style="display:flex;align-items:center;gap:7px">Rows <select value="{{ schedulePageSize }}" onchange="{{ setSchedulePageSize }}" style="height:30px;border:1px solid var(--lineS);background:var(--surface);color:var(--ink2);padding:0 7px"><option value="10">10</option><option value="25">25</option><option value="50">50</option></select></label><div style="margin-left:auto;display:flex;gap:4px"><button onclick="{{ schedulePrevious }}" disabled="{{ schedulePreviousDisabled }}" aria-label="Previous page">‹</button><button onclick="{{ scheduleNext }}" disabled="{{ scheduleNextDisabled }}" aria-label="Next page">›</button></div></div>
+  </section></sc-if>
 </sc-if>
 <sc-if value="{{ isMyWork }}">
   <div class="page-heading"><h1>My Work</h1></div>
@@ -730,16 +779,28 @@ button{transition:background .15s,border-color .15s,color .15s,transform .15s}
       <article class="location-card">
         <div class="location-card-head">
           <h2>{{ r.city }}</h2>
-          <span class="location-card-sector">{{ r.sectorTag }}</span>
+          <span class="location-card-total" title="Total active projects and pipeline">{{ r.totalCount }}</span>
         </div>
-        <p class="location-card-summary">{{ r.summary }}</p>
-        <div class="location-card-items">
-          <sc-for list="{{ r.items }}" as="item" hint-placeholder-count="3">
-            <button type="button" class="location-item" onclick="{{ item.open }}">
-              <strong>{{ item.name }}</strong>
-              <span class="loc-kind {{ item.kindClass }}">{{ item.kind }}</span>
-            </button>
-          </sc-for>
+        <div class="location-card-overview">
+          <span class="location-stat"><strong>{{ r.activeCount }}</strong> Active</span>
+          <span class="location-stat"><strong>{{ r.pipelineCount }}</strong> Pipeline</span>
+          <div class="location-card-sectors" title="{{ r.sectorTitle }}">
+            <span class="location-sector-label">Sectors</span>
+            <sc-for list="{{ r.sectorTags }}" as="sector"><span class="location-card-sector">{{ sector.label }}</span></sc-for>
+            <sc-if value="{{ r.hasMoreSectors }}"><span class="location-card-sector location-card-sector-more">{{ r.moreSectorCount }}</span></sc-if>
+          </div>
+        </div>
+        <div class="location-columns">
+          <section class="location-section">
+            <h3 class="location-section-title">Active projects</h3>
+            <div class="location-items"><sc-for list="{{ r.activeItems }}" as="item" hint-placeholder-count="2"><button type="button" class="location-item" onclick="{{ item.open }}"><strong>{{ item.name }}</strong><small>{{ item.meta }}</small></button></sc-for></div>
+            <sc-if value="{{ r.noActiveItems }}"><div class="location-section-empty">No active projects</div></sc-if>
+          </section>
+          <section class="location-section">
+            <h3 class="location-section-title">Pipeline</h3>
+            <div class="location-items"><sc-for list="{{ r.pipelineItems }}" as="item" hint-placeholder-count="2"><button type="button" class="location-item" onclick="{{ item.open }}"><strong>{{ item.name }}</strong><small>{{ item.meta }}</small></button></sc-for></div>
+            <sc-if value="{{ r.noPipelineItems }}"><div class="location-section-empty">No pipeline enquiries</div></sc-if>
+          </section>
         </div>
         <sc-if value="{{ r.noItems }}"><div class="location-card-empty">No active projects or pipeline.</div></sc-if>
       </article>

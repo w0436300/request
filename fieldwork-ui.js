@@ -207,6 +207,10 @@
     sortDir: "asc",
     listPage: 1,
     listPageSize: 8,
+    scheduleBucket: "all",
+    scheduleSearch: "",
+    schedulePage: 1,
+    schedulePageSize: 10,
     scheduleFilters: {
       city: "all",
       project: "all",
@@ -2559,6 +2563,67 @@
             count: items.length + " milestones",
           };
         });
+        const scheduleBucketMeta = [
+          ["all", "All", "All upcoming milestones"],
+          ["overdue", "Overdue", "Past due"],
+          ["week", "This week", "Due by Sunday"],
+          ["next", "Next week", "The following 7 days"],
+          ["later", "Later", "Beyond next week"],
+        ];
+        const scheduleSearch = s.scheduleSearch.trim().toLowerCase();
+        const scheduleVisible = schedule.filter((r) => {
+          if (s.scheduleBucket !== "all" && r.bucket !== s.scheduleBucket)
+            return false;
+          if (!scheduleSearch) return true;
+          const wp = r.workPackage?.name || "";
+          return [
+            r.milestone.title,
+            r.project.code,
+            r.project.name,
+            r.project.location.city,
+            D.name(r.milestone.ownerId),
+            wp,
+          ].some((value) =>
+            String(value || "")
+              .toLowerCase()
+              .includes(scheduleSearch),
+          );
+        });
+        const schedulePages = Math.max(
+          1,
+          Math.ceil(scheduleVisible.length / Number(s.schedulePageSize)),
+        );
+        const schedulePage = Math.min(s.schedulePage, schedulePages);
+        const schedulePageStart = scheduleVisible.length
+          ? (schedulePage - 1) * Number(s.schedulePageSize) + 1
+          : 0;
+        const scheduleRows = scheduleVisible
+          .slice(
+            (schedulePage - 1) * Number(s.schedulePageSize),
+            schedulePage * Number(s.schedulePageSize),
+          )
+          .map((r) => ({
+            ...this.milestoneRow(r.project, r.milestone),
+            bucketLabel:
+              r.bucket === "overdue"
+                ? "Overdue"
+                : r.bucket === "week"
+                  ? "This week"
+                  : r.bucket === "next"
+                    ? "Next week"
+                    : "Later",
+            bucketClass: "schedule-due-" + r.bucket,
+          }));
+        const scheduleTabs = scheduleBucketMeta.map(([key, label, hint]) => ({
+          label,
+          hint,
+          count:
+            key === "all"
+              ? schedule.length
+              : schedule.filter((r) => r.bucket === key).length,
+          pressed: s.scheduleBucket === key,
+          select: () => this.setState({ scheduleBucket: key, schedulePage: 1 }),
+        }));
         const my = D.myWork(s.db, actor),
           myWorkGroups = [
             ["assigned", "Assigned to me"],
@@ -2574,52 +2639,41 @@
             empty: !my[key].length,
             count: my[key].length,
           }));
-        const dominantSector = (projects, enquiries) => {
-          const pick = (list) => {
-            const counts = new Map();
-            list.forEach((x) => {
-              if (!x.sector) return;
-              counts.set(x.sector, (counts.get(x.sector) || 0) + 1);
-            });
-            let best = "",
-              n = -1;
-            for (const [sector, count] of counts) {
-              if (count > n) {
-                best = sector;
-                n = count;
-              }
-            }
-            return best;
-          };
-          return (
-            pick(projects) || pick(enquiries) || "Other commercial"
-          );
-        };
         const locationRows = D.cities(s.db, D.today(), actor).map((c) => {
-          const items = [
-            ...c.projects.map((p) => ({
-              name: p.name,
-              kind: "Active",
-              kindClass: "is-active",
-              open: () => this.setState({ peekId: p.id, peekTab: "brief" }),
-            })),
-            ...c.enquiries.map((q) => ({
-              name: q.name,
-              kind: "Pipeline",
-              kindClass: "is-pipeline",
-              open: () => this.openDialog("enquiry", null, q.id),
-            })),
+          const sectors = [
+            ...new Set(
+              [...c.projects, ...c.enquiries]
+                .map((item) => item.sector)
+                .filter(Boolean),
+            ),
           ];
+          if (!sectors.length) sectors.push("Other commercial");
+          const activeItems = c.projects.map((p) => ({
+              name: p.name,
+              meta: p.code + " · " + D.PHASES[p.phase].label,
+              open: () => this.setState({ peekId: p.id, peekTab: "brief" }),
+            }));
+          const pipelineItems = c.enquiries.map((q) => ({
+              name: q.name,
+              meta: q.code + " · " + q.status,
+              open: () => this.openDialog("enquiry", null, q.id),
+            }));
           return {
             city: c.city,
-            sectorTag: dominantSector(c.projects, c.enquiries),
-            summary:
-              c.projects.length +
-              " active · " +
-              c.enquiries.length +
-              " pipeline",
-            items,
-            noItems: !items.length,
+            totalCount: c.projects.length + c.enquiries.length,
+            activeCount: c.projects.length,
+            pipelineCount: c.enquiries.length,
+            sectorTags: sectors.slice(0, 2).map((label) => ({ label })),
+            sectorTitle: sectors.join(", "),
+            hasMoreSectors: sectors.length > 2,
+            moreSectorCount: "+" + (sectors.length - 2),
+            activeItems,
+            pipelineItems,
+            hasActiveItems: !!activeItems.length,
+            hasPipelineItems: !!pipelineItems.length,
+            noActiveItems: !activeItems.length,
+            noPipelineItems: !pipelineItems.length,
+            noItems: !activeItems.length && !pipelineItems.length,
           };
         });
         const nav = (key, label, badge) => ({
@@ -3370,8 +3424,34 @@
           intakeNoMatches: !!s.db.enquiries.length && !intakeFiltered.length,
           intakeHasRows: !!intakeFiltered.length,
           scheduleGroups,
-          scheduleEmpty: !schedule.length,
+          scheduleTabs,
+          scheduleRows,
+          scheduleEmpty: !scheduleVisible.length,
           scheduleCount: schedule.length,
+          scheduleVisibleCount: scheduleVisible.length,
+          scheduleSearch: s.scheduleSearch,
+          setScheduleSearch: (ev) =>
+            this.setState({ scheduleSearch: ev.target.value, schedulePage: 1 }),
+          schedulePageStart,
+          schedulePageEnd: Math.min(
+            scheduleVisible.length,
+            schedulePage * Number(s.schedulePageSize),
+          ),
+          schedulePageSize: s.schedulePageSize,
+          scheduleShowPagination: scheduleVisible.length > 0,
+          schedulePreviousDisabled: schedulePage <= 1,
+          scheduleNextDisabled: schedulePage >= schedulePages,
+          schedulePrevious: () =>
+            this.setState({ schedulePage: Math.max(1, schedulePage - 1) }),
+          scheduleNext: () =>
+            this.setState({
+              schedulePage: Math.min(schedulePages, schedulePage + 1),
+            }),
+          setSchedulePageSize: (ev) =>
+            this.setState({
+              schedulePageSize: Number(ev.target.value),
+              schedulePage: 1,
+            }),
           showScheduleFilters: s.showScheduleFilters,
           toggleScheduleFilters: () =>
             this.setState({ showScheduleFilters: !s.showScheduleFilters }),
@@ -3413,13 +3493,14 @@
             advanced: !["city", "project"].includes(key),
             value: s.scheduleFilters[key],
             options,
-            set: (ev) =>
-              this.setState({
-                scheduleFilters: {
-                  ...s.scheduleFilters,
-                  [key]: ev.target.value,
-                },
-              }),
+              set: (ev) =>
+                this.setState({
+                  scheduleFilters: {
+                    ...s.scheduleFilters,
+                    [key]: ev.target.value,
+                  },
+                  schedulePage: 1,
+                }),
           })),
           resetSchedule: () =>
             this.setState({
@@ -3431,6 +3512,7 @@
                 status: "all",
                 sector: "all",
               },
+              schedulePage: 1,
             }),
           myWorkEmpty: myWorkGroups.every((g) => g.empty),
           myWorkGroups: myWorkGroups.filter((g) => !g.empty),
